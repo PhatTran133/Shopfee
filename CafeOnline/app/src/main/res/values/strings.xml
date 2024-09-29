@@ -1,3 +1,153 @@
 <resources>
-    <string name="app_name">CafeOnline</string>
+    <string name="app_name">KooHee</string>
+
+    <string name="nav_home">Home</string>
+    <string name="nav_history">History</string>
+    <string name="nav_account">Account</string>
+
+    //<string name="title_voucher" translatable="false">Khuyến mại</string>
+    <string name="title_payment_method">Payment Methods</string>
+
+    // action
+    <string name="action_ok">Yes</string>
+    <string name="action_cancel">Cancel</string>
+    <string name="action_add">Add</string>
+
+    <string name="hint_email">Enter your email</string>
+    <string name="hint_password">Enter your password</string>
+    <string name="hint_password_old">Enter your old password…</string>
+    <string name="hint_password_new">Enter your new password…</string>
+    <string name="hint_password_confirm">Confirm your new password…</string>
+    <string name="hint_optional">Optional</string>
+    //<string name="hint_rating_review" translatable="false">Hãy cho chúng tôi biết đánh giá của bạn</string>
+
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="register">Register</string>
+    <string name="have_account">Already have an account?</string>
+    <string name="have_not_account">Do not have an account?</string>
+    <string name="login">Login</string>
+    <string name="forgot_password">Forgot password?</string>
+    //<string name="feedback" translatable="false">Phản hồi</string>
+    //<string name="contact" translatable="false">Liên hệ</string>
+    <string name="change_password">Change password</string>
+    <string name="sign_out">Log out</string>
+    <string name="reset_password">Reset password</string>
+    <string name="send_OTP">Send OTP</string>
+    <string name="add_address">Add your delivery address</string>
+    <string name="full_name">Full name:</string>
+    <string name="address">Address:</string>
+    <string name="phone_number">Phone number:</string>
+    <string name="address_title">Delivery address:</string>
+    <string name="label_full_name">Full name (*)</string>
+    <string name="label_phone">Phone number (*)</string>
+    <string name="label_address">Address (*)</string>
+    <string name="order_full_name">Full name</string>
+    <string name="order_address">Address</string>
+    <string name="order_phone_number">Phone number</string>
+
+    <string name="msg_get_date_error">There is an error. Please try again!</string>
+    <string name="msg_exit_app">Do you want to exit the app?</string>
+    <string name="msg_waiting_message">Please wait…</string>
+
+    <string name="msg_email_require">Please enter your email</string>
+    <string name="msg_password_require">Please enter your password</string>
+    <string name="msg_email_invalid">Your email is invalid!</string>
+
+    <string name="label_user_name">Email</string>
+    <string name="label_old_password">Old password</string>
+    <string name="label_new_password">New password</string>
+    <string name="confirm_OTP">Enter OTP</string>
+
+    <string name="label_confirm_new_password">Confirm new password</string>
+    <string name="msg_old_password_require">Please enter your old password</string>
+    <string name="msg_new_password_require" translatable="false">Please enter your new password</string>
+    <string name="msg_confirm_password_require" translatable="false">Please confirm your new password</string>
+    <string name="msg_old_password_invalid" translatable="false">Incorrect old password, please enter again!</string>
+    <string name="msg_confirm_password_invalid" translatable="false">Confirmed password is invalid</string>
+    <string name="msg_new_password_invalid" translatable="false">New password must be different from old password</string>
+
+    <string name="msg_change_password_successfully" translatable="false">Change password successfully!</string>
+    <string name="msg_reset_password_successfully" translatable="false">Reset password successfully! Please check your email.</string>
+
+    <string name="msg_register_error" translatable="false">Register unsuccessfully! Please try again.</string>
+    <string name="msg_login_error" translatable="false">Login unsuccessfully! Please try again.</string>
+    <string name="message_enter_infor" translatable="false">Please fill in all the information!</string>
+    <string name="msg_add_address_success" translatable="false">Add delivery address successfully!</string>
+
+    <string name="filter_all" translatable="false">All</string>
+    <string name="filter_rate" translatable="false">Rating</string>
+    <string name="filter_price" translatable="false">Price</string>
+    <string name="filter_promotion" translatable="false">Discount</string>
+
+    <string name="hint_home_search" translatable="false">Koohee Hi! What do you want for today?</string>
+    <string name="hint_voucher_code" translatable="false">Please enter your voucher!</string>
+    <string name="ratings_and_reviews" translatable="false">Xếp hạng và đánh giá</string>
+    <string name="customize" translatable="false">Customize</string>
+    <string name="label_variant" translatable="false">Drinks</string>
+    <string name="label_size" translatable="false">Size</string>
+    <string name="label_sugar" translatable="false">Sweet</string>
+    <string name="label_ice" translatable="false">Iced</string>
+    <string name="label_hot" translatable="false">Hot</string>
+    <string name="label_regular" translatable="false">Small</string>
+    <string name="label_medium" translatable="false">Medium</string>
+    <string name="label_large" translatable="false">Large</string>
+    <string name="label_normal" translatable="false">Normal</string>
+    <string name="label_less" translatable="false">Less</string>
+    <string name="label_topping" translatable="false">Other topping</string>
+    <string name="label_notes" translatable="false">Notes</string>
+    <string name="label_total" translatable="false">Total</string>
+    <string name="label_add_order" translatable="false">Add to your order</string>
+
+    <string name="label_rating_review_order" translatable="false">Đánh giá quá trình giao hàng cho đơn hàng này</string>
+    <string name="label_rating_review_drink" translatable="false">Bạn cảm thấy đồ uống này như thế nào?</string>
+    <string name="label_rating" translatable="false">Xếp hạng</string>
+    <string name="label_review" translatable="false">Đánh giá</string>
+    <string name="label_review_note" translatable="false">Đánh giá sẽ được hiển thị công khai</string>
+    <string name="label_send_review" translatable="false">Gửi đánh giá</string>
+    <string name="msg_send_review_success" translatable="false">Đánh giá đã được gửi thành công</string>
+
+    <string name="label_cart" translatable="false">Your cart</string>
+    <string name="label_checkout" translatable="false">Order</string>
+    <string name="label_payment_method" translatable="false">Payment methods</string>
+    <string name="label_no_payment_method" translatable="false">Payment methods required!</string>
+    <string name="label_no_address" translatable="false">Delivery address required!</string>
+    <string name="label_no_voucher" translatable="false">Voucher required!</string>
+    <string name="label_payment_summary" translatable="false">Payment summary</string>
+    <string name="label_price" translatable="false">Price</string>
+    <string name="label_choose_payment_method" translatable="false">Please select payment method!</string>
+    <string name="label_choose_address" translatable="false">Please select delivery address!</string>
+    <string name="label_item" translatable="false">Items</string>
+
+    <string name="label_thank_you" translatable="false">KooHee thank you!</string>
+    <string name="label_your_transaction_success" translatable="false">Your transaction is successfully!</string>
+    <string name="label_id_transaction" translatable="false">Transaction code</string>
+    <string name="label_date_and_time" translatable="false">Date and time</string>
+    <string name="label_tracking_order" translatable="false">Tracking order</string>
+    <string name="label_receipt_order" translatable="false">Receipt</string>
+
+    <string name="label_shop_takes_order" translatable="false">KooHee receives your order!</string>
+    <string name="label_prepare_your_order" translatable="false">Order preparing</string>
+    <string name="label_order_complete" translatable="false">Your order is completed, KooHee will deliver to you soon!</string>
+    <string name="label_take_order" translatable="false">KooHee takes order</string>
+    <string name="label_take_order_message" translatable="false">Please recheck your order when receiving.</string>
+    <string name="label_process" translatable="false">Processing</string>
+    <string name="label_done" translatable="false">Completed</string>
+    <string name="label_success" translatable="false">Successful</string>
+
+    <string name="label_facebook" translatable="false">Facebook</string>
+    <string name="label_call" translatable="false">Call Phone</string>
+    <string name="label_gmail" translatable="false">Gmail</string>
+    <string name="label_skype" translatable="false">Skype</string>
+    <string name="label_youtube" translatable="false">Youtube</string>
+    <string name="label_zalo" translatable="false">Zalo</string>
+    <string name="name_require" translatable="false">Vui lòng nhập tên của bạn</string>
+    <string name="comment_require" translatable="false">Vui lòng nhập phản hồi của bạn</string>
+    <string name="msg_send_feedback_success" translatable="false">Gửi phản hồi thành công, cám ơn bạn rất nhiều!</string>
+    <string name="feedback_name" translatable="false">Họ và tên (*)</string>
+    <string name="feedback_email" translatable="false">Email</string>
+    <string name="feedback_phone" translatable="false">Số điện thoại</string>
+    <string name="feedback_comment" translatable="false">Nội dung (*)</string>
+    <string name="send_feedback" translatable="false">Gửi phản hồi</string>
+
 </resources>
