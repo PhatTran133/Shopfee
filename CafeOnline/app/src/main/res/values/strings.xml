@@ -31,14 +31,19 @@
     //<string name="feedback" translatable="false">Phản hồi</string>
     //<string name="contact" translatable="false">Liên hệ</string>
     <string name="change_password">Change password</string>
+    <string name="update_profile">Update profile</string>
     <string name="sign_out">Log out</string>
     <string name="reset_password">Reset password</string>
     <string name="send_OTP">Send OTP</string>
     <string name="add_address">Add your delivery address</string>
     <string name="full_name">Full name:</string>
+    <string name="updt_username">User name</string>
+    <string name="updt_phone">Phone number</string>
+    <string name="updt_address">Address</string>
     <string name="address">Address:</string>
     <string name="phone_number">Phone number:</string>
     <string name="address_title">Delivery address:</string>
+    <string name="profile">Profile</string>
     <string name="label_full_name">Full name (*)</string>
     <string name="label_phone">Phone number (*)</string>
     <string name="label_address">Address (*)</string>
