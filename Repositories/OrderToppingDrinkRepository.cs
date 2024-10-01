@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Repositories
 {
-    public interface OrderToppingDrinkRepository
+    public class OrderToppingDrinkRepository
     {
     }
 }
