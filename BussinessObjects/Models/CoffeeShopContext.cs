@@ -43,9 +43,7 @@ namespace BussinessObjects.Models
             {
                 entity.ToTable("Cart");
 
-                entity.Property(e => e.Id)
-                    .ValueGeneratedNever()
-                    .HasColumnName("id");
+                entity.Property(e => e.Id).HasColumnName("id");
 
                 entity.Property(e => e.CreatedDate)
                     .HasColumnType("datetime")
@@ -75,9 +73,7 @@ namespace BussinessObjects.Models
             {
                 entity.ToTable("CartToppingDrink");
 
-                entity.Property(e => e.Id)
-                    .ValueGeneratedNever()
-                    .HasColumnName("id");
+                entity.Property(e => e.Id).HasColumnName("id");
 
                 entity.Property(e => e.CartId).HasColumnName("cartId");
 
@@ -122,9 +118,7 @@ namespace BussinessObjects.Models
             {
                 entity.ToTable("Drink");
 
-                entity.Property(e => e.Id)
-                    .ValueGeneratedNever()
-                    .HasColumnName("id");
+                entity.Property(e => e.Id).HasColumnName("id");
 
                 entity.Property(e => e.CategoryId).HasColumnName("categoryId");
 
@@ -171,9 +165,7 @@ namespace BussinessObjects.Models
             {
                 entity.ToTable("DrinkTopping");
 
-                entity.Property(e => e.Id)
-                    .ValueGeneratedNever()
-                    .HasColumnName("id");
+                entity.Property(e => e.Id).HasColumnName("id");
 
                 entity.Property(e => e.DrinkId).HasColumnName("drinkId");
 
@@ -257,9 +249,7 @@ namespace BussinessObjects.Models
             {
                 entity.ToTable("tblNotification");
 
-                entity.Property(e => e.Id)
-                    .ValueGeneratedNever()
-                    .HasColumnName("id");
+                entity.Property(e => e.Id).HasColumnName("id");
 
                 entity.Property(e => e.Content)
                     .HasMaxLength(100)
@@ -290,9 +280,7 @@ namespace BussinessObjects.Models
             {
                 entity.ToTable("tblOrder");
 
-                entity.Property(e => e.Id)
-                    .ValueGeneratedNever()
-                    .HasColumnName("id");
+                entity.Property(e => e.Id).HasColumnName("id");
 
                 entity.Property(e => e.CreatedDate)
                     .HasColumnType("datetime")
@@ -348,6 +336,8 @@ namespace BussinessObjects.Models
                     .HasMaxLength(20)
                     .IsUnicode(false)
                     .HasColumnName("phone");
+
+                entity.Property(e => e.RoleId).HasColumnName("roleId");
 
                 entity.Property(e => e.UpdatedDate)
                     .HasColumnType("datetime")

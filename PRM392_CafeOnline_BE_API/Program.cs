@@ -13,6 +13,9 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddDbContext<CoffeeShopContext>();
+builder.Services.AddDbContext<InMemoryDbContext>(options =>
+    options.UseInMemoryDatabase("InMemoryDb"));
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddAuthentication(options =>
@@ -35,9 +38,12 @@ builder.Services.AddAuthentication(options =>
 });
 
 // Register Services
+builder.Services.AddFluentEmailExtension(builder.Configuration);
 builder.Services.AddScoped<DrinkDAO>();
 builder.Services.AddScoped<DrinkRepository>();
 builder.Services.AddScoped<IUserRepository, TblUserRepository>();
+builder.Services.AddScoped<IEmailService, EmailService>();
+builder.Services.AddScoped<IForgotPasswordService, ForgotPasswordService>();
 
 
 var app = builder.Build();
