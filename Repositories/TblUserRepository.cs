@@ -29,8 +29,7 @@ namespace Repositories
 
         public async Task<TblUser> GetTblUser(int id)
         {
-            _context.Update(user);
-            await _context.SaveChangesAsync();
+            return await _context.TblUsers.FirstOrDefaultAsync(_context => _context.Id == id) ?? throw new Exception("Not found user");
         }
 
         public async Task<TblUser> GetUserByEmailAsync(string email)
