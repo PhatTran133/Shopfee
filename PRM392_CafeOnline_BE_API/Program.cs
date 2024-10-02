@@ -1,7 +1,10 @@
-using BussinessObjects.Models;
+﻿using BussinessObjects.Models;
 using DataAccess;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 using Repositories;
 using Repositories.Interface;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,11 +15,30 @@ builder.Services.AddControllers();
 builder.Services.AddDbContext<CoffeeShopContext>();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        ValidIssuer = "CoffeeOnline.com",
+        ValidAudience = "CoffeeOnline.com",
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("mayemixeneldnhowyytjohgadwosqogo")) // Đặt secret key mạnh
+    };
+});
 
 // Register Services
 builder.Services.AddScoped<DrinkDAO>();
 builder.Services.AddScoped<DrinkRepository>();
 builder.Services.AddScoped<IUserRepository, TblUserRepository>();
+
 
 var app = builder.Build();
 
@@ -28,7 +50,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
