@@ -1,4 +1,7 @@
-﻿using System;
+﻿using BussinessObjects.Models;
+using DataAccess;
+using Repositories.Interface;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,7 +9,8 @@ using System.Threading.Tasks;
 
 namespace Repositories
 {
-    public interface DrinkRepository
+    public class DrinkRepository : IDrinkRepository
     {
+        public Task<List<Drink>> SearchDrinksByNameAsync(string name) => DrinkDAO.Instance.SearchDrinksByNameAsync(name);
     }
 }
