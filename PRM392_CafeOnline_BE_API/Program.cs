@@ -1,5 +1,7 @@
+using BussinessObjects.Models;
 using DataAccess;
 using Repositories;
+using Repositories.Interface;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -7,12 +9,14 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+builder.Services.AddDbContext<CoffeeShopContext>();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 // Register Services
 builder.Services.AddScoped<DrinkDAO>();
 builder.Services.AddScoped<DrinkRepository>();
+builder.Services.AddScoped<IUserRepository, TblUserRepository>();
 
 var app = builder.Build();
 
