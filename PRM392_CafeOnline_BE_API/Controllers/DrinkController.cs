@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using BussinessObjects.DTO;
+using Microsoft.AspNetCore.Mvc;
 using Repositories;
 
 namespace PRM392_CafeOnline_BE_API.Controllers
@@ -27,7 +28,21 @@ namespace PRM392_CafeOnline_BE_API.Controllers
             {
                 return NoContent();
             }
-            return Ok(drinks);
+            // Trả về một đối tượng ẩn danh trực tiếp
+            var result = drinks.Select(d => new DrinkDTO
+            {
+                Id = d.Id,
+                Name = d.Name,
+                Description = d.Description,
+                Price = d.Price,
+                CreatedDate = d.CreatedDate,
+                UpdatedDate = d.UpdatedDate,
+                Image = d.Image,
+                Size = d.Size,
+                CategoryName = d.Category?.Name // Lấy tên Category
+            }).ToList();
+
+            return Ok(result);  // Trả về danh sách đối tượng ẩn danh
         }
     }
 }

@@ -33,6 +33,7 @@ namespace DataAccess
         public async Task<List<Drink>> SearchDrinksByNameAsync(string name)
         {
             return await _context.Drinks
+                .Include(d => d.Category)
                 .Where(d => d.Name.Contains(name) && d.IsDeleted == false)
                 .ToListAsync();
         }
