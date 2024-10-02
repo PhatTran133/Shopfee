@@ -22,6 +22,11 @@ namespace PRM392_CafeOnline_BE_API.Controllers
             }
 
             var drinks = await _drinkRepository.SearchDrinksByNameAsync(name);
+
+            if (drinks == null)
+            {
+                return NoContent();
+            }
             return Ok(drinks);
         }
     }
