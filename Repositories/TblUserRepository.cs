@@ -19,9 +19,13 @@ namespace Repositories
 
         public async Task AddUserAsync(TblUser user)
         {
-            _context.TblUsers.Add(user);
+            // Thêm người dùng mới vào DbSet
+            await _context.TblUsers.AddAsync(user);
+
+            // Lưu các thay đổi vào cơ sở dữ liệu
             await _context.SaveChangesAsync();
         }
+
 
         public async Task<TblUser> GetTblUser(int id)
         {

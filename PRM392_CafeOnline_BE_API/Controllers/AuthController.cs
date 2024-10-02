@@ -34,6 +34,7 @@ namespace PRM392_CafeOnline_BE_API.Controllers
 
             var newUser = new TblUser
             {
+              
                 Username = request.Username,
                 Email = request.Email,
                 Password = HashPassword(request.Password),
@@ -116,3 +117,5 @@ namespace PRM392_CafeOnline_BE_API.Controllers
         }
     }
 }
+
+
