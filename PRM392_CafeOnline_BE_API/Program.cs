@@ -1,3 +1,6 @@
+using DataAccess;
+using Repositories;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -6,6 +9,10 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+// Register Services
+builder.Services.AddScoped<DrinkDAO>();
+builder.Services.AddScoped<DrinkRepository>();
 
 var app = builder.Build();
 
