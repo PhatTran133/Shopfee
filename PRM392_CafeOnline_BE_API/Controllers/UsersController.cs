@@ -40,7 +40,7 @@ namespace PRM392_CafeOnline_BE_API.Controllers
                 UpdatedDate = user.UpdatedDate,
                 Username = user.Username,
             };
-
+            
             return Ok(userResponse);
         }
     }
