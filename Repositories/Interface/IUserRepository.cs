@@ -9,8 +9,9 @@ namespace Repositories.Interface
 {
     public interface IUserRepository
     {
-        Task<TblUser?> GetTblUser(int id);
-        Task<TblUser?> GetByEmail(string email);
-        Task UpdateUser(TblUser user);
+        Task<TblUser> GetTblUser(int id);
+        Task<TblUser> GetUserByEmailAsync(string email);
+        Task AddUserAsync(TblUser user);
+       
     }
 }

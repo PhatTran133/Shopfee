@@ -17,20 +17,25 @@ namespace Repositories
             _context = context;
         }
 
-        public async Task<TblUser?> GetByEmail(string email)
+        public async Task AddUserAsync(TblUser user)
         {
-            return await _context.TblUsers.FirstOrDefaultAsync(x => x.Email == email);
+            // Thêm người dùng mới vào DbSet
+            await _context.TblUsers.AddAsync(user);
+
+            // Lưu các thay đổi vào cơ sở dữ liệu
+            await _context.SaveChangesAsync();
         }
 
-        public async Task<TblUser?> GetTblUser(int id)
-        {
-            return await _context.TblUsers.FirstOrDefaultAsync(_context => _context.Id == id);
-        }
 
-        public async Task UpdateUser(TblUser user)
+        public async Task<TblUser> GetTblUser(int id)
         {
             _context.Update(user);
             await _context.SaveChangesAsync();
+        }
+
+        public async Task<TblUser> GetUserByEmailAsync(string email)
+        {
+            return await _context.TblUsers.FirstOrDefaultAsync(u => u.Email == email);
         }
     }
 }

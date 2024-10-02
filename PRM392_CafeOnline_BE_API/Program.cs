@@ -1,11 +1,10 @@
-using BussinessObjects.Models;
+﻿using BussinessObjects.Models;
 using DataAccess;
-using Microsoft.EntityFrameworkCore;
-using PRM392_CafeOnline_BE_API.Configurations;
-using PRM392_CafeOnline_BE_API.Services;
-using PRM392_CafeOnline_BE_API.Services.Interfaces;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 using Repositories;
 using Repositories.Interface;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,6 +18,24 @@ builder.Services.AddDbContext<InMemoryDbContext>(options =>
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        ValidIssuer = "CoffeeOnline.com",
+        ValidAudience = "CoffeeOnline.com",
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("mayemixeneldnhowyytjohgadwosqogo")) // Đặt secret key mạnh
+    };
+});
 
 // Register Services
 builder.Services.AddFluentEmailExtension(builder.Configuration);
@@ -27,6 +44,7 @@ builder.Services.AddScoped<DrinkRepository>();
 builder.Services.AddScoped<IUserRepository, TblUserRepository>();
 builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<IForgotPasswordService, ForgotPasswordService>();
+
 
 var app = builder.Build();
 
@@ -38,7 +56,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
