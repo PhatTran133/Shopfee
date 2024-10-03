@@ -27,15 +27,17 @@ namespace Repositories
         }
 
 
-        public async Task<TblUser> GetTblUser(int id)
+        public async Task<TblUser?> GetTblUser(int id)
         {
-
-           // _context.Update(user);
-            //await _context.SaveChangesAsync();
-            return await _context.TblUsers.FirstOrDefaultAsync(_context => _context.Id == id) ?? throw new Exception("Not found user");
+            return await _context.TblUsers.FirstOrDefaultAsync(_context => _context.Id == id);
         }
 
-
+        public async Task UpdateUser(TblUser user)
+        {
+            _context.Update(user);
+            await _context.SaveChangesAsync();
+        }
+        
         public async Task<TblUser> GetUserByEmailAsync(string email)
         {
             return await _context.TblUsers.FirstOrDefaultAsync(u => u.Email == email);
