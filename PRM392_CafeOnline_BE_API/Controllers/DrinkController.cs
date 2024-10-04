@@ -1,5 +1,7 @@
 ﻿using BussinessObjects.DTO;
+using DataAccess.DTO;
 using Microsoft.AspNetCore.Mvc;
+using PRM392_CafeOnline_BE_API.ResponseType;
 using Repositories;
 
 namespace PRM392_CafeOnline_BE_API.Controllers
@@ -19,7 +21,7 @@ namespace PRM392_CafeOnline_BE_API.Controllers
         {
             if (string.IsNullOrEmpty(name))
             {
-                return BadRequest("Name cannot be empty.");
+                return BadRequest(new JsonResponse<string>(null, 400, "Name cannot be empty."));
             }
 
             var drinks = await _drinkRepository.SearchDrinksByNameAsync(name);
@@ -42,7 +44,7 @@ namespace PRM392_CafeOnline_BE_API.Controllers
                 CategoryName = d.Category?.Name // Lấy tên Category
             }).ToList();
 
-            return Ok(result);  // Trả về danh sách đối tượng ẩn danh
+            return Ok(new JsonResponse<List<DrinkDTO>>(result, 200, "Get Drink List Sucessfully"));  // Trả về danh sách đối tượng ẩn danh
         }
     }
 }

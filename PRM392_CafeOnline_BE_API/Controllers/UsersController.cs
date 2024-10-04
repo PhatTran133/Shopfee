@@ -1,6 +1,8 @@
-﻿using DataAccess.DTO;
+﻿using BussinessObjects.DTO;
+using DataAccess.DTO;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using PRM392_CafeOnline_BE_API.ResponseType;
 using Repositories.Interface;
 
 namespace PRM392_CafeOnline_BE_API.Controllers
@@ -20,13 +22,13 @@ namespace PRM392_CafeOnline_BE_API.Controllers
         {
             if (string.IsNullOrEmpty(Convert.ToString(userId)))
             {
-                return BadRequest();
+                return BadRequest(new JsonResponse<string>(null, 400, "UserId cannot be null"));
             }
 
             var user = await _userRepository.GetTblUser(userId);
             if (user == null)
             {
-                return NotFound();
+                return NotFound(new JsonResponse<string>(null, 404, "User is not found"));
             }
 
             var userResponse = new UserDTO
@@ -41,7 +43,7 @@ namespace PRM392_CafeOnline_BE_API.Controllers
                 Username = user.Username,
             };
             
-            return Ok(userResponse);
+            return Ok(new JsonResponse<UserDTO>(userResponse, 200, "Get User Sucessfully"));
         }
     }
 }

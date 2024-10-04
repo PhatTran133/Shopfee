@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
+using PRM392_CafeOnline_BE_API.ResponseType;
 using Repositories.Interface;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -29,7 +30,7 @@ namespace PRM392_CafeOnline_BE_API.Controllers
             var existingUser = await _userRepository.GetUserByEmailAsync(request.Email);
             if (existingUser != null)
             {
-                return Conflict(new { message = "Email already exists" });
+                return Conflict(new JsonResponse<string>(null, 400, "Email already exists"));
             }
 
             var newUser = new TblUser
@@ -46,7 +47,7 @@ namespace PRM392_CafeOnline_BE_API.Controllers
 
             await _userRepository.AddUserAsync(newUser);
 
-            return Ok(new { message = "User registered successfully" });
+            return Ok(new JsonResponse<string>(null, 200, "User registered successfully"));
         }
 
         private string HashPassword(string password)
@@ -66,25 +67,21 @@ namespace PRM392_CafeOnline_BE_API.Controllers
             var user = await _userRepository.GetUserByEmailAsync(request.Email);
             if (user == null)
             {
-                return Unauthorized(new { message = "Invalid email or password" });
+                return Unauthorized(new JsonResponse<string>(null, 401, "Invalid email or password"));
             }
 
             
             bool isPasswordValid = BCrypt.Net.BCrypt.Verify(request.Password, user.Password);
             if (!isPasswordValid)
             {
-                return Unauthorized(new { message = "Invalid email or password" });
+                return Unauthorized(new JsonResponse<string>(null, 401, "Invalid email or password"));
             }
 
             
             var token = GenerateJwtToken(user);
 
-           
-            return Ok(new
-            {
-                token,
-                message = "Login successful"
-            });
+
+            return Ok(new JsonResponse<string>(token, 200, "Login successful"));
         }
 
        
@@ -113,7 +110,7 @@ namespace PRM392_CafeOnline_BE_API.Controllers
         [HttpPost("logout")]
         public IActionResult Logout()
         {            
-            return Ok(new { message = "Logout successful" });
+            return Ok(new JsonResponse<string>(null, 200, "Login successful"));
         }
     }
 }
