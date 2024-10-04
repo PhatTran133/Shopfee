@@ -67,11 +67,49 @@
             tools:ignore="Autofill"
             />
 
+        <LinearLayout
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/define_dimen_20"
+            android:background="@drawable/bg_white_corner_16_border_gray"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:padding="8dp">
+
+            <!-- EditText for OTP Code input -->
+            <EditText
+                android:id="@+id/textOtp"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:hint="@string/confirm_OTP"
+                android:inputType="number"
+                android:padding="@dimen/define_dimen_10"
+                android:paddingStart="@dimen/define_dimen_5"
+                android:paddingEnd="@dimen/define_dimen_5"
+                android:textColor="@color/textColorPrimary"
+                android:textColorHint="@color/colorAccent"
+                android:textSize="@dimen/text_size_small" />
+
+            <!-- Button to send OTP Code -->
+            <Button
+                android:id="@+id/btn_reset_password"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/colorAccent"
+                android:padding="@dimen/define_dimen_10"
+                android:text="@string/send_OTP"
+                android:textSize="@dimen/text_size_xsmall"
+                android:textColor="@color/textColorSecondary" />
+        </LinearLayout>
+
         <Button
             android:id="@+id/btn_register"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
+            android:layout_marginTop="@dimen/define_dimen_24"
             android:textAllCaps="false"
             android:background="@drawable/bg_button_disable_corner_16"
             android:text="@string/register"
