@@ -70,14 +70,27 @@ namespace PRM392_CafeOnline_BE_API.Controllers
                 return Unauthorized(new JsonResponse<string>(null, 401, "Invalid email or password"));
             }
 
-            
-            bool isPasswordValid = BCrypt.Net.BCrypt.Verify(request.Password, user.Password);
+
+            bool isPasswordValid;
+
+            // Nếu mật khẩu đã được mã hóa bằng BCrypt
+            if (user.Password.StartsWith("$2a$") || user.Password.StartsWith("$2b$") || user.Password.StartsWith("$2y$"))
+            {
+                isPasswordValid = BCrypt.Net.BCrypt.Verify(request.Password, user.Password);
+            }
+            else
+            {
+                // Môi trường phát triển: nếu mật khẩu là plain text, so sánh trực tiếp
+                isPasswordValid = request.Password == user.Password;
+            }
+
+            // Nếu mật khẩu không hợp lệ
             if (!isPasswordValid)
             {
                 return Unauthorized(new JsonResponse<string>(null, 401, "Invalid email or password"));
             }
 
-            
+
             var token = GenerateJwtToken(user);
 
 

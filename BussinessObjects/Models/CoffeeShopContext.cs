@@ -337,7 +337,7 @@ namespace BussinessObjects.Models
                     .IsUnicode(false)
                     .HasColumnName("phone");
 
-                entity.Property(e => e.RoleId).HasColumnName("roleId");
+               // entity.Property(e => e.RoleId).HasColumnName("roleId");
 
                 entity.Property(e => e.UpdatedDate)
                     .HasColumnType("datetime")
