@@ -42,5 +42,10 @@ namespace Repositories
         {
             return await _context.TblUsers.FirstOrDefaultAsync(u => u.Email == email);
         }
+
+        public async Task<TblUser?> GetByEmail(string email)
+        {
+            return await _context.TblUsers.FirstOrDefaultAsync(x => x.Email == email);
+        }
     }
 }

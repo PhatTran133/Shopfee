@@ -1,7 +1,11 @@
 ﻿using BussinessObjects.Models;
 using DataAccess;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using PRM392_CafeOnline_BE_API.Configurations;
+using PRM392_CafeOnline_BE_API.Services;
+using PRM392_CafeOnline_BE_API.Services.Interfaces;
 using Repositories;
 using Repositories.Interface;
 using System.Text;
