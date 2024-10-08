@@ -29,33 +29,6 @@
                 app:civ_border_color="@color/colorAccent"
                 app:civ_border_width="0.5dp" />
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginTop="-10dp"
-                android:paddingStart="@dimen/define_dimen_4"
-                android:paddingTop="@dimen/define_dimen_2"
-                android:paddingEnd="@dimen/define_dimen_4"
-                android:paddingBottom="@dimen/define_dimen_2"
-                android:background="@drawable/bg_white_corner_30_border_gray"
-                android:gravity="center">
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="@dimen/define_dimen_2"
-                    android:src="@drawable/baseline_star_24" />
-
-                <TextView
-                    android:id="@+id/tv_rate"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/textColorHeading"
-                    android:textStyle="bold"
-                    android:text="4.9"
-                    android:textSize="@dimen/text_size_xsmall" />
-            </LinearLayout>
         </LinearLayout>
 
         <LinearLayout
