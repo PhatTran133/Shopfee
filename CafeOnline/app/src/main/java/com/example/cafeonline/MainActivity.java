@@ -1,5 +1,6 @@
 package com.example.cafeonline;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.activity.EdgeToEdge;
@@ -12,6 +13,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -30,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
 
     private EditText edtEmail, edtPassword;
     private Button btnLogin;
+    private TextView btnForgotPassword;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,12 +44,16 @@ public class MainActivity extends AppCompatActivity {
         edtEmail = findViewById(R.id.edt_email);
         edtPassword = findViewById(R.id.edt_password);
         btnLogin = findViewById(R.id.btn_login);
-
+        btnForgotPassword = findViewById(R.id.tv_forgot_password);
         // Set up click listener for login button
         btnLogin.setOnClickListener(v -> performLogin());
-
-
+        btnForgotPassword.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, ForgotPasswordActivity.class);
+            startActivity(intent); // Chuyển sang ForgotPasswordActivity
+        });
     }
+
+
 
     private void performLogin() {
         String email = edtEmail.getText().toString().trim();
