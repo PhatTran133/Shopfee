@@ -7,7 +7,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public interface ApiService {
-        static final String BASE_URL = "https://globalmind.azurewebsites.net/";
+    static final String BASE_URL = "http://10.0.2.2:7079/";
 
     public static <T> T createService(Class<T> serviceClass) {
         Retrofit retrofit = new Retrofit.Builder()
