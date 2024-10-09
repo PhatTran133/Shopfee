@@ -1,6 +1,6 @@
 ﻿using BussinessObjects.DTO;
+using BussinessObjects.Models;
 using DataAccess;
-using DataAccess.Models;
 using Microsoft.EntityFrameworkCore;
 using Repositories.Interface;
 using System;
@@ -68,8 +68,9 @@ namespace Repositories
 
             return drinkDetail;
 
-          
+
         }
 
+        public Task<Drink?> GetDrinkByIdAsync(int id) => DrinkDAO.Instance.GetDrinkByIdAsync(id);
     }
 }

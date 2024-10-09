@@ -1,5 +1,5 @@
 ﻿using BussinessObjects.DTO;
-using DataAccess.Models;
+using BussinessObjects.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -12,6 +12,7 @@ namespace Repositories.Interface
     public interface IDrinkRepository
     {
         Task<List<Drink>> SearchDrinksByIdAsync(int id);
+        Task<Drink?> GetDrinkByIdAsync(int id);
         Task<List<Drink>> FilterDrinksAsync(string? name, string? categoryName, decimal? minPrice, decimal? maxPrice, DateTime? startDate, DateTime? endDate, string? size);
         Task<List<DrinkDTO>> GetDrinksByCategoryAsync(string categoryName);
 

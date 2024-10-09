@@ -4,7 +4,7 @@ using System.Security.Cryptography;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 
-namespace DataAccess.Models
+namespace BussinessObjects.Models
 {
     public partial class CoffeeShopContext : DbContext
     {
@@ -18,6 +18,7 @@ namespace DataAccess.Models
         }
 
         public virtual DbSet<Cart> Carts { get; set; } = null!;
+        public virtual DbSet<CartItem> CartItems { get; set; } = null!;
         public virtual DbSet<CartToppingDrink> CartToppingDrinks { get; set; } = null!;
         public virtual DbSet<Category> Categories { get; set; } = null!;
         public virtual DbSet<Drink> Drinks { get; set; } = null!;
@@ -35,9 +36,9 @@ namespace DataAccess.Models
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-                //    optionsBuilder.UseSqlServer("Server=(local);Uid=sa;Pwd=12345;Database=CoffeeShop;TrustServerCertificate=True");
-                optionsBuilder.UseSqlServer("Server=database-1.cd82m0owep6n.ap-southeast-2.rds.amazonaws.com,1433;Database = CoffeeShop;Uid=admin; Pwd = Helloworld12345; Trusted_Connection = True");
-
+                //optionsBuilder.UseSqlServer("Server=(local);Uid=sa;Pwd=12345;Database=CoffeeShop;TrustServerCertificate=True");
+                //optionsBuilder.UseSqlServer("Server=database-1.cd82m0owep6n.ap-southeast-2.rds.amazonaws.com,1433;Database = CoffeeShop;Uid=admin; Pwd = Helloworld12345; Trusted_Connection = True");
+                optionsBuilder.UseSqlServer("Server=(local);Database=CoffeeShop;Trusted_Connection=True;");
             }
         }
 
@@ -75,13 +76,43 @@ namespace DataAccess.Models
                     .HasConstraintName("FK_Cart_tblUser");
             });
 
+            modelBuilder.Entity<CartItem>(entity =>
+            {
+                entity.HasKey(e => new { e.CartId, e.DrinkId });
+
+                entity.ToTable("CartItem");
+
+                entity.Property(e => e.CartId).HasColumnName("cartId");
+
+                entity.Property(e => e.DrinkId).HasColumnName("drinkId");
+
+                entity.Property(e => e.Price)
+                    .HasColumnType("decimal(10, 2)")
+                    .HasColumnName("price");
+
+                entity.Property(e => e.Quantity).HasColumnName("quantity");
+
+                entity.Property(e => e.TotalPrice)
+                    .HasColumnType("decimal(21, 2)")
+                    .HasColumnName("totalPrice")
+                    .HasComputedColumnSql("([quantity]*[price])", true);
+
+                entity.HasOne(d => d.Cart)
+                    .WithMany(p => p.CartItems)
+                    .HasForeignKey(d => d.CartId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_CartItem_Cart");
+
+                entity.HasOne(d => d.Drink)
+                    .WithMany(p => p.CartItems)
+                    .HasForeignKey(d => d.DrinkId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_CartItem_Drink");
+            });
+
             modelBuilder.Entity<CartToppingDrink>(entity =>
             {
                 entity.ToTable("CartToppingDrink");
-
-                entity.HasIndex(e => e.CartId, "IX_CartToppingDrink_cartId");
-
-                entity.HasIndex(e => e.ToppingDrinkId, "IX_CartToppingDrink_toppingDrinkId");
 
                 entity.Property(e => e.Id).HasColumnName("id");
 
@@ -94,12 +125,12 @@ namespace DataAccess.Models
                 entity.HasOne(d => d.Cart)
                     .WithMany(p => p.CartToppingDrinks)
                     .HasForeignKey(d => d.CartId)
-                    .HasConstraintName("FK__CartToppi__cartI__38996AB5");
+                    .HasConstraintName("FK_CartToppingDrink_Cart");
 
                 entity.HasOne(d => d.ToppingDrink)
                     .WithMany(p => p.CartToppingDrinks)
                     .HasForeignKey(d => d.ToppingDrinkId)
-                    .HasConstraintName("FK__CartToppi__toppi__398D8EEE");
+                    .HasConstraintName("FK__CartToppi__toppi__4CA06362");
             });
 
             modelBuilder.Entity<Category>(entity =>
@@ -127,8 +158,6 @@ namespace DataAccess.Models
             modelBuilder.Entity<Drink>(entity =>
             {
                 entity.ToTable("Drink");
-
-                entity.HasIndex(e => e.CategoryId, "IX_Drink_categoryId");
 
                 entity.Property(e => e.Id).HasColumnName("id");
 
@@ -170,16 +199,12 @@ namespace DataAccess.Models
                 entity.HasOne(d => d.Category)
                     .WithMany(p => p.Drinks)
                     .HasForeignKey(d => d.CategoryId)
-                    .HasConstraintName("FK__Drink__categoryI__3A81B327");
+                    .HasConstraintName("FK__Drink__categoryI__4D94879B");
             });
 
             modelBuilder.Entity<DrinkTopping>(entity =>
             {
                 entity.ToTable("DrinkTopping");
-
-                entity.HasIndex(e => e.DrinkId, "IX_DrinkTopping_drinkId");
-
-                entity.HasIndex(e => e.ToppingId, "IX_DrinkTopping_toppingId");
 
                 entity.Property(e => e.Id).HasColumnName("id");
 
@@ -190,12 +215,12 @@ namespace DataAccess.Models
                 entity.HasOne(d => d.Drink)
                     .WithMany(p => p.DrinkToppings)
                     .HasForeignKey(d => d.DrinkId)
-                    .HasConstraintName("FK__DrinkTopp__drink__3B75D760");
+                    .HasConstraintName("FK__DrinkTopp__drink__4E88ABD4");
 
                 entity.HasOne(d => d.Topping)
                     .WithMany(p => p.DrinkToppings)
                     .HasForeignKey(d => d.ToppingId)
-                    .HasConstraintName("FK__DrinkTopp__toppi__3C69FB99");
+                    .HasConstraintName("FK__DrinkTopp__toppi__4F7CD00D");
             });
 
             modelBuilder.Entity<OrderToppingDrink>(entity =>
@@ -219,12 +244,12 @@ namespace DataAccess.Models
                 entity.HasOne(d => d.Order)
                     .WithMany(p => p.OrderToppingDrinks)
                     .HasForeignKey(d => d.OrderId)
-                    .HasConstraintName("FK__OrderTopp__order__3D5E1FD2");
+                    .HasConstraintName("FK__OrderTopp__order__5070F446");
 
                 entity.HasOne(d => d.ToppingDrink)
                     .WithMany(p => p.OrderToppingDrinks)
                     .HasForeignKey(d => d.ToppingDrinkId)
-                    .HasConstraintName("FK__OrderTopp__toppi__3E52440B");
+                    .HasConstraintName("FK__OrderTopp__toppi__5165187F");
             });
 
             modelBuilder.Entity<Payment>(entity =>
@@ -264,14 +289,12 @@ namespace DataAccess.Models
                 entity.HasOne(d => d.Order)
                     .WithMany(p => p.Payments)
                     .HasForeignKey(d => d.OrderId)
-                    .HasConstraintName("FK__Payment__orderId__3F466844");
+                    .HasConstraintName("FK__Payment__orderId__52593CB8");
             });
 
             modelBuilder.Entity<TblNotification>(entity =>
             {
                 entity.ToTable("tblNotification");
-
-                entity.HasIndex(e => e.UserId, "IX_tblNotification_userId");
 
                 entity.Property(e => e.Id).HasColumnName("id");
 
@@ -303,8 +326,6 @@ namespace DataAccess.Models
             modelBuilder.Entity<TblOrder>(entity =>
             {
                 entity.ToTable("tblOrder");
-
-                entity.HasIndex(e => e.UserId, "IX_tblOrder_userId");
 
                 entity.Property(e => e.Id).HasColumnName("id");
 
