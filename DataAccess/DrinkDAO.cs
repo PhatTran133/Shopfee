@@ -39,6 +39,11 @@ namespace DataAccess
                 .ToListAsync();
         }
 
+        public async Task<Drink?> GetDrinkByIdAsync(int id)
+        {
+            return await _context.Drinks.FirstOrDefaultAsync(x => x.Id == id);
+        }
+
         public async Task<List<Drink>> FilterDrinksAsync(string? name, string? categoryName, decimal? minPrice, decimal? maxPrice, DateTime? startDate, DateTime? endDate, string? size)
         {
             try
