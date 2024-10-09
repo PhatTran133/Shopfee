@@ -85,7 +85,21 @@ namespace Repositories
             return _mapper.Map<UserDTO>(user);
         }
 
+        public async Task<UserDTO> GetUserByUnverifiedEmailAsync(string email)
+        {
+            var user = await _context.TblUsers.FirstOrDefaultAsync(x => x.Email == email && x.EmailVerified == false);
 
+            return _mapper.Map<UserDTO>(user);
+        }
+
+        public async Task VerifyUserAccountAsync(int id)
+        {
+            var user = _context.TblUsers.FirstOrDefault(x => x.Id == id);
+
+            user.EmailVerified = true;           
+            _context.TblUsers.Update(user);
+            await _context.SaveChangesAsync();
+        }
     }
 
 }

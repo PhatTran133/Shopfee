@@ -17,5 +17,7 @@ namespace Repositories.Interface
         Task<TblUser?> GetByEmail(string email);
         Task<bool> CreateUserForOtp(RegisterRequest requestDTO);
         Task<UserDTO> LoginAsync(LoginRequestDTO requestDTO);
+        Task<UserDTO> GetUserByUnverifiedEmailAsync(string email);
+        Task VerifyUserAccountAsync(int id);
     }
 }

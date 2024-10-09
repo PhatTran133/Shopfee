@@ -18,7 +18,7 @@ namespace PRM392_CafeOnline_BE_API.Services
         {
             // Tạo mã OTP và lưu vào database
             var otpCode = new Random().Next(100000, 999999).ToString();
-            var otpExpiryTime = DateTime.UtcNow.AddMinutes(5); // Mã OTP hết hạn sau 5 phút
+            var otpExpiryTime = DateTime.Now.AddMinutes(5); // Mã OTP hết hạn sau 5 phút
             await _otpRepository.SaveOtpAsync(new OtpRequestDTO
             {
                 Email = email,

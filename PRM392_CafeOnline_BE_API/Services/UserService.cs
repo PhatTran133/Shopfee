@@ -23,5 +23,17 @@ namespace PRM392_CafeOnline_BE_API.Services
         {
             return await _userRepository.LoginAsync(requestDTO);
         }
+
+        public async Task<UserDTO> GetUserByUnverifiedEmailAsync(string email)
+        {
+            return await _userRepository.GetUserByUnverifiedEmailAsync(email);
+
+        }
+
+        public async Task VerifyUserAccountAsync(int id)
+        {
+            await _userRepository.VerifyUserAccountAsync(id);
+        }
     }
+   
 }
