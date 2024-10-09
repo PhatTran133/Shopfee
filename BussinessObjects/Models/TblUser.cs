@@ -22,6 +22,14 @@ namespace BussinessObjects.Models
         public DateTime? CreatedDate { get; set; }
         public DateTime? UpdatedDate { get; set; }
 
+        public string Otp { get; set; }
+
+        // Thuộc tính mới để lưu thời gian hết hạn của OTP
+        public DateTime OtpExpiration { get; set; }
+
+        // Thuộc tính mới để lưu trạng thái xác thực email
+        public bool EmailVerified { get; set; } // Cờ để xác định email đã xác thực
+
         public virtual ICollection<Cart> Carts { get; set; }
         public virtual ICollection<TblNotification> TblNotifications { get; set; }
         public virtual ICollection<TblOrder> TblOrders { get; set; }
