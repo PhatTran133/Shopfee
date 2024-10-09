@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -36,6 +37,59 @@ namespace DataAccess
                 .Include(d => d.Category)
                 .Where(d => d.Name.Contains(name) && d.IsDeleted == false)
                 .ToListAsync();
+        }
+
+        public async Task<List<Drink>> FilterDrinksAsync(string? categoryName, decimal? minPrice, decimal? maxPrice, DateTime? startDate, DateTime? endDate, string? size)
+        {
+            try
+            {
+                var query = _context.Drinks.Include(d => d.Category).AsQueryable();
+
+                // Lọc theo Category Name
+                if (!string.IsNullOrEmpty(categoryName))
+                {
+                    query = query.Where(d => d.Category != null && d.Category.Name.Contains(categoryName));
+                }
+
+                // Lọc theo khoảng giá
+                if (minPrice.HasValue)
+                {
+                    query = query.Where(d => d.Price >= minPrice);
+                }
+
+                if (maxPrice.HasValue)
+                {
+                    query = query.Where(d => d.Price <= maxPrice);
+                }
+
+                // Lọc theo khoảng ngày tạo
+                if (startDate.HasValue)
+                {
+                    query = query.Where(d => d.CreatedDate >= startDate);
+                }
+
+                if (endDate.HasValue)
+                {
+                    query = query.Where(d => d.CreatedDate <= endDate);
+                }
+
+                // Lọc theo kích thước (Size)
+                if (!string.IsNullOrEmpty(size))
+                {
+                    query = query.Where(d => d.Size == size);
+                }
+
+                // Thực hiện truy vấn bất đồng bộ và trả về kết quả
+                return await query.ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                // Log lỗi lại (có thể dùng một công cụ logging như NLog, Serilog, hoặc log vào database)
+                Console.WriteLine($"Error occurred: {ex.Message}");
+
+                // Trả về danh sách rỗng trong trường hợp có lỗi (hoặc ném ngoại lệ tuỳ theo yêu cầu)
+                return new List<Drink>();
+            }
         }
     }
 }
