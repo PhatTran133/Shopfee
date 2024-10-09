@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using BussinessObjects.DTO;
-using DataAccess.Models;
+using BussinessObjects.Models;
 using Microsoft.EntityFrameworkCore;
 using Repositories.Interface;
 using System;

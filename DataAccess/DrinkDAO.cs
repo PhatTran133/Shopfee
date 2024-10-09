@@ -1,4 +1,4 @@
-﻿using DataAccess.Models;
+﻿using BussinessObjects.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -37,6 +37,11 @@ namespace DataAccess
                 .Include(d => d.Category)
                 .Where(d => d.Id == id && d.IsDeleted == false)
                 .ToListAsync();
+        }
+
+        public async Task<Drink?> GetDrinkByIdAsync(int id)
+        {
+            return await _context.Drinks.FirstOrDefaultAsync(x => x.Id == id);
         }
 
         public async Task<List<Drink>> FilterDrinksAsync(string? name, string? categoryName, decimal? minPrice, decimal? maxPrice, DateTime? startDate, DateTime? endDate, string? size)
