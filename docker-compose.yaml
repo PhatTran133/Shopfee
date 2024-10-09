@@ -1,0 +1,14 @@
+services:
+  app:
+    build: ./
+    # image: kreden35/lab2-client
+    ports:
+      - 7079:7079
+
+  # client:
+  #   # build: ./Lab01_BookStoreOData8-2/
+  #   image: kreden35/lab2-app
+  #   ports:
+  #     - 5289:5289
+  #   depends_on:
+  #     - app

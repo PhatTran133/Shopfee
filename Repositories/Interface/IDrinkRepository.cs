@@ -10,5 +10,6 @@ namespace Repositories.Interface
     public interface IDrinkRepository
     {
         Task<List<Drink>> SearchDrinksByNameAsync(string name);
+        Task<List<Drink>> FilterDrinksAsync(string? categoryName, decimal? minPrice, decimal? maxPrice, DateTime? startDate, DateTime? endDate, string? size);
     }
 }
