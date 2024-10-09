@@ -48,12 +48,12 @@ namespace PRM392_CafeOnline_BE_API.Controllers
         }
 
         [HttpGet("filter")]
-        public async Task<IActionResult> FilterDrinksAsync([FromQuery] string? categoryName, [FromQuery] decimal? minPrice,[FromQuery] decimal? maxPrice,[FromQuery] DateTime? startDate,[FromQuery] DateTime? endDate, [FromQuery] string? size)
+        public async Task<IActionResult> FilterDrinksAsync([FromQuery] string? name, [FromQuery] string? categoryName, [FromQuery] decimal? minPrice,[FromQuery] decimal? maxPrice,[FromQuery] DateTime? startDate,[FromQuery] DateTime? endDate, [FromQuery] string? size)
         {
             try
             {
                 // Gọi service để thực hiện logic lọc bất đồng bộ
-                var filteredDrinks = await _drinkRepository.FilterDrinksAsync(categoryName, minPrice, maxPrice, startDate, endDate, size);
+                var filteredDrinks = await _drinkRepository.FilterDrinksAsync(name, categoryName, minPrice, maxPrice, startDate, endDate, size);
 
                 // Kiểm tra nếu danh sách kết quả rỗng hoặc null
                 if (filteredDrinks == null || !filteredDrinks.Any())

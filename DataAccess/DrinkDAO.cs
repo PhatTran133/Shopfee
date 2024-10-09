@@ -39,11 +39,17 @@ namespace DataAccess
                 .ToListAsync();
         }
 
-        public async Task<List<Drink>> FilterDrinksAsync(string? categoryName, decimal? minPrice, decimal? maxPrice, DateTime? startDate, DateTime? endDate, string? size)
+        public async Task<List<Drink>> FilterDrinksAsync(string? name, string? categoryName, decimal? minPrice, decimal? maxPrice, DateTime? startDate, DateTime? endDate, string? size)
         {
             try
             {
                 var query = _context.Drinks.Include(d => d.Category).AsQueryable();
+
+                // Lọc theo Drink Name
+                if (!string.IsNullOrEmpty(name))
+                {
+                    query = query.Where(d => d.Name.Contains(name) && d.IsDeleted == false);
+                }
 
                 // Lọc theo Category Name
                 if (!string.IsNullOrEmpty(categoryName))
