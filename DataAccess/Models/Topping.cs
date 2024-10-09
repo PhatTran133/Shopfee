@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace BussinessObjects.Models
+namespace DataAccess.Models
 {
     public partial class Topping
     {

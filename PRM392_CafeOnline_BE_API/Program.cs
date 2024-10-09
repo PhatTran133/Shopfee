@@ -1,5 +1,5 @@
-﻿using BussinessObjects.Models;
-using DataAccess;
+﻿using DataAccess;
+using DataAccess.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -22,6 +22,7 @@ builder.Services.AddDbContext<InMemoryDbContext>(options =>
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -46,8 +47,13 @@ builder.Services.AddFluentEmailExtension(builder.Configuration);
 builder.Services.AddScoped<DrinkDAO>();
 builder.Services.AddScoped<DrinkRepository>();
 builder.Services.AddScoped<IUserRepository, TblUserRepository>();
+builder.Services.AddScoped<IOtpRepository, OtpRepository>();
+builder.Services.AddScoped<IOtpService, OtpService>();
 builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<IForgotPasswordService, ForgotPasswordService>();
+
+builder.Services.AddScoped<IUserRepository, TblUserRepository>();
+builder.Services.AddScoped<IUserService, UserService>();
 
 
 var app = builder.Build();
