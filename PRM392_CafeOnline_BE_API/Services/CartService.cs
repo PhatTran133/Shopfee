@@ -96,6 +96,7 @@ namespace PRM392_CafeOnline_BE_API.Services
                 await _cartRepository.UpdateCart(cartExist);
                 await _cartRepository.AddToCartAsync(newCartItem);
             }
+            await _cartRepository.UpdateTotalPriceOfCart(cartId);
         }
 
 
@@ -103,6 +104,7 @@ namespace PRM392_CafeOnline_BE_API.Services
         {
             var cartItem = await _cartRepository.GetCartItemExistingAsync(cartId, drinkId) ?? throw new Exception("cartItem not found");
             await _cartRepository.DeleteCartItemAsync(cartItem);
+            await _cartRepository.UpdateTotalPriceOfCart(cartId);
         }
 
         public async Task<IEnumerable<CartDTO>> GetCartDTOsAsync()
@@ -155,6 +157,8 @@ namespace PRM392_CafeOnline_BE_API.Services
             }
             cartItem.Quantity = quantity;
             await _cartRepository.UpdateCartItemAsync(cartItem);
+
+            await _cartRepository.UpdateTotalPriceOfCart(cartId);
             return new CartItemDTO
             {
                 DrinkId = cartItem.DrinkId,

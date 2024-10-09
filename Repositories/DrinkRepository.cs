@@ -1,6 +1,6 @@
 ﻿using BussinessObjects.DTO;
+using BussinessObjects.Models;
 using DataAccess;
-using DataAccess.Models;
 using Microsoft.EntityFrameworkCore;
 using Repositories.Interface;
 using System;

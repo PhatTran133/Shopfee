@@ -50,7 +50,7 @@ namespace Repositories
 
         public async Task<CartItem?> GetCartItemExistingAsync(int cartId, int drinkId)
         {
-            return await _context.CartItems.Where(x => x.CartId == cartId && x.DrinkId ==drinkId).FirstOrDefaultAsync();
+            return await _context.CartItems.Where(x => x.CartId == cartId && x.DrinkId == drinkId).FirstOrDefaultAsync();
         }
 
         public async Task UpdateCart(Cart cart)
@@ -65,19 +65,16 @@ namespace Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task UpdateTotalPriceOfCart(int cartId, decimal? priceUpdated)
+        public async Task UpdateTotalPriceOfCart(int cartId)
         {
             var cart = await _context.Carts
               .Include(c => c.CartItems)
               .FirstOrDefaultAsync(c => c.Id == cartId);
-            if (priceUpdated == null)
+            if (cart == null)
             {
-                cart.TotalPrice = cart.CartItems.Sum(ci => ci.TotalPrice);
+                throw new Exception("Cart is Null");
             }
-            else
-            {
-                cart.TotalPrice += priceUpdated;
-            }
+            cart.TotalPrice = cart.CartItems.Sum(ci => ci.TotalPrice);
 
             _context.Carts.Update(cart);
             await _context.SaveChangesAsync();

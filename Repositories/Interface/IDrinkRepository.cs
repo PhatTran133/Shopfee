@@ -1,5 +1,5 @@
 ﻿using BussinessObjects.DTO;
-using DataAccess.Models;
+using BussinessObjects.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;

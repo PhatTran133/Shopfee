@@ -17,6 +17,6 @@ namespace Repositories.Interface
         Task AddToCartAsync(CartItem cartItem);
         Task UpdateCartItemAsync(CartItem cartItem);
         Task DeleteCartItemAsync(CartItem cartItem);
-        Task UpdateTotalPriceOfCart(int cartId, decimal? priceUpdated);
+        Task UpdateTotalPriceOfCart(int cartId);
     }
 }
