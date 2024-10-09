@@ -7,6 +7,7 @@ namespace DataAccess.Models
     {
         public Drink()
         {
+            CartItems = new HashSet<CartItem>();
             DrinkToppings = new HashSet<DrinkTopping>();
         }
 
@@ -22,6 +23,7 @@ namespace DataAccess.Models
         public bool? IsDeleted { get; set; }
 
         public virtual Category? Category { get; set; }
+        public virtual ICollection<CartItem> CartItems { get; set; }
         public virtual ICollection<DrinkTopping> DrinkToppings { get; set; }
     }
 }

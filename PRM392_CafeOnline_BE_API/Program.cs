@@ -46,11 +46,15 @@ builder.Services.AddAuthentication(options =>
 builder.Services.AddFluentEmailExtension(builder.Configuration);
 builder.Services.AddScoped<DrinkDAO>();
 builder.Services.AddScoped<DrinkRepository>();
+builder.Services.AddScoped<IDrinkRepository, DrinkRepository>();
 builder.Services.AddScoped<IUserRepository, TblUserRepository>();
 builder.Services.AddScoped<IOtpRepository, OtpRepository>();
 builder.Services.AddScoped<IOtpService, OtpService>();
 builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<IForgotPasswordService, ForgotPasswordService>();
+builder.Services.AddScoped<ICartRepository, CartRepository>();
+builder.Services.AddScoped<ICartService, CartService>();
+builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddScoped<IUserRepository, TblUserRepository>();
 builder.Services.AddScoped<IUserService, UserService>();
