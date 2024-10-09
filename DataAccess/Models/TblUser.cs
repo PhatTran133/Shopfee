@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace BussinessObjects.Models
+namespace DataAccess.Models
 {
     public partial class TblUser
     {
@@ -13,7 +13,6 @@ namespace BussinessObjects.Models
         }
 
         public int Id { get; set; }
-       // public int? RoleId { get; set; }
         public string? Username { get; set; }
         public string? Email { get; set; }
         public string? Password { get; set; }
@@ -21,14 +20,7 @@ namespace BussinessObjects.Models
         public string? Address { get; set; }
         public DateTime? CreatedDate { get; set; }
         public DateTime? UpdatedDate { get; set; }
-
-        public string Otp { get; set; }
-
-        // Thuộc tính mới để lưu thời gian hết hạn của OTP
-        public DateTime OtpExpiration { get; set; }
-
-        // Thuộc tính mới để lưu trạng thái xác thực email
-        public bool EmailVerified { get; set; } // Cờ để xác định email đã xác thực
+        public bool EmailVerified { get; set; }
 
         public virtual ICollection<Cart> Carts { get; set; }
         public virtual ICollection<TblNotification> TblNotifications { get; set; }

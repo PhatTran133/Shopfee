@@ -1,4 +1,5 @@
-﻿using BussinessObjects.Models;
+﻿using BussinessObjects.DTO;
+using DataAccess.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
@@ -35,7 +36,7 @@ namespace PRM392_CafeOnline_BE_API.Controllers
 
             var newUser = new TblUser
             {
-              
+
                 Username = request.Username,
                 Email = request.Email,
                 Password = HashPassword(request.Password),
@@ -56,14 +57,14 @@ namespace PRM392_CafeOnline_BE_API.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody] LoginRequest request)
+        public async Task<IActionResult> Login([FromBody] LoginRequestDTO request)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-           
+
             var user = await _userRepository.GetUserByEmailAsync(request.Email);
             if (user == null)
             {
@@ -97,7 +98,7 @@ namespace PRM392_CafeOnline_BE_API.Controllers
             return Ok(new JsonResponse<string>(token, 200, "Login successful"));
         }
 
-       
+
         private string GenerateJwtToken(TblUser user)
         {
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("YourSecretKeyHere")); // Đặt secret key mạnh
@@ -107,7 +108,7 @@ namespace PRM392_CafeOnline_BE_API.Controllers
             {
             new Claim(JwtRegisteredClaimNames.Email, user.Email),
              new Claim(JwtRegisteredClaimNames.Name, user.Username),
- 
+
         };
 
             var token = new JwtSecurityToken(
@@ -122,7 +123,7 @@ namespace PRM392_CafeOnline_BE_API.Controllers
 
         [HttpPost("logout")]
         public IActionResult Logout()
-        {            
+        {
             return Ok(new JsonResponse<string>(null, 200, "Login successful"));
         }
     }

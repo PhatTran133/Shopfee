@@ -1,5 +1,4 @@
 ﻿using BussinessObjects.DTO;
-using DataAccess.DTO;
 using Microsoft.AspNetCore.Mvc;
 using PRM392_CafeOnline_BE_API.ResponseType;
 using Repositories;
@@ -48,7 +47,7 @@ namespace PRM392_CafeOnline_BE_API.Controllers
         }
 
         [HttpGet("filter")]
-        public async Task<IActionResult> FilterDrinksAsync([FromQuery] string? name, [FromQuery] string? categoryName, [FromQuery] decimal? minPrice,[FromQuery] decimal? maxPrice,[FromQuery] DateTime? startDate,[FromQuery] DateTime? endDate, [FromQuery] string? size)
+        public async Task<IActionResult> FilterDrinksAsync([FromQuery] string? name, [FromQuery] string? categoryName, [FromQuery] decimal? minPrice, [FromQuery] decimal? maxPrice, [FromQuery] DateTime? startDate, [FromQuery] DateTime? endDate, [FromQuery] string? size)
         {
             try
             {
