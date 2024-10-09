@@ -17,14 +17,14 @@ namespace PRM392_CafeOnline_BE_API.Controllers
             _drinkRepository = drinkRepository;
         }
         [HttpGet("search")]
-        public async Task<IActionResult> SearchDrinks([FromQuery] string name)
+        public async Task<IActionResult> SearchDrinks([FromQuery] int id)
         {
-            if (string.IsNullOrEmpty(name))
+            if (id == null)
             {
-                return BadRequest(new JsonResponse<string>(null, 400, "Name cannot be empty."));
+                return BadRequest(new JsonResponse<string>(null, 400, "Id cannot be empty."));
             }
 
-            var drinks = await _drinkRepository.SearchDrinksByNameAsync(name);
+            var drinks = await _drinkRepository.SearchDrinksByIdAsync(id);
 
             if (drinks == null)
             {

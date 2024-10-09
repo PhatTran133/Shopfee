@@ -31,11 +31,11 @@ namespace DataAccess
             }
         }
 
-        public async Task<List<Drink>> SearchDrinksByNameAsync(string name)
+        public async Task<List<Drink>> SearchDrinksByIdAsync(int id)
         {
             return await _context.Drinks
                 .Include(d => d.Category)
-                .Where(d => d.Name.Contains(name) && d.IsDeleted == false)
+                .Where(d => d.Id == id && d.IsDeleted == false)
                 .ToListAsync();
         }
 

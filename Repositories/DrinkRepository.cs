@@ -11,7 +11,7 @@ namespace Repositories
 {
     public class DrinkRepository : IDrinkRepository
     {
-        public Task<List<Drink>> SearchDrinksByNameAsync(string name) => DrinkDAO.Instance.SearchDrinksByNameAsync(name);
+        public Task<List<Drink>> SearchDrinksByIdAsync(int id) => DrinkDAO.Instance.SearchDrinksByIdAsync(id);
         public Task<List<Drink>> FilterDrinksAsync(string? name, string? categoryName, decimal? minPrice, decimal? maxPrice, DateTime? startDate, DateTime? endDate, string? size) => DrinkDAO.Instance.FilterDrinksAsync(name, categoryName, minPrice, maxPrice, startDate, endDate, size);
     }
 }
