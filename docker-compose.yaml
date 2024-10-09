@@ -1,7 +1,7 @@
 services:
   app:
-    build: ./
-    # image: kreden35/lab2-client
+    # build: ./
+    image: tuankiet1201/helloworld
     ports:
       - 7079:7079
 
