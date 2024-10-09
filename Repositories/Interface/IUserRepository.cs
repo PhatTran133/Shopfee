@@ -1,4 +1,5 @@
-﻿using BussinessObjects.Models;
+﻿using BussinessObjects.DTO;
+using DataAccess.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,5 +15,9 @@ namespace Repositories.Interface
         Task AddUserAsync(TblUser user);
         Task UpdateUser(TblUser user);
         Task<TblUser?> GetByEmail(string email);
+        Task<bool> CreateUserForOtp(RegisterRequest requestDTO);
+        Task<UserDTO> LoginAsync(LoginRequestDTO requestDTO);
+        Task<UserDTO> GetUserByUnverifiedEmailAsync(string email);
+        Task VerifyUserAccountAsync(int id);
     }
 }

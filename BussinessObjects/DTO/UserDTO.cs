@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DataAccess.DTO
+namespace BussinessObjects.DTO
 {
     public class UserDTO
     {
@@ -14,6 +14,8 @@ namespace DataAccess.DTO
         public string? Password { get; set; }
         public string? Phone { get; set; }
         public string? Address { get; set; }
+
+        public bool? EmailVerified { get; set; }
         public DateTime? CreatedDate { get; set; }
         public DateTime? UpdatedDate { get; set; }
     }

@@ -1,7 +1,7 @@
 ﻿using BussinessObjects.DTO;
-using DataAccess.DTO;
 using Microsoft.AspNetCore.Mvc;
 using PRM392_CafeOnline_BE_API.ResponseType;
+using PRM392_CafeOnline_BE_API.Services.Interfaces;
 using Repositories;
 
 namespace PRM392_CafeOnline_BE_API.Controllers
@@ -10,11 +10,13 @@ namespace PRM392_CafeOnline_BE_API.Controllers
     [ApiController]
     public class DrinkController : ControllerBase
     {
+        private readonly IDrinkService _drinkService;
         private readonly DrinkRepository _drinkRepository;
 
-        public DrinkController(DrinkRepository drinkRepository)
+        public DrinkController(DrinkRepository drinkRepository, IDrinkService drinkService)
         {
             _drinkRepository = drinkRepository;
+            _drinkService = drinkService;
         }
         [HttpGet("search")]
         public async Task<IActionResult> SearchDrinks([FromQuery] int id)
@@ -48,7 +50,7 @@ namespace PRM392_CafeOnline_BE_API.Controllers
         }
 
         [HttpGet("filter")]
-        public async Task<IActionResult> FilterDrinksAsync([FromQuery] string? name, [FromQuery] string? categoryName, [FromQuery] decimal? minPrice,[FromQuery] decimal? maxPrice,[FromQuery] DateTime? startDate,[FromQuery] DateTime? endDate, [FromQuery] string? size)
+        public async Task<IActionResult> FilterDrinksAsync([FromQuery] string? name, [FromQuery] string? categoryName, [FromQuery] decimal? minPrice, [FromQuery] decimal? maxPrice, [FromQuery] DateTime? startDate, [FromQuery] DateTime? endDate, [FromQuery] string? size)
         {
             try
             {
@@ -84,6 +86,29 @@ namespace PRM392_CafeOnline_BE_API.Controllers
                 // Trả về mã lỗi 500 (Internal Server Error) và thông báo lỗi
                 return StatusCode(500, "An error occurred while processing your request.");
             }
+        }
+
+        [HttpGet("drinks-by-category")]
+        public async Task<IActionResult> GetDrinksByCategoryName([FromQuery] string categoryName)
+        {
+            var result = await _drinkService.GetDrinksByCategoryName(categoryName);
+            if (result == null || !result.Any())
+            {
+                return NotFound($"No drinks found for category '{categoryName}'.");
+            }
+
+            return Ok(result);
+        }
+
+        [HttpGet("{drinkId}/details")]
+        public async Task<IActionResult> GetDrinkDetail(int drinkId)
+        {
+            var drinkDetail = await _drinkService.GetDrinkDetailAsync(drinkId);
+            if (drinkDetail == null)
+            {
+                return NotFound(); // Trả về 404 nếu không tìm thấy đồ uống
+            }
+            return Ok(drinkDetail); // Trả về thông tin chi tiết đồ uống
         }
 
     }

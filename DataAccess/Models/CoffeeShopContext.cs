@@ -4,7 +4,7 @@ using System.Security.Cryptography;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 
-namespace BussinessObjects.Models
+namespace DataAccess.Models
 {
     public partial class CoffeeShopContext : DbContext
     {
@@ -23,6 +23,7 @@ namespace BussinessObjects.Models
         public virtual DbSet<Drink> Drinks { get; set; } = null!;
         public virtual DbSet<DrinkTopping> DrinkToppings { get; set; } = null!;
         public virtual DbSet<OrderToppingDrink> OrderToppingDrinks { get; set; } = null!;
+        public virtual DbSet<Otp> Otps { get; set; } = null!;
         public virtual DbSet<Payment> Payments { get; set; } = null!;
         public virtual DbSet<TblNotification> TblNotifications { get; set; } = null!;
         public virtual DbSet<TblOrder> TblOrders { get; set; } = null!;
@@ -45,6 +46,8 @@ namespace BussinessObjects.Models
             modelBuilder.Entity<Cart>(entity =>
             {
                 entity.ToTable("Cart");
+
+                entity.HasIndex(e => e.UserId, "IX_Cart_userId");
 
                 entity.Property(e => e.Id).HasColumnName("id");
 
@@ -75,6 +78,10 @@ namespace BussinessObjects.Models
             modelBuilder.Entity<CartToppingDrink>(entity =>
             {
                 entity.ToTable("CartToppingDrink");
+
+                entity.HasIndex(e => e.CartId, "IX_CartToppingDrink_cartId");
+
+                entity.HasIndex(e => e.ToppingDrinkId, "IX_CartToppingDrink_toppingDrinkId");
 
                 entity.Property(e => e.Id).HasColumnName("id");
 
@@ -120,6 +127,8 @@ namespace BussinessObjects.Models
             modelBuilder.Entity<Drink>(entity =>
             {
                 entity.ToTable("Drink");
+
+                entity.HasIndex(e => e.CategoryId, "IX_Drink_categoryId");
 
                 entity.Property(e => e.Id).HasColumnName("id");
 
@@ -168,6 +177,10 @@ namespace BussinessObjects.Models
             {
                 entity.ToTable("DrinkTopping");
 
+                entity.HasIndex(e => e.DrinkId, "IX_DrinkTopping_drinkId");
+
+                entity.HasIndex(e => e.ToppingId, "IX_DrinkTopping_toppingId");
+
                 entity.Property(e => e.Id).HasColumnName("id");
 
                 entity.Property(e => e.DrinkId).HasColumnName("drinkId");
@@ -188,6 +201,10 @@ namespace BussinessObjects.Models
             modelBuilder.Entity<OrderToppingDrink>(entity =>
             {
                 entity.ToTable("OrderToppingDrink");
+
+                entity.HasIndex(e => e.OrderId, "IX_OrderToppingDrink_orderId");
+
+                entity.HasIndex(e => e.ToppingDrinkId, "IX_OrderToppingDrink_toppingDrinkId");
 
                 entity.Property(e => e.Id)
                     .ValueGeneratedNever()
@@ -213,6 +230,8 @@ namespace BussinessObjects.Models
             modelBuilder.Entity<Payment>(entity =>
             {
                 entity.ToTable("Payment");
+
+                entity.HasIndex(e => e.OrderId, "IX_Payment_orderId");
 
                 entity.Property(e => e.Id)
                     .ValueGeneratedNever()
@@ -252,6 +271,8 @@ namespace BussinessObjects.Models
             {
                 entity.ToTable("tblNotification");
 
+                entity.HasIndex(e => e.UserId, "IX_tblNotification_userId");
+
                 entity.Property(e => e.Id).HasColumnName("id");
 
                 entity.Property(e => e.Content)
@@ -282,6 +303,8 @@ namespace BussinessObjects.Models
             modelBuilder.Entity<TblOrder>(entity =>
             {
                 entity.ToTable("tblOrder");
+
+                entity.HasIndex(e => e.UserId, "IX_tblOrder_userId");
 
                 entity.Property(e => e.Id).HasColumnName("id");
 
@@ -339,8 +362,6 @@ namespace BussinessObjects.Models
                     .HasMaxLength(20)
                     .IsUnicode(false)
                     .HasColumnName("phone");
-
-               // entity.Property(e => e.RoleId).HasColumnName("roleId");
 
                 entity.Property(e => e.UpdatedDate)
                     .HasColumnType("datetime")

@@ -1,27 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace BussinessObjects.Models
+namespace BussinessObjects.DTO
 {
-    public partial class Drink
+    public class DrinkDetailDTO
     {
-        public Drink()
-        {
-            DrinkToppings = new HashSet<DrinkTopping>();
-        }
-
         public int Id { get; set; }
-        public int? CategoryId { get; set; }
         public string? Name { get; set; }
         public string? Description { get; set; }
         public decimal? Price { get; set; }
+        public string CategoryName { get; set; }
         public string? Size { get; set; }
         public string? Image { get; set; }
         public DateTime? CreatedDate { get; set; }
         public DateTime? UpdatedDate { get; set; }
-        public bool? IsDeleted { get; set; }
-
-        public virtual Category? Category { get; set; }
-        public virtual ICollection<DrinkTopping> DrinkToppings { get; set; }
+        public List<string> ToppingNames { get; set; } // Danh sách các tên topping
     }
 }

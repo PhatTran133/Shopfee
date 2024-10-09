@@ -4,12 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DataAccess.DTO
+namespace BussinessObjects.DTO
 {
-    public class ResetPasswordDTO
+    public class VerifyCodeDTO
     {
         public string Email { get; set; } = null!;
         public string Code { get; set; } = null!;
-        public string NewPassword { get; set; } = null!;
     }
 }
