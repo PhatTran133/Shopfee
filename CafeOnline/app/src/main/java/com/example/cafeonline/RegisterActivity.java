@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -12,7 +13,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.cafeonline.api.ApiService;
 import com.example.cafeonline.api.UserApiService;
 import com.example.cafeonline.model.request.RegisterRequest;
-
 import com.example.cafeonline.model.request.VerifyCodeRequest;
 import com.example.cafeonline.model.response.ApiResponse;
 
@@ -24,6 +24,7 @@ public class RegisterActivity extends AppCompatActivity {
     private EditText edtEmail, edtPassword, edtUsername, edtOTP;
     private Button btnSendOTP, btnRegister;
     private TextView txtLogin;
+    private ImageView imgBack;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,13 +38,15 @@ public class RegisterActivity extends AppCompatActivity {
         btnSendOTP = findViewById(R.id.btn_sendOTP);
         btnRegister = findViewById(R.id.btn_register);
         txtLogin = findViewById(R.id.tv_login);
+        imgBack = findViewById(R.id.img_toolbar_back);
 
         btnRegister.setOnClickListener(v -> getOTP());
         btnSendOTP.setOnClickListener(v -> verifiedOTP());
         txtLogin.setOnClickListener(v -> {
             Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
-            startActivity(intent); // Chuyển sang ForgotPasswordActivity
+            startActivity(intent);
         });
+        imgBack.setOnClickListener(v -> onBackPressed());
     }
 
     private void getOTP(){

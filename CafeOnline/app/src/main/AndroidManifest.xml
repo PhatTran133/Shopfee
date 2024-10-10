@@ -26,6 +26,12 @@
             </intent-filter>
         </activity>
         <activity
+            android:name="com.example.cafeonline.LoginActivity"
+            android:exported="true" />
+        <activity
+            android:name="com.example.cafeonline.RegisterActivity"
+            android:exported="true" />
+        <activity
             android:name="com.example.cafeonline.ForgotPasswordActivity"
             android:exported="false" />
         <activity

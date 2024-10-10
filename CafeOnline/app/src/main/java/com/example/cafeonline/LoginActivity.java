@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
@@ -31,25 +32,31 @@ import retrofit2.Response;
 public class LoginActivity extends AppCompatActivity {
     private EditText edtEmail, edtPassword;
     private Button btnLogin;
-    private TextView btnForgotPassword;
+    private TextView tvForgotPassword, tvRegister;
+    private ImageView imgBack;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-
         edtEmail = findViewById(R.id.edt_email);
         edtPassword = findViewById(R.id.edt_password);
         btnLogin = findViewById(R.id.btn_login);
-        btnForgotPassword = findViewById(R.id.tv_forgot_password);
-
+        tvForgotPassword = findViewById(R.id.tv_forgot_password);
+        tvRegister =  findViewById(R.id.tv_register);
+        imgBack = findViewById(R.id.img_toolbar_back);
 
         btnLogin.setOnClickListener(v -> performLogin());
-        btnForgotPassword.setOnClickListener(v -> {
+        tvForgotPassword.setOnClickListener(v -> {
             Intent intent = new Intent(LoginActivity.this, ForgotPasswordActivity.class);
-            startActivity(intent); // Chuyển sang ForgotPasswordActivity
+            startActivity(intent);
         });
+        tvRegister.setOnClickListener(v -> {
+            Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
+            startActivity(intent);
+        });
+        imgBack.setOnClickListener(v -> onBackPressed());
     }
 
 

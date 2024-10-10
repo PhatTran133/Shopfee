@@ -2,7 +2,7 @@ package com.example.cafeonline;
 
 import android.content.Intent;
 import android.os.Bundle;
-
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
@@ -30,5 +30,28 @@ import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
 
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
 
+        bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
+            if (item.getItemId() == R.id.nav_home) {
+                Intent intent = new Intent(MainActivity.this, MainActivity.class);
+                startActivity(intent);
+                return true;
+            } else if (item.getItemId() == R.id.nav_history) {
+                // Xử lý chuyển về màn hình History
+                return true;
+            } else if (item.getItemId() == R.id.nav_account) {
+
+                // thêm if else để check đăng nhập chưa
+                Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                startActivity(intent);
+                return true;
+            }
+            return false;
+        });
+    }
 }

@@ -4,6 +4,7 @@ package com.example.cafeonline;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -23,6 +24,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
 
         private EditText emailEditText, OTPEditText;
         private Button btnSendOTP, btnResetPassword;
+        private ImageView imgBack;
 
         @Override
         protected void onCreate(Bundle savedInstanceState) {
@@ -33,8 +35,11 @@ public class ForgotPasswordActivity extends AppCompatActivity {
             OTPEditText = findViewById(R.id.textOtp);
             btnSendOTP = findViewById(R.id.btn_sendOTP);
             btnResetPassword=findViewById(R.id.btn_reset_password);
+            imgBack = findViewById(R.id.img_toolbar_back);
+
             btnSendOTP.setOnClickListener(v -> forgotPassword());
             btnResetPassword.setOnClickListener(v -> verifyCode());
+            imgBack.setOnClickListener(v -> onBackPressed());
         }
 
         private void forgotPassword() {
