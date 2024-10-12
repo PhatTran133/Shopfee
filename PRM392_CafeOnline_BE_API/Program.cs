@@ -52,8 +52,8 @@ builder.Services.AddScoped<IOtpRepository, OtpRepository>();
 builder.Services.AddScoped<IOtpService, OtpService>();
 builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<IForgotPasswordService, ForgotPasswordService>();
-builder.Services.AddScoped<ICartRepository, CartRepository>();
-builder.Services.AddScoped<ICartService, CartService>();
+//builder.Services.AddScoped<ICartRepository, CartRepository>();
+//builder.Services.AddScoped<ICartService, CartService>();
 builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddScoped<IUserRepository, TblUserRepository>();
@@ -65,6 +65,7 @@ builder.Services.AddScoped<IDrinkService, DrinkService>();
 
 var app = builder.Build();
 
+AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {

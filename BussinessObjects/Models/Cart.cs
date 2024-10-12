@@ -7,7 +7,7 @@ namespace BussinessObjects.Models
     {
         public Cart()
         {
-            CartItems = new HashSet<CartItem>();
+         
             CartToppingDrinks = new HashSet<CartToppingDrink>();
         }
 
@@ -19,7 +19,7 @@ namespace BussinessObjects.Models
         public int Id { get; set; }
 
         public virtual TblUser? User { get; set; }
-        public virtual ICollection<CartItem> CartItems { get; set; }
+    
         public virtual ICollection<CartToppingDrink> CartToppingDrinks { get; set; }
     }
 }
