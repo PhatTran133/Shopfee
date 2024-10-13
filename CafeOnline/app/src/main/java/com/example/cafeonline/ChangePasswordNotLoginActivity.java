@@ -60,13 +60,13 @@ public class ChangePasswordNotLoginActivity extends AppCompatActivity {
         UserApiService authService = ApiService.createService(UserApiService.class);
 
         // Make API call
-        Call<ApiResponse<UserResponse>> call = authService.resetPassword(request);
-        call.enqueue(new Callback<ApiResponse<UserResponse>>() {
+        Call<ApiResponse<ResetPasswordRequest>> call = authService.resetPassword(request);
+        call.enqueue(new Callback<ApiResponse<ResetPasswordRequest>>() {
             @Override
-            public void onResponse(Call<ApiResponse<UserResponse>> call, Response<ApiResponse<UserResponse>> response) {
+            public void onResponse(Call<ApiResponse<ResetPasswordRequest>> call, Response<ApiResponse<ResetPasswordRequest>> response) {
                 System.out.println("Response received");
                 if (response.isSuccessful() && response.body() != null) {
-                    ApiResponse<UserResponse> apiResponse = response.body();
+                    ApiResponse<ResetPasswordRequest> apiResponse = response.body();
 
                     if ("200".equals(apiResponse.getValue().getStatus())) {
                         // Login successful
@@ -82,7 +82,7 @@ public class ChangePasswordNotLoginActivity extends AppCompatActivity {
                 }
             }
             @Override
-            public void onFailure(Call<ApiResponse<UserResponse>> call, Throwable t) {
+            public void onFailure(Call<ApiResponse<ResetPasswordRequest>> call, Throwable t) {
                 System.out.println("Failure occurred: " + t.getMessage());
                 Toast.makeText(ChangePasswordNotLoginActivity.this, "Change password failed: " + t.getMessage(), Toast.LENGTH_SHORT).show();
 
