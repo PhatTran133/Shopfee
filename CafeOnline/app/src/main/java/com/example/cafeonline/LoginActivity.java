@@ -1,6 +1,7 @@
 package com.example.cafeonline;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.activity.EdgeToEdge;
@@ -24,6 +25,7 @@ import com.example.cafeonline.api.UserApiService;
 import com.example.cafeonline.model.request.LoginRequest;
 import com.example.cafeonline.model.response.ApiResponse;
 import com.example.cafeonline.model.response.UserResponse;
+import com.google.gson.Gson;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -83,17 +85,30 @@ public class LoginActivity extends AppCompatActivity {
                     ApiResponse<UserResponse> apiResponse = response.body();
 
                     if ("200".equals(apiResponse.getValue().getStatus())) {
-
+                        int userId = apiResponse.getValue().getData().getId(); // Assuming getUserId() returns the ID
+                        saveUserIdToPreferences(userId);
                         Toast.makeText(LoginActivity.this, "Login Successfully", Toast.LENGTH_SHORT).show();
-
+                        Intent intent = new Intent(LoginActivity.this, AccountActivity.class);
+                        startActivity(intent);
                     } else {
 
                         Toast.makeText(LoginActivity.this, "Login Failed: " + apiResponse.getValue().getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 } else {
 
-                    Toast.makeText(LoginActivity.this, "Login Failed: Invalid response", Toast.LENGTH_SHORT).show();
-                }
+                    try {
+                        // Check if error body exists
+                        if (response.errorBody() != null) {
+                            // Deserialize error body to ApiResponse<String>
+                            Gson gson = new Gson();
+                            ApiResponse<String> errorResponse = gson.fromJson(response.errorBody().string(), ApiResponse.class);
+                            Toast.makeText(LoginActivity.this, "Register Failed: " + errorResponse.getValue().getMessage(), Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(LoginActivity.this, "Error: Invalid response", Toast.LENGTH_SHORT).show();
+                        }
+                    } catch (Exception e) {
+                        Toast.makeText(LoginActivity.this, "Error parsing response: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }                }
             }
             @Override
             public void onFailure(Call<ApiResponse<UserResponse>> call, Throwable t) {
@@ -101,5 +116,11 @@ public class LoginActivity extends AppCompatActivity {
 
             }
         });
+    }
+    private void saveUserIdToPreferences(int userId) {
+        SharedPreferences sharedPreferences = getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putInt("userId", userId);
+        editor.apply();
     }
 }

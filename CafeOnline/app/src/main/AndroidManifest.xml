@@ -44,6 +44,9 @@
             android:name="com.example.cafeonline.ChangePasswordNotLoginActivity"
             android:exported="true" />
 
+        <activity
+            android:name="com.example.cafeonline.UserProfileActivity"
+            android:exported="true" />
     </application>
 
 </manifest>

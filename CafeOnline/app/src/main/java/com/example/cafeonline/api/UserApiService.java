@@ -25,13 +25,13 @@ public interface UserApiService {
 
 
     //DƯƠNG
-    @POST("api/authentication/forgot-password")
-    Call<ApiResponse<UserResponse>> forgotPassword(@Body ForgotPasswordRequest forgotPasswordRequest);
+    @POST("/api/authentication/forgot-password")
+    Call<ApiResponse<String>> forgotPassword(@Body ForgotPasswordRequest forgotPasswordRequest);
     @POST("api/authentication/verify-reset-code")
-    Call<ApiResponse<UserResponse>> verifyCode(@Body VerifyCodeRequest verifyCodeRequest);
+    Call<ApiResponse<String>> verifyCode(@Body VerifyCodeRequest verifyCodeRequest);
     @POST("api/authentication/reset-password")
-    Call<ApiResponse<UserResponse>> resetPassword(@Body ResetPasswordRequest resetPasswordRequest);
-    @POST("api/users/userId")
-    Call<ApiResponse<UserResponse>> userProfile(@Body UserProfileRequest userProfileRequest);
+    Call<ApiResponse<ResetPasswordRequest>> resetPassword(@Body ResetPasswordRequest resetPasswordRequest);
+    @POST("/api/users/{userId}")
+    Call<ApiResponse<UserResponse>> userProfile(@Body int Id);
 
 }
