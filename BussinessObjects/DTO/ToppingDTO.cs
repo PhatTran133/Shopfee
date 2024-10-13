@@ -6,13 +6,12 @@ using System.Threading.Tasks;
 
 namespace BussinessObjects.DTO
 {
-    public class CartDTO
+    public class ToppingDTO
     {
         public int Id { get; set; }
-        public int? UserId { get; set; }
+        public string? Name { get; set; }
+        public decimal? Price { get; set; }
         public DateTime? CreatedDate { get; set; }
         public DateTime? UpdatedDate { get; set; }
-        public decimal? TotalPrice { get; set; }
-        public List<CartToppingDrinkDTO>? CartItems { get; set; }
     }
 }

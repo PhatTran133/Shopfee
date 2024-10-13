@@ -41,6 +41,16 @@ builder.Services.AddAuthentication(options =>
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("mayemixeneldnhowyytjohgadwosqogo")) // Đặt secret key mạnh
     };
 });
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAllOrigins",
+    builder =>
+    {
+        builder.WithOrigins("*")
+               .AllowAnyHeader()
+               .AllowAnyMethod();
+    });
+});
 
 // Register Services
 builder.Services.AddFluentEmailExtension(builder.Configuration);
@@ -52,9 +62,14 @@ builder.Services.AddScoped<IOtpRepository, OtpRepository>();
 builder.Services.AddScoped<IOtpService, OtpService>();
 builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<IForgotPasswordService, ForgotPasswordService>();
+
+builder.Services.AddScoped<ICartToppingDrinkRepository, CartToppingDrinkRepository>();
 builder.Services.AddScoped<ICartRepository, CartRepository>();
 builder.Services.AddScoped<ICartService, CartService>();
-builder.Services.AddHttpContextAccessor();
+
+builder.Services.AddScoped<IDrinkToppingRepository, DrinkToppingRepository>();
+
+builder.Services.AddScoped<IToppingRepository, ToppingRepository>();
 
 builder.Services.AddScoped<IUserRepository, TblUserRepository>();
 builder.Services.AddScoped<IUserService, UserService>();
@@ -65,14 +80,26 @@ builder.Services.AddScoped<IDrinkService, DrinkService>();
 
 var app = builder.Build();
 
+AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
+    app.UseDeveloperExceptionPage();
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+else
+{
+    app.UseSwagger();
+    app.UseSwaggerUI(c =>
+    {
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "GlobalMind API V1");
+        c.RoutePrefix = string.Empty;
+    });
+}
 
 app.UseHttpsRedirection();
+app.UseCors("AllowAllOrigins");
 app.UseAuthentication();
 app.UseAuthorization();
 

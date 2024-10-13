@@ -24,7 +24,7 @@ namespace PRM392_CafeOnline_BE_API.Services
         {
             var user = await _userRepository.GetByEmail(email) ?? throw new Exception("User not found");
 
-            var code = GenerateUniqueCode(user.Email, user.Username);
+            var code = new Random().Next(100000, 999999).ToString();
 
             var expiryTime = DateTime.UtcNow.AddMinutes(5);
 
