@@ -1,169 +1,174 @@
-﻿//using BussinessObjects.DTO;
-//using BussinessObjects.Models;
-//using PRM392_CafeOnline_BE_API.Services.Interfaces;
-//using Repositories.Interface;
-//using System.Security.Claims;
+﻿using AutoMapper;
+using BussinessObjects.DTO;
+using BussinessObjects.Models;
+using PRM392_CafeOnline_BE_API.Services.Enums;
+using PRM392_CafeOnline_BE_API.Services.Interfaces;
+using Repositories.Interface;
 
-//namespace PRM392_CafeOnline_BE_API.Services
-//{
-//    public class CartService : ICartService
-//    {
-//        private readonly ICartRepository _cartRepository;
-//        private readonly IUserRepository _userRepository;
-//        private readonly IDrinkRepository _drinkRepository;
-//        private readonly IHttpContextAccessor _httpContextAccessor;
-//        public CartService(ICartRepository cartRepository, IHttpContextAccessor httpContextAccessor, IUserRepository userRepository, IDrinkRepository drinkRepository)
-//        {
-//            _cartRepository = cartRepository;
-//            _httpContextAccessor = httpContextAccessor;
-//            _userRepository = userRepository;
-//            _drinkRepository = drinkRepository;
-//        }
+namespace PRM392_CafeOnline_BE_API.Services
+{
+    public class CartService : ICartService
+    {
+        private readonly ICartRepository _cartRepository;
+        private readonly ICartToppingDrinkRepository _cartToppingDrinkRepository;
+        private readonly IDrinkToppingRepository _drinkToppingRepository;
+        private readonly IDrinkRepository _drinkRepository;
+        private readonly IToppingRepository _toppingRepository;
+        private readonly IMapper _mapper;
+        public CartService(ICartRepository cartRepository, IMapper mapper, ICartToppingDrinkRepository cartToppingDrinkRepository,
+            IDrinkToppingRepository drinkToppingRepository, IDrinkRepository drinkRepository, IToppingRepository toppingRepository)
+        {
+            _cartRepository = cartRepository;
+            _mapper = mapper;
+            _cartToppingDrinkRepository = cartToppingDrinkRepository;
+            _drinkToppingRepository = drinkToppingRepository;
+            _toppingRepository = toppingRepository;
+            _drinkRepository = drinkRepository;
+        }
 
-//        public async Task AddToCartAsync(int cartId, CartItemDTO cartItemDTO)
-//        {
-//            var drinkFound = await _drinkRepository.GetDrinkByIdAsync(cartItemDTO.DrinkId)
-//                ?? throw new Exception("Drink not found");
+        public async Task<CartToppingDrinkDTO> AddToCart(ToppingDrinkRequestDTO requestDTO)
+        {
+            try
+            {
+                Cart cart;
+                cart = await _cartRepository.GetCartByIdAsync(requestDTO.CartId);
+                if (cart == null || requestDTO.CartId == 0)
+                {
+                    cart = new Cart()
+                    {
+                        CreatedDate = DateTime.Now,
+                        UpdatedDate = DateTime.Now,
+                        UserId = requestDTO.UserId,
+                    };
 
-//            if (cartId == 0)
-//            {
-//                // Create a new cart
-//                Cart cart;
-//                var emailClaim = _httpContextAccessor.HttpContext?.User.FindFirst(ClaimTypes.Email);
+                    await _cartRepository.CreateCartAsync(cart);
+                    requestDTO.CartId = cart.Id;
+                }
+                var cartToppingDrinkExist = await _cartToppingDrinkRepository.GetCartToppingDrinkByCartIdAsync(requestDTO.CartId, requestDTO.ToppingDrinkId);
+                if (cartToppingDrinkExist != null)
+                {
+                    await CalculateTotalPrice(cartToppingDrinkExist, requestDTO.Quantity, requestDTO.CartId, OperationEnums.ADD);
 
-//                if (emailClaim == null)
-//                {
-//                    // Create cart for anonymous user
-//                    cart = new Cart
-//                    {
-//                        CreatedDate = DateTime.Now,
-//                        UpdatedDate = DateTime.Now
-//                    };
-//                    await _cartRepository.CreateCart(cart);
-//                }
-//                else
-//                {
-//                    // Create cart for authenticated user
-//                    var email = emailClaim.Value;
-//                    var user = await _userRepository.GetByEmail(email)
-//                        ?? throw new Exception("User not found");
+                    cartToppingDrinkExist.Quantity += requestDTO.Quantity;
 
-//                    cart = new Cart
-//                    {
-//                        User = user,
-//                        UserId = user.Id,
-//                        CreatedDate = DateTime.Now,
-//                        UpdatedDate = DateTime.Now
-//                    };
-//                    await _cartRepository.CreateCart(cart);
-//                }
+                    await _cartToppingDrinkRepository.UpdateCartItemAsync(cartToppingDrinkExist);
 
-//                cartId = cart.Id;  // Use the new cartId
-//            }
+                    return _mapper.Map<CartToppingDrinkDTO>(cartToppingDrinkExist);
+                }
+                var cartToppingDrink = _mapper.Map<CartToppingDrink>(requestDTO);
+                await _cartToppingDrinkRepository.AddCartItemAsync(cartToppingDrink);
+                await CalculateTotalPrice(cartToppingDrink, requestDTO.Quantity, cart.Id, OperationEnums.ADD);
 
-//            // Check if the cart exists
-//            var cartExist = await _cartRepository.GetCartByIdAsync(cartId);
-//            if (cartExist == null)
-//            {
-//                throw new Exception("Cart not found");
-//            }
+                return _mapper.Map<CartToppingDrinkDTO>(cartToppingDrink);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
 
-//            // Check if the CartItem for the same Drink already exists
-//            var existingCartItem = await _cartRepository.GetCartItemExistingAsync(cartId, cartItemDTO.DrinkId);
+        private async Task CalculateTotalPrice(CartToppingDrink cartToppingDrink, int quantity, int cartId, OperationEnums operationEnums)
+        {
+            var cart = await _cartRepository.GetCartByIdAsync((int)cartId);
+            if(cart.CartToppingDrinks.Count == 0)
+            {
+                cart.TotalPrice = 0;
+                await _cartRepository.UpdateCartAsync(cart);
+                return;
+            }
 
-//            if (existingCartItem != null)
-//            {
-//                // If it exists, update the quantity
-//                existingCartItem.Quantity += cartItemDTO.Quantity;
-//                cartExist.UpdatedDate = DateTime.Now;
+            var drinkTopping = await _drinkToppingRepository.FindByIdAsync((int)cartToppingDrink.ToppingDrinkId);
 
-//                await _cartRepository.UpdateCart(cartExist);
-//                await _cartRepository.UpdateCartItemAsync(existingCartItem);
-//            }
-//            else
-//            {
-//                // If it does not exist, create a new CartItem
-//                var newCartItem = new CartItem
-//                {
-//                    CartId = cartId,
-//                    DrinkId = cartItemDTO.DrinkId,
-//                    Quantity = cartItemDTO.Quantity,
-//                    Price = drinkFound.Price.Value
-//                };
+            var drink = await _drinkRepository.GetDrinkByIdAsync((int)drinkTopping.DrinkId);
 
-//                cartExist.UpdatedDate = DateTime.Now;
+            var topping = await _toppingRepository.GetToppingByIdAsync((int)drinkTopping.ToppingId);
 
-//                await _cartRepository.UpdateCart(cartExist);
-//                await _cartRepository.AddToCartAsync(newCartItem);
-//            }
-//            await _cartRepository.UpdateTotalPriceOfCart(cartId);
-//        }
+            var price = (drink.Price + topping.Price) * quantity;
 
+            switch (operationEnums)
+            {
+                case OperationEnums.ADD:
+                    cart.TotalPrice = cart.TotalPrice.HasValue ? cart.TotalPrice + price : price;
+                    break;
+                case OperationEnums.SUBSTRACT:
+                    cart.TotalPrice = cart.TotalPrice.HasValue ? cart.TotalPrice - price : price;
+                    break;
+                default:
+                    throw new ArgumentException("Invalid price operation");
+            }
 
-//        public async Task DeleteCartItemAsync(int cartId, int drinkId)
-//        {
-//            var cartItem = await _cartRepository.GetCartItemExistingAsync(cartId, drinkId) ?? throw new Exception("cartItem not found");
-//            await _cartRepository.DeleteCartItemAsync(cartItem);
-//            await _cartRepository.UpdateTotalPriceOfCart(cartId);
-//        }
+            await _cartRepository.UpdateCartAsync(cart);
 
-//        public async Task<IEnumerable<CartDTO>> GetCartDTOsAsync()
-//        {
-//            var carts = await _cartRepository.GetAllCartsAsync();
-//            var cartDTOs = new List<CartDTO>();
-            
-//            foreach(var cart in carts)
-//            {
-//                var cartItemDTOs = cart.CartItems.Select(cartItem => new CartItemResponseDTO
-//                {
-//                    Quantity = cartItem.Quantity,
-//                    TotalPrice = cartItem.TotalPrice,
-//                    Drink = new DrinkDTO
-//                    {
-//                        Id = cartItem.DrinkId,
-//                        Name = cartItem.Drink.Name,
-//                        Image = cartItem.Drink.Image,
-//                        CategoryName = cartItem.Drink.Category.Name,
-//                        CreatedDate = cartItem.Drink.CreatedDate,
-//                        Description = cartItem.Drink.Description,
-//                        Price = cartItem.Drink.Price,
-//                        Size = cartItem.Drink.Size,
-//                        UpdatedDate = cartItem.Drink.UpdatedDate
-//                    }
-//                }).ToList();
+            cartToppingDrink.ToppingDrink = drinkTopping;
+            cartToppingDrink.ToppingDrink.Drink = drink;
+            cartToppingDrink.ToppingDrink.Topping = topping;
+        }
 
-//                var cartDTO = new CartDTO
-//                {
-//                    Id = cart.Id,
-//                    CreatedDate = cart.CreatedDate,
-//                    UpdatedDate = cart.UpdatedDate,
-//                    CartItemResponseDTO = cartItemDTOs,
-//                    TotalPrice = cart.TotalPrice,
-//                    UserId = cart.UserId
-//                };
+        public async Task<IEnumerable<CartDTO>> GetAllCartsByUserId(int userId)
+        {
+            var carts = await _cartRepository.GetCartsByUserIdAsync(userId);
+            return _mapper.Map<List<CartDTO>>(carts);
+        }
 
-//                cartDTOs.Add(cartDTO);
-//            }
+        public async Task<CartDTO> GetCartById(int cartId)
+        {
+            var cart = await _cartRepository.GetCartByIdAsync(cartId);
+            return _mapper.Map<CartDTO>(cart);
+        }
 
-//            return cartDTOs;
-//        }
+        public async Task RemoveFromCart(int cartItemId)
+        {
+            var cartItem = await _cartToppingDrinkRepository.GetCartToppingDrinkByIdAsync(cartItemId);
+            if (cartItem == null)
+            {
+                throw new Exception("Item not found");
+            }
+            await CalculateTotalPrice(cartItem, (int)cartItem.Quantity, (int)cartItem.CartId, OperationEnums.SUBSTRACT);
+            await _cartToppingDrinkRepository.RemoveCartItemAsync(cartItem);
+        }
 
-//        public async Task<CartItemDTO> UpdateCartItemQuantityAsync(int cartId, int drinkId, int quantity)
-//        {
-//            var cartItem = await _cartRepository.GetCartItemExistingAsync(cartId, drinkId);
-//            if (cartItem == null)
-//            {
-//                throw new Exception("cartItem not found");
-//            }
-//            cartItem.Quantity = quantity;
-//            await _cartRepository.UpdateCartItemAsync(cartItem);
+        public async Task<CartToppingDrinkDTO> UpdateQuantity(int cartToppingDrinkId, int newQuantity)
+        {
+            var cartItem = await _cartToppingDrinkRepository.GetCartToppingDrinkByIdAsync(cartToppingDrinkId);
+            if (cartItem == null)
+            {
+                throw new Exception("Item not found");
+            }
 
-//            await _cartRepository.UpdateTotalPriceOfCart(cartId);
-//            return new CartItemDTO
-//            {
-//                DrinkId = cartItem.DrinkId,
-//                Quantity = cartItem.Quantity
-//            };
-//        }
-//    }
-//}
+            if(newQuantity == 0)
+            {
+                await RemoveFromCart(cartItem.Id);
+                return new CartToppingDrinkDTO
+                {
+                    Quantity = 0
+                };
+            }
+
+            // Calculate the difference between the new quantity and the current quantity
+            int quantityDifference = newQuantity - cartItem.Quantity.Value;
+
+            // If the quantity is being increased
+            if (quantityDifference > 0)
+            {
+                // Calculate the total price change based on the difference in quantity
+                await CalculateTotalPrice(cartItem, quantityDifference, (int)cartItem.CartId, OperationEnums.ADD);
+            }
+            // If the quantity is being decreased
+            else if (quantityDifference < 0)
+            {
+                // Calculate the total price change based on the difference in quantity (make it positive for subtraction)
+                await CalculateTotalPrice(cartItem, -quantityDifference, (int)cartItem.CartId, OperationEnums.SUBSTRACT);
+            }
+
+            // Update the cart item quantity
+            cartItem.Quantity = newQuantity;
+
+            // Update the cart item in the repository
+            await _cartToppingDrinkRepository.UpdateCartItemAsync(cartItem);
+
+            // Return the updated cart item
+            return _mapper.Map<CartToppingDrinkDTO>(cartItem);
+        }
+
+    }
+}
