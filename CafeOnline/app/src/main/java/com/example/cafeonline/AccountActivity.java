@@ -18,7 +18,7 @@ public class AccountActivity  extends AppCompatActivity {
 
         update_profile =  findViewById(R.id.update_profile);
         update_profile.setOnClickListener(v -> {
-            Intent intent = new Intent(AccountActivity.this, UpdateActivity.class);
+            Intent intent = new Intent(AccountActivity.this, UserProfileActivity.class);
             startActivity(intent);
         });
         imgBack = findViewById(R.id.img_toolbar_back);

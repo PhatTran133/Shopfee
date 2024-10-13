@@ -11,7 +11,9 @@ import com.example.cafeonline.model.response.UserResponse;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.GET;
 import retrofit2.http.POST;
+import retrofit2.http.Path;
 
 public interface UserApiService {
 
@@ -31,7 +33,7 @@ public interface UserApiService {
     Call<ApiResponse<String>> verifyCode(@Body VerifyCodeRequest verifyCodeRequest);
     @POST("api/authentication/reset-password")
     Call<ApiResponse<ResetPasswordRequest>> resetPassword(@Body ResetPasswordRequest resetPasswordRequest);
-    @POST("/api/users/{userId}")
-    Call<ApiResponse<UserResponse>> userProfile(@Body int Id);
+    @GET("/api/users/{userId}")
+    Call<ApiResponse<UserResponse>> userProfile(@Path("userId") int userId);
 
 }

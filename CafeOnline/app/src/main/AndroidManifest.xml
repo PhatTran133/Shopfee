@@ -25,6 +25,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+<!--        USER-->
         <activity
             android:name="com.example.cafeonline.LoginActivity"
             android:exported="true" />
@@ -43,10 +45,15 @@
         <activity
             android:name="com.example.cafeonline.ChangePasswordNotLoginActivity"
             android:exported="true" />
-
         <activity
             android:name="com.example.cafeonline.UserProfileActivity"
             android:exported="true" />
+
+<!--        DRINK-->
+        <activity
+            android:name="com.example.cafeonline.DrinkDetailActivity"
+            android:exported="true" />
+
     </application>
 
 </manifest>

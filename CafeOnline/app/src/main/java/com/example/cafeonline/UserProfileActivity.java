@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -14,6 +15,7 @@ import com.example.cafeonline.model.request.ForgotPasswordRequest;
 import com.example.cafeonline.model.request.UserProfileRequest;
 import com.example.cafeonline.model.response.ApiResponse;
 import com.example.cafeonline.model.response.UserResponse;
+import com.google.gson.Gson;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -22,6 +24,7 @@ import retrofit2.Response;
 public class UserProfileActivity extends AppCompatActivity {
     private EditText Name, Number, Address;
     private UserResponse user;
+    private ImageView imgBack;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,10 +34,11 @@ public class UserProfileActivity extends AppCompatActivity {
         Name = findViewById(R.id.update_username);
         Number = findViewById(R.id.update_phone);
         Address = findViewById(R.id.update_address);
-        SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
+        imgBack = findViewById(R.id.img_toolbar_back);
+
+        imgBack.setOnClickListener(v -> onBackPressed());
 //        int userId = getIntent().getIntExtra("userId", 0);
         int userId = getUserIdFromPreferences();
-
         UserApiService authService = ApiService.createService(UserApiService.class);
 
         // Make API call
@@ -46,14 +50,28 @@ public class UserProfileActivity extends AppCompatActivity {
                     ApiResponse<UserResponse> apiResponse = response.body();
                     if ("200".equals(apiResponse.getValue().getStatus())) {
                         UserResponse user = apiResponse.getValue().getData();
-                        Name.setText(user.getFullName());
+                        Name.setText(user.getUsername());
                         Number.setText(user.getPhone());
                         Address.setText(user.getAddress());
                     } else {
                         Toast.makeText(UserProfileActivity.this, apiResponse.getValue().getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 } else {
-                    Toast.makeText(UserProfileActivity.this, "Failed to fetch user data", Toast.LENGTH_SHORT).show();
+                    try {
+                        // Check if error body exists
+                        if (response.errorBody() != null) {
+                            // Deserialize error body to ApiResponse<String>
+                            Gson gson = new Gson();
+                            ApiResponse<String> errorResponse = gson.fromJson(response.errorBody().string(), ApiResponse.class);
+                            System.out.println(errorResponse.getValue().getMessage());
+                            Toast.makeText(UserProfileActivity.this, "Fetch Failed: " + errorResponse.getValue().getMessage(), Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(UserProfileActivity.this, "Error", Toast.LENGTH_SHORT).show();
+                        }
+                    } catch (Exception e) {
+                        Toast.makeText(UserProfileActivity.this, "Error parsing response: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        System.out.println(e.getMessage());
+                    }
                 }
             }
 

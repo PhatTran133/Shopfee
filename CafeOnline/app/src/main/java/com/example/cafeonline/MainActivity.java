@@ -34,6 +34,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+//    ĐỪNG XÓA COMMENT NÀY
+//        Intent intent = new Intent(MainActivity.this, DrinkDetailActivity.class);
+//        startActivity(intent);
+
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
 
         bottomNavigationView.setOnNavigationItemSelectedListener(item -> {

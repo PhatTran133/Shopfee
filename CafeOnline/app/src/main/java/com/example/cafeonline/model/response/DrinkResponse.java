@@ -1,8 +1,7 @@
 package com.example.cafeonline.model.response;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
-import java.util.Date;
+import java.util.List;
 
 public class DrinkResponse {
     private int id;
@@ -10,21 +9,15 @@ public class DrinkResponse {
     private String description;
     private BigDecimal price;
     private String categoryName;
-    private String size;
-    private String image;
-    private Date createDate;
-    private Date updateDate;
+    private List<String> toppingNames;
 
-    public DrinkResponse(int id, String name, String description, BigDecimal price, String categoryName, String size, String image, Date createDate, Date updateDate) {
+    public DrinkResponse(int id, String name, String description, BigDecimal price, String categoryName, List<String> toppingNames) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.price = price;
         this.categoryName = categoryName;
-        this.size = size;
-        this.image = image;
-        this.createDate = createDate;
-        this.updateDate = updateDate;
+        this.toppingNames = toppingNames;
     }
 
     public int getId() {
@@ -67,35 +60,11 @@ public class DrinkResponse {
         this.categoryName = categoryName;
     }
 
-    public String getSize() {
-        return size;
+    public List<String> getToppingNames() {
+        return toppingNames;
     }
 
-    public void setSize(String size) {
-        this.size = size;
-    }
-
-    public String getImage() {
-        return image;
-    }
-
-    public void setImage(String image) {
-        this.image = image;
-    }
-
-    public Date getCreateDate() {
-        return createDate;
-    }
-
-    public void setCreateDate(Date createDate) {
-        this.createDate = createDate;
-    }
-
-    public Date getUpdateDate() {
-        return updateDate;
-    }
-
-    public void setUpdateDate(Date updateDate) {
-        this.updateDate = updateDate;
+    public void setToppingNames(List<String> toppingNames) {
+        this.toppingNames = toppingNames;
     }
 }
