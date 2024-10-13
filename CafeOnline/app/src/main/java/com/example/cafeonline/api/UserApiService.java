@@ -16,9 +16,9 @@ import retrofit2.http.POST;
 public interface UserApiService {
 
     //PHAT
-    @POST("api/Auth/login")
+    @POST("api/users/login")
     Call<ApiResponse<UserResponse>> loginUser(@Body LoginRequest loginRequest);
-    @POST("api/Auth/register")
+    @POST("api/users/register")
     Call<ApiResponse<String>> registerUser(@Body RegisterRequest registerRequest);
     @POST("")//Check lại theo BE
     Call<ApiResponse<String>> verifyCodeForRegister(@Body VerifyCodeRequest verifyCodeRequest);
@@ -31,7 +31,7 @@ public interface UserApiService {
     Call<ApiResponse<String>> verifyCode(@Body VerifyCodeRequest verifyCodeRequest);
     @POST("api/authentication/reset-password")
     Call<ApiResponse<ResetPasswordRequest>> resetPassword(@Body ResetPasswordRequest resetPasswordRequest);
-    @POST("api/users/userId")
-    Call<ApiResponse<UserResponse>> userProfile(@Body UserProfileRequest userProfileRequest);
+    @POST("/api/users/{userId}")
+    Call<ApiResponse<UserResponse>> userProfile(@Body int Id);
 
 }

@@ -48,7 +48,7 @@ public class ChangePasswordNotLoginActivity extends AppCompatActivity {
         if (nPassword.isEmpty() || cPassword.isEmpty()) {
             Toast.makeText(this, "Please enter both new password and confirm password", Toast.LENGTH_SHORT).show();
             return;
-        } else if (cPassword.equalsIgnoreCase(nPassword)) {
+        } else if (!cPassword.equalsIgnoreCase(nPassword)) {
             Toast.makeText(this, "Confirm password is not match", Toast.LENGTH_SHORT).show();
             return;
         }
