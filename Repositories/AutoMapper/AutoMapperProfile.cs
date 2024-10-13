@@ -15,7 +15,16 @@ namespace Repositories.AutoMapper
         {
             CreateMap<Otp, OtpResponseDTO>();
             CreateMap<TblUser, UserDTO>();
-
+            CreateMap<Cart, CartDTO>()
+                .ForMember(dest => dest.CartItems, opt => opt.MapFrom(src => src.CartToppingDrinks))
+                .ReverseMap();
+            CreateMap<ToppingDrinkRequestDTO, CartToppingDrink>();
+            CreateMap<CartToppingDrink, CartToppingDrinkDTO>()
+                .ForMember(dest => dest.Drink, opt => opt.MapFrom(src => src.ToppingDrink.Drink))
+                .ForMember(dest => dest.Topping, opt => opt.MapFrom(src => src.ToppingDrink.Topping))
+                .ReverseMap();
+            CreateMap<Drink, DrinkDTO>().ReverseMap();
+            CreateMap<Topping, ToppingDTO>().ReverseMap();
         }
 
 

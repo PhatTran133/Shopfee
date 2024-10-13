@@ -4,9 +4,10 @@ namespace PRM392_CafeOnline_BE_API.Services.Interfaces
 {
     public interface ICartService
     {
-        Task<IEnumerable<CartDTO>> GetCartDTOsAsync();
-        Task AddToCartAsync(int cartId, CartItemDTO cartItem);
-        Task<CartItemDTO> UpdateCartItemQuantityAsync(int cartId, int drinkId, int quantity);
-        Task DeleteCartItemAsync(int cartId, int drinkId);
+        public Task<CartToppingDrinkDTO> AddToCart(ToppingDrinkRequestDTO requestDTO);
+        public Task RemoveFromCart (int cartItemId);
+        public Task<IEnumerable<CartDTO>> GetAllCartsByUserId(int userId);
+        public Task<CartDTO> GetCartById(int cartId);
+        public Task<CartToppingDrinkDTO> UpdateQuantity(int cartToppingDrinkId, int quantity);
     }
 }
