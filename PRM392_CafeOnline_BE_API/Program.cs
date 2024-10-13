@@ -41,6 +41,16 @@ builder.Services.AddAuthentication(options =>
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("mayemixeneldnhowyytjohgadwosqogo")) // Đặt secret key mạnh
     };
 });
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAllOrigins",
+    builder =>
+    {
+        builder.WithOrigins("*")
+               .AllowAnyHeader()
+               .AllowAnyMethod();
+    });
+});
 
 // Register Services
 builder.Services.AddFluentEmailExtension(builder.Configuration);
@@ -74,11 +84,22 @@ AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
+    app.UseDeveloperExceptionPage();
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+else
+{
+    app.UseSwagger();
+    app.UseSwaggerUI(c =>
+    {
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "GlobalMind API V1");
+        c.RoutePrefix = string.Empty;
+    });
+}
 
 app.UseHttpsRedirection();
+app.UseCors("AllowAllOrigins");
 app.UseAuthentication();
 app.UseAuthorization();
 
