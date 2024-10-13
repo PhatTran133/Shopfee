@@ -16,12 +16,12 @@ import retrofit2.http.POST;
 public interface UserApiService {
 
     //PHAT
-    @POST("api/Auth/login")
+    @POST("api/users/login")
     Call<ApiResponse<UserResponse>> loginUser(@Body LoginRequest loginRequest);
-    @POST("api/Auth/register")
+    @POST("api/users/register")
     Call<ApiResponse<String>> registerUser(@Body RegisterRequest registerRequest);
-    @POST("")//Check lại theo BE
-    Call<ApiResponse<String>> verifyCodeForRegister(@Body VerifyCodeRequest verifyCodeRequest);
+    @POST("api/Otp/verify-otp-register")//Check lại theo BE
+    Call<ApiResponse<Integer>> verifyCodeForRegister(@Body VerifyCodeRequest verifyCodeRequest);
 
 
     //DƯƠNG

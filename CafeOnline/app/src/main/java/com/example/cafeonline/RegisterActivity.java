@@ -15,6 +15,7 @@ import com.example.cafeonline.api.UserApiService;
 import com.example.cafeonline.model.request.RegisterRequest;
 import com.example.cafeonline.model.request.VerifyCodeRequest;
 import com.example.cafeonline.model.response.ApiResponse;
+import com.google.gson.Gson;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -25,6 +26,7 @@ public class RegisterActivity extends AppCompatActivity {
     private Button btnSendOTP, btnRegister;
     private TextView txtLogin;
     private ImageView imgBack;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,8 +42,8 @@ public class RegisterActivity extends AppCompatActivity {
         txtLogin = findViewById(R.id.tv_login);
         imgBack = findViewById(R.id.img_toolbar_back);
 
-        btnRegister.setOnClickListener(v -> getOTP());
-        btnSendOTP.setOnClickListener(v -> verifiedOTP());
+        btnRegister.setOnClickListener(v -> verifiedOTP());
+        btnSendOTP.setOnClickListener(v -> getOTP() );
         txtLogin.setOnClickListener(v -> {
             Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
             startActivity(intent);
@@ -68,14 +70,26 @@ public class RegisterActivity extends AppCompatActivity {
                     ApiResponse<String> apiResponse = response.body();
 
                     if("200".equals(apiResponse.getValue().getStatus())){
-                        Toast.makeText(RegisterActivity.this,"Register Successfully" +  apiResponse.getValue().getData().toString(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(RegisterActivity.this,"Register Successfully" +  apiResponse.getValue().getMessage(), Toast.LENGTH_SHORT).show();
                     }
                     else{
-                        Toast.makeText(RegisterActivity.this, "Register Failed" + apiResponse.getValue().getData().toString(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(RegisterActivity.this, "Register Failed" + apiResponse.getValue().getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 }
                 else{
-                    Toast.makeText(RegisterActivity.this, "Login Failed: Invalid response", Toast.LENGTH_SHORT).show();
+                    try {
+                        // Check if error body exists
+                        if (response.errorBody() != null) {
+                            // Deserialize error body to ApiResponse<String>
+                            Gson gson = new Gson();
+                            ApiResponse<String> errorResponse = gson.fromJson(response.errorBody().string(), ApiResponse.class);
+                            Toast.makeText(RegisterActivity.this, "Register Failed: " + errorResponse.getValue().getMessage(), Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(RegisterActivity.this, "Error: Invalid response", Toast.LENGTH_SHORT).show();
+                        }
+                    } catch (Exception e) {
+                        Toast.makeText(RegisterActivity.this, "Error parsing response: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
             @Override
@@ -96,26 +110,37 @@ public class RegisterActivity extends AppCompatActivity {
         }
         VerifyCodeRequest verifyCodeRequest = new VerifyCodeRequest(email,otp);
         UserApiService authService = ApiService.createService(UserApiService.class);
-        Call<ApiResponse<String>> call = authService.verifyCodeForRegister(verifyCodeRequest);
-        call.enqueue(new Callback<ApiResponse<String>>() {
+        Call<ApiResponse<Integer>> call = authService.verifyCodeForRegister(verifyCodeRequest);
+        call.enqueue(new Callback<ApiResponse<Integer>>() {
             @Override
-            public void onResponse(Call<ApiResponse<String>> call, Response<ApiResponse<String>> response) {
+            public void onResponse(Call<ApiResponse<Integer>> call, Response<ApiResponse<Integer>> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                    ApiResponse<String> apiResponse = response.body();
+                    ApiResponse<Integer> apiResponse = response.body();
 
                     if ("200".equals(apiResponse.getValue().getStatus())) {
+                        Toast.makeText(RegisterActivity.this, "Register Successfully: UserId: " + apiResponse.getValue().getData(), Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
                         startActivity(intent);
                     } else {
-                        Toast.makeText(RegisterActivity.this, "Register Failed" + apiResponse.getValue().getData().toString(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(RegisterActivity.this, "Register Failed: " + apiResponse.getValue().getMessage(), Toast.LENGTH_SHORT).show();
                     }
-                } else {
-                    Toast.makeText(RegisterActivity.this, "Login Failed: Invalid response", Toast.LENGTH_SHORT).show();
+                } try {
+                    // Check if error body exists
+                    if (response.errorBody() != null) {
+                        // Deserialize error body to ApiResponse<String>
+                        Gson gson = new Gson();
+                        ApiResponse<String> errorResponse = gson.fromJson(response.errorBody().string(), ApiResponse.class);
+                        Toast.makeText(RegisterActivity.this, "Register Failed: " + errorResponse.getValue().getMessage(), Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(RegisterActivity.this, "Error: Invalid response", Toast.LENGTH_SHORT).show();
+                    }
+                } catch (Exception e) {
+                    Toast.makeText(RegisterActivity.this, "Error parsing response: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
-            public void onFailure(Call<ApiResponse<String>> call, Throwable t) {
+            public void onFailure(Call<ApiResponse<Integer>> call, Throwable t) {
                 Toast.makeText(RegisterActivity.this, "Register Failed: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
