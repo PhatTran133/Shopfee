@@ -27,6 +27,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
         private Button btnSendOTP,btnResetPassword;
         private ImageView imgBack;
 
+
         @Override
         protected void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
@@ -119,6 +120,8 @@ private void verifyCode() {
                     Toast.makeText(ForgotPasswordActivity.this, "verified successfully", Toast.LENGTH_SHORT).show();
                     System.out.println("verified successfully");
                     Intent intent = new Intent(ForgotPasswordActivity.this, ChangePasswordNotLoginActivity.class);
+                    intent.putExtra("email", email);
+                    intent.putExtra("otp", OTP);
                     startActivity(intent);
                 } else {
                     // Login failed with specific message

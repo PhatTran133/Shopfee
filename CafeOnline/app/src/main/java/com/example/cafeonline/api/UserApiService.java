@@ -13,6 +13,7 @@ import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
 import retrofit2.http.Path;
 
 public interface UserApiService {
@@ -31,7 +32,7 @@ public interface UserApiService {
     Call<ApiResponse<String>> forgotPassword(@Body ForgotPasswordRequest forgotPasswordRequest);
     @POST("api/authentication/verify-reset-code")
     Call<ApiResponse<String>> verifyCode(@Body VerifyCodeRequest verifyCodeRequest);
-    @POST("api/authentication/reset-password")
+    @PUT("api/authentication/reset-password")
     Call<ApiResponse<ResetPasswordRequest>> resetPassword(@Body ResetPasswordRequest resetPasswordRequest);
     @GET("/api/users/{userId}")
     Call<ApiResponse<UserResponse>> userProfile(@Path("userId") int userId);

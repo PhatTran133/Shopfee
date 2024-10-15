@@ -1,5 +1,6 @@
 package com.example.cafeonline;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
@@ -13,6 +14,7 @@ import com.example.cafeonline.api.UserApiService;
 import com.example.cafeonline.model.request.ResetPasswordRequest;
 import com.example.cafeonline.model.response.ApiResponse;
 import com.example.cafeonline.model.response.UserResponse;
+import com.google.gson.Gson;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -21,6 +23,8 @@ import retrofit2.Response;
 public class ChangePasswordNotLoginActivity extends AppCompatActivity {
     private EditText newPassword, confirmPassword;
     private Button btnResetPassword;
+    private String email = null;
+    private String otp = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,9 +57,15 @@ public class ChangePasswordNotLoginActivity extends AppCompatActivity {
             return;
         }
 
+        Intent intent = getIntent();
+        if (intent != null) {
+             email = intent.getStringExtra("email");
+             otp = intent.getStringExtra("otp");
+            // Sử dụng email và OTP truyề từ trang ForgotPasswordActivity
+        }
         // Create login request object
 //        LoginRequest loginRequest = new LoginRequest(email, password);
-        ResetPasswordRequest request = new ResetPasswordRequest(nPassword,cPassword);
+        ResetPasswordRequest request = new ResetPasswordRequest(email.toString().trim(), otp.toString().trim(), nPassword);
         // Create AuthService instance
         UserApiService authService = ApiService.createService(UserApiService.class);
 
@@ -72,14 +82,27 @@ public class ChangePasswordNotLoginActivity extends AppCompatActivity {
                         // Login successful
                         Toast.makeText(ChangePasswordNotLoginActivity.this, "Change password successfully", Toast.LENGTH_SHORT).show();
                         System.out.println("Change password successfully");
+                        Intent intent = new Intent(ChangePasswordNotLoginActivity.this, LoginActivity.class);
+                        startActivity(intent);
                     } else {
                         // Login failed with specific message
                         Toast.makeText(ChangePasswordNotLoginActivity.this, "Change password failed: " + apiResponse.getValue().getMessage(), Toast.LENGTH_SHORT).show();
                     }   System.out.println("Change password failed");
                 } else {
                     // Handle error case
-                    Toast.makeText(ChangePasswordNotLoginActivity.this, "Change password failed: Invalid response", Toast.LENGTH_SHORT).show();
-                }
+                    try {
+                        // Check if error body exists
+                        if (response.errorBody() != null) {
+                            // Deserialize error body to ApiResponse<String>
+                            Gson gson = new Gson();
+                            ApiResponse<String> errorResponse = gson.fromJson(response.errorBody().string(), ApiResponse.class);
+                            Toast.makeText(ChangePasswordNotLoginActivity.this, "Reset Password Failed: " + errorResponse.getValue().getMessage(), Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(ChangePasswordNotLoginActivity.this, "Error: Invalid response", Toast.LENGTH_SHORT).show();
+                        }
+                    } catch (Exception e) {
+                        Toast.makeText(ChangePasswordNotLoginActivity.this, "Error parsing response: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }                }
             }
             @Override
             public void onFailure(Call<ApiResponse<ResetPasswordRequest>> call, Throwable t) {

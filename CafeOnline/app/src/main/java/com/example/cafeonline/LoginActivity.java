@@ -88,7 +88,7 @@ public class LoginActivity extends AppCompatActivity {
                         int userId = apiResponse.getValue().getData().getId(); // Assuming getUserId() returns the ID
                         saveUserIdToPreferences(userId);
                         Toast.makeText(LoginActivity.this, "Login Successfully", Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent(LoginActivity.this, AccountActivity.class);
+                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                         startActivity(intent);
                     } else {
 
@@ -108,7 +108,8 @@ public class LoginActivity extends AppCompatActivity {
                         }
                     } catch (Exception e) {
                         Toast.makeText(LoginActivity.this, "Error parsing response: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                    }                }
+                    }
+                }
             }
             @Override
             public void onFailure(Call<ApiResponse<UserResponse>> call, Throwable t) {

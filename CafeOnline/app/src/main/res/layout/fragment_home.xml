@@ -51,29 +51,16 @@
             android:layout_height="@dimen/define_dimen_150"
             android:layout_marginTop="@dimen/define_dimen_10">
 
-            <androidx.cardview.widget.CardView
-                android:id="@+id/imageslider"
-                android:layout_width="370dp"
-                android:layout_height="190dp"
-                android:layout_marginTop="108dp"
-                app:cardCornerRadius="8dp"
-                app:cardElevation="4dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+            <com.denzcoskun.imageslider.ImageSlider
+                android:id="@+id/imageSlider"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:iss_auto_cycle="true"
+                app:iss_corner_radius="20"
+                app:iss_delay="3000"
+                app:iss_period="3000"
+                app:iss_title_background="@drawable/gradient" />
 
-
-                <com.denzcoskun.imageslider.ImageSlider
-                    android:id="@+id/imageSlider"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    app:iss_auto_cycle="true"
-                    app:iss_corner_radius="20"
-                    app:iss_delay="3000"
-                    app:iss_period="1000"
-                    app:iss_title_background="@drawable/gradient" />
-
-            </androidx.cardview.widget.CardView>
             <me.relex.circleindicator.CircleIndicator3
                 android:id="@+id/indicator_drink_featured"
                 android:layout_width="wrap_content"
