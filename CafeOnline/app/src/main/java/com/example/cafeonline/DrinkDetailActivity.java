@@ -1,6 +1,7 @@
 package com.example.cafeonline;
 
 import android.content.Intent;
+import android.icu.math.BigDecimal;
 import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -25,10 +26,12 @@ public class DrinkDetailActivity extends AppCompatActivity {
     private ImageView imgBack;
     private TextView tvName, tvDescription, tvPrice, tvSub, tvAdd, tvCount;
     private int count = 1;
+    private String price = null;
     private TextView selectedVariant = null;
     private TextView selectedSize = null;
     private TextView selectedSugar = null;
     private TextView selectedIce = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,21 +52,24 @@ public class DrinkDetailActivity extends AppCompatActivity {
             if (count > 1) { // Giảm count nhưng không cho phép nhỏ hơn 1
                 count--;
                 tvCount.setText(String.valueOf(count));
+                double doublePrice = Double.parseDouble(price) * count;
+                tvPrice.setText(String.valueOf(doublePrice));
             }
         });
         tvAdd.setOnClickListener(v -> {
             count++; // Tăng count
             tvCount.setText(String.valueOf(count));
+            double doublePrice = Double.parseDouble(price) * count;
+            tvPrice.setText(String.valueOf(doublePrice));
         });
-        // Các TextView để lựa chọn loại (ice, hot)
+
         TextView tvVariantIce = findViewById(R.id.tv_variant_ice);
         TextView tvVariantHot = findViewById(R.id.tv_variant_hot);
 
-        // Xử lý sự kiện chọn loại
+
         tvVariantIce.setOnClickListener(v -> selectOption(tvVariantIce, "variant"));
         tvVariantHot.setOnClickListener(v -> selectOption(tvVariantHot, "variant"));
 
-        // Tương tự với các lựa chọn size, sugar, ice
         TextView tvSizeSmall = findViewById(R.id.tv_size_small);
         TextView tvSizeMedium = findViewById(R.id.tv_size_medium);
         TextView tvSizeLarge = findViewById(R.id.tv_size_large);
@@ -96,7 +102,8 @@ public class DrinkDetailActivity extends AppCompatActivity {
                         DrinkResponse drink = apiResponse.getValue().getData();
                         tvName.setText(drink.getName());
                         tvDescription.setText(drink.getDescription());
-                        tvPrice.setText(drink.getPrice().toString());
+                        price = drink.getPrice().toString();
+                        tvPrice.setText(price);
                     } else {
                         Toast.makeText(DrinkDetailActivity.this, apiResponse.getValue().getMessage(), Toast.LENGTH_SHORT).show();
                     }
@@ -128,7 +135,6 @@ public class DrinkDetailActivity extends AppCompatActivity {
     private void selectOption(TextView selectedTextView, String type) {
         TextView previousSelection = null;
 
-        // Kiểm tra loại lựa chọn để lấy trạng thái hiện tại
         switch (type) {
             case "variant":
                 previousSelection = selectedVariant;
