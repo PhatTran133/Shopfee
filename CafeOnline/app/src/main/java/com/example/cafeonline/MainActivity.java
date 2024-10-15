@@ -2,6 +2,10 @@ package com.example.cafeonline;
 
 import android.content.Intent;
 import android.os.Bundle;
+
+import com.denzcoskun.imageslider.ImageSlider;
+import com.denzcoskun.imageslider.constants.ScaleTypes;
+import com.denzcoskun.imageslider.models.SlideModel;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -23,6 +27,8 @@ import com.example.cafeonline.api.UserApiService;
 import com.example.cafeonline.model.request.LoginRequest;
 import com.example.cafeonline.model.response.ApiResponse;
 import com.example.cafeonline.model.response.UserResponse;
+
+import java.util.ArrayList;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -70,5 +76,17 @@ public class MainActivity extends AppCompatActivity {
 //            }
 //            return false;
 //        });
+
+        //kiếm id của image slider
+        ImageSlider imageSlider = findViewById(R.id.imageSlider);
+        //tạo array list cho ảnh trong slider
+        ArrayList<SlideModel> slideModels = new ArrayList<>();
+        //Add ảnh vào slider
+        slideModels.add(new SlideModel(R.drawable.baseline_account_circle_24, ScaleTypes.FIT));
+        slideModels.add(new SlideModel(R.drawable.baseline_account_circle_24, ScaleTypes.FIT));
+        slideModels.add(new SlideModel(R.drawable.baseline_account_circle_24, ScaleTypes.FIT));
+        slideModels.add(new SlideModel(R.drawable.baseline_account_circle_24, ScaleTypes.FIT));
+
+        imageSlider.setImageList(slideModels, ScaleTypes.FIT);
     }
 }
