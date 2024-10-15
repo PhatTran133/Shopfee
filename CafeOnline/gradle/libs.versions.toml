@@ -1,5 +1,5 @@
 [versions]
-agp = "8.6.0"
+agp = "8.5.1"
 junit = "4.13.2"
 junitVersion = "1.2.1"
 espressoCore = "3.6.1"
@@ -10,6 +10,7 @@ constraintlayout = "2.1.4"
 circleindicator = "2.1.6"
 retrofit = "2.9.0"
 circleimageview = "3.0.0"
+imageSlideshow = "0.1.0"
 
 [libraries]
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -21,6 +22,7 @@ activity = { group = "androidx.activity", name = "activity", version.ref = "acti
 constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
 circleindicator = { group = "me.relex", name = "circleindicator", version.ref = "circleindicator" }
 circleimageview = { group = "de.hdodenhof", name = "circleimageview", version.ref = "circleimageview" }
+imageSlideshow = {group ="com.github.denzcoskun", name= "ImageSlideshow", version.ref = "imageSlideshow"}
 
 retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
 retrofit-gson = { group = "com.squareup.retrofit2", name = "converter-gson", version.ref = "retrofit" }
