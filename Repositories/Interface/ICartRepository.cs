@@ -13,5 +13,6 @@ namespace Repositories.Interface
         Task<IEnumerable<Cart?>> GetCartsByUserIdAsync(int userId);
         Task CreateCartAsync(Cart cart);
         Task UpdateCartAsync(Cart cart);
+        Task RemoveCartAsync(Cart cart);
     }
 }

@@ -50,6 +50,11 @@ namespace BussinessObjects.Models
             base.OnModelCreating(modelBuilder);
             //modelBuilder.ApplyConfiguration(new RoleConfiguration());
             ConfigureModel(modelBuilder);
+            modelBuilder.Entity<Cart>()
+                .HasMany(c => c.CartToppingDrinks)
+                .WithOne(ct => ct.Cart)
+                .HasForeignKey(ct => ct.CartId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             OnModelCreatingPartial(modelBuilder);
         }

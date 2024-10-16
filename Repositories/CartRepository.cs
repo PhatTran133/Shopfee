@@ -50,5 +50,11 @@ namespace Repositories
                 .Where(x => x.UserId == userId)
                 .ToListAsync();
         }
+
+        public async Task RemoveCartAsync(Cart cart)
+        {
+            _context.Carts.Remove(cart);
+            await _context.SaveChangesAsync();
+        }
     }
 }
