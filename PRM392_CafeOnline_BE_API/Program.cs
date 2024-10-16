@@ -3,8 +3,11 @@ using DataAccess;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Any;
+using Microsoft.OpenApi.Models;
 using PRM392_CafeOnline_BE_API.Configurations;
 using PRM392_CafeOnline_BE_API.Services;
+using PRM392_CafeOnline_BE_API.Services.Enums;
 using PRM392_CafeOnline_BE_API.Services.Interfaces;
 using Repositories;
 using Repositories.Interface;
@@ -70,6 +73,10 @@ builder.Services.AddScoped<ICartService, CartService>();
 builder.Services.AddScoped<IDrinkToppingRepository, DrinkToppingRepository>();
 
 builder.Services.AddScoped<IToppingRepository, ToppingRepository>();
+
+builder.Services.AddScoped<IOrderRepository, TblOrderRepository>();
+builder.Services.AddScoped<IOrderToppingDrinkRepository, OrderToppingDrinkRepository>();
+builder.Services.AddScoped<IOrderService, OrderService>();
 
 builder.Services.AddScoped<IUserRepository, TblUserRepository>();
 builder.Services.AddScoped<IUserService, UserService>();

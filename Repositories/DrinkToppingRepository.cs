@@ -19,7 +19,10 @@ namespace Repositories
 
         public async Task<DrinkTopping?> FindByIdAsync(int id)
         {
-            return await _context.DrinkToppings.FirstOrDefaultAsync(x => x.Id == id);
+            return await _context.DrinkToppings
+                .Include(d => d.Drink)
+                .Include(t => t.Topping)
+                .FirstOrDefaultAsync(x => x.Id == id);
         }
     }
 }

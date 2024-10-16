@@ -3,6 +3,7 @@ using System;
 using BussinessObjects.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,10 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace BussinessObjects.Migrations
 {
     [DbContext(typeof(CoffeeShopContext))]
-    partial class CoffeeShopContextModelSnapshot : ModelSnapshot
+    [Migration("20241013163844_migration_2")]
+    partial class migration_2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -416,8 +418,7 @@ namespace BussinessObjects.Migrations
                 {
                     b.HasOne("BussinessObjects.Models.Cart", "Cart")
                         .WithMany("CartToppingDrinks")
-                        .HasForeignKey("CartId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("CartId");
 
                     b.HasOne("BussinessObjects.Models.DrinkTopping", "ToppingDrink")
                         .WithMany("CartToppingDrinks")

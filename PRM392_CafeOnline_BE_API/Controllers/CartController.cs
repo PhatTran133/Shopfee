@@ -17,28 +17,69 @@ namespace PRM392_CafeOnline_BE_API.Controllers
             _cartService = cartService;
         }
         [HttpPost]
-        public async Task<IActionResult> AddToCart([FromBody] ToppingDrinkRequestDTO toppingDrinkRequestDTO)
+        public async Task<IActionResult> AddToCart([FromBody] AddToCartRequestDTO toppingDrinkRequestDTO)
         {
-            var cartItem = await _cartService.AddToCart(toppingDrinkRequestDTO);
-            return Ok(new JsonResponse<CartToppingDrinkDTO>(cartItem, 200, "Add to cart successfully"));
+            try
+            {
+                var cartItem = await _cartService.AddToCart(toppingDrinkRequestDTO);
+                return Ok(new JsonResponse<CartToppingDrinkDTO>(cartItem, 200, "Add to cart successfully"));
+            }catch(Exception ex)
+            {
+                if (ex.Message != null)
+                {
+                    return BadRequest(new JsonResponse<string>(ex.Message, 400, ex.Message));
+                }
+                return StatusCode(500, ex.Message);
+            }
         }
         [HttpGet("{cartId}")]
         public async Task<IActionResult> GetCartById(int cartId)
         {
-            var cart = await _cartService.GetCartById(cartId);
-            return Ok(new JsonResponse<CartDTO>(cart, 200, "Get cart successfully"));
+            try
+            {
+                var cart = await _cartService.GetCartById(cartId);
+                return Ok(new JsonResponse<CartDTO>(cart, 200, "Get cart successfully"));
+            }catch(Exception ex)
+            {
+                if (ex.Message != null)
+                {
+                    return BadRequest(new JsonResponse<string>(ex.Message, 400, ex.Message));
+                }
+                return StatusCode(500, ex.Message);
+            }
         }
         [HttpPut("{cartToppingDrinkId}")]
-        public async Task<IActionResult> UpdateCartItem(int cartToppingDrinkId, [FromBody] int quantity)
+        public async Task<IActionResult> UpdateCartItem(int cartToppingDrinkId, [FromBody] UpdateCartItemRequestDTO updateCartItemRequestDTO)
         {
-            var cartItem = await _cartService.UpdateQuantity(cartToppingDrinkId, quantity);
-            return Ok(new JsonResponse<CartToppingDrinkDTO>(cartItem, 200, "Update successfully"));
+            try
+            {
+                var cartItem = await _cartService.UpdateCartItem(cartToppingDrinkId, updateCartItemRequestDTO);
+                return Ok(new JsonResponse<CartToppingDrinkDTO>(cartItem, 200, "Update successfully"));
+            }
+            catch (Exception ex)
+            {
+                if (ex.Message != null)
+                {
+                    return BadRequest(new JsonResponse<string>(ex.Message, 400, ex.Message));
+                }
+                return StatusCode(500, ex.Message);
+            }
         }
         [HttpDelete("{cartToppingDrinkId}")]
         public async Task<IActionResult> RemoveItem(int cartToppingDrinkId)
         {
-            await _cartService.RemoveFromCart(cartToppingDrinkId);
-            return NoContent();
+            try
+            {
+                await _cartService.RemoveFromCart(cartToppingDrinkId);
+                return NoContent();
+            }catch(Exception ex)
+            {
+                if (ex.Message != null)
+                {
+                    return BadRequest(new JsonResponse<string>(ex.Message, 400, ex.Message));
+                }
+                return StatusCode(500, ex.Message);
+            }
         }
     }
 }
