@@ -1,4 +1,5 @@
-﻿using BussinessObjects.Models;
+﻿using BussinessObjects.DTO;
+using BussinessObjects.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,5 +11,6 @@ namespace Repositories.Interface
     public interface IToppingRepository
     {
         Task<Topping?> GetToppingByIdAsync(int id);
+        Task<List<Topping>> GetAllTopping();
     }
 }

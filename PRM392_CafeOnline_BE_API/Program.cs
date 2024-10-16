@@ -77,6 +77,9 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IDrinkRepository, DrinkRepository>();
 builder.Services.AddScoped<IDrinkService, DrinkService>();
 
+builder.Services.AddScoped<IToppingService, ToppingService>();
+builder.Services.AddScoped<IToppingRepository, ToppingRepository>();
+
 
 var app = builder.Build();
 
