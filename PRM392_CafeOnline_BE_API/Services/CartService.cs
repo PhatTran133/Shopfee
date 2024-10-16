@@ -26,7 +26,7 @@ namespace PRM392_CafeOnline_BE_API.Services
             _drinkRepository = drinkRepository;
         }
 
-        public async Task<CartToppingDrinkDTO> AddToCart(ToppingDrinkRequestDTO requestDTO)
+        public async Task<CartToppingDrinkDTO> AddToCart(AddToCartRequestDTO requestDTO)
         {
             try
             {
@@ -112,63 +112,82 @@ namespace PRM392_CafeOnline_BE_API.Services
 
         public async Task<CartDTO> GetCartById(int cartId)
         {
-            var cart = await _cartRepository.GetCartByIdAsync(cartId);
-            return _mapper.Map<CartDTO>(cart);
+            try
+            {
+                var cart = await _cartRepository.GetCartByIdAsync(cartId);
+                return _mapper.Map<CartDTO>(cart);
+            }catch(Exception ex)
+            {
+                throw new Exception("Cart not found");
+            }
         }
 
         public async Task RemoveFromCart(int cartItemId)
         {
-            var cartItem = await _cartToppingDrinkRepository.GetCartToppingDrinkByIdAsync(cartItemId);
-            if (cartItem == null)
+            try
             {
-                throw new Exception("Item not found");
-            }
-            await CalculateTotalPrice(cartItem, (int)cartItem.Quantity, (int)cartItem.CartId, OperationEnums.SUBSTRACT);
-            await _cartToppingDrinkRepository.RemoveCartItemAsync(cartItem);
-        }
-
-        public async Task<CartToppingDrinkDTO> UpdateQuantity(int cartToppingDrinkId, int newQuantity)
-        {
-            var cartItem = await _cartToppingDrinkRepository.GetCartToppingDrinkByIdAsync(cartToppingDrinkId);
-            if (cartItem == null)
-            {
-                throw new Exception("Item not found");
-            }
-
-            if(newQuantity == 0)
-            {
-                await RemoveFromCart(cartItem.Id);
-                return new CartToppingDrinkDTO
+                var cartItem = await _cartToppingDrinkRepository.GetCartToppingDrinkByIdAsync(cartItemId);
+                if (cartItem == null)
                 {
-                    Quantity = 0
-                };
-            }
-
-            // Calculate the difference between the new quantity and the current quantity
-            int quantityDifference = newQuantity - cartItem.Quantity.Value;
-
-            // If the quantity is being increased
-            if (quantityDifference > 0)
+                    throw new Exception("Item not found");
+                }
+                await CalculateTotalPrice(cartItem, (int)cartItem.Quantity, (int)cartItem.CartId, OperationEnums.SUBSTRACT);
+                await _cartToppingDrinkRepository.RemoveCartItemAsync(cartItem);
+            }catch(Exception ex)
             {
-                // Calculate the total price change based on the difference in quantity
-                await CalculateTotalPrice(cartItem, quantityDifference, (int)cartItem.CartId, OperationEnums.ADD);
+                throw new Exception(ex.Message);
             }
-            // If the quantity is being decreased
-            else if (quantityDifference < 0)
-            {
-                // Calculate the total price change based on the difference in quantity (make it positive for subtraction)
-                await CalculateTotalPrice(cartItem, -quantityDifference, (int)cartItem.CartId, OperationEnums.SUBSTRACT);
-            }
-
-            // Update the cart item quantity
-            cartItem.Quantity = newQuantity;
-
-            // Update the cart item in the repository
-            await _cartToppingDrinkRepository.UpdateCartItemAsync(cartItem);
-
-            // Return the updated cart item
-            return _mapper.Map<CartToppingDrinkDTO>(cartItem);
         }
 
+        public async Task<CartToppingDrinkDTO> UpdateCartItem(int cartToppingDrinkId, UpdateCartItemRequestDTO updateCartItemRequestDTO)
+        {
+            try
+            {
+                var cartToppingDrinkExist = await _cartToppingDrinkRepository.GetCartToppingDrinkByIdAsync(cartToppingDrinkId);
+                if(cartToppingDrinkExist == null)
+                {
+                    throw new Exception("Cart item not found");
+                }
+
+                if(cartToppingDrinkExist.CartId == null)
+                {
+                    throw new Exception("Invalid cart item");
+                }
+
+                if (updateCartItemRequestDTO.Quantity == 0)
+                {
+                    await RemoveFromCart(cartToppingDrinkExist.Id);
+                    return new CartToppingDrinkDTO
+                    {
+                        Quantity = 0
+                    };
+                }
+
+                // Calculate the difference between the new quantity and the current quantity
+                int quantityDifference = updateCartItemRequestDTO.Quantity - cartToppingDrinkExist.Quantity.Value;
+
+                // If the quantity is being increased
+                if (quantityDifference > 0)
+                {
+                    // Calculate the total price change based on the difference in quantity
+                    await CalculateTotalPrice(cartToppingDrinkExist, quantityDifference, (int)cartToppingDrinkExist.CartId, OperationEnums.ADD);
+                }
+                // If the quantity is being decreased
+                else if (quantityDifference < 0)
+                {
+                    // Calculate the total price change based on the difference in quantity (make it positive for subtraction)
+                    await CalculateTotalPrice(cartToppingDrinkExist, -quantityDifference, (int)cartToppingDrinkExist.CartId, OperationEnums.SUBSTRACT);
+                }
+                var cartToppingDrinkUpdate = _mapper.Map(updateCartItemRequestDTO, cartToppingDrinkExist);
+
+                await _cartToppingDrinkRepository.UpdateCartItemAsync(cartToppingDrinkUpdate);
+
+                return _mapper.Map<CartToppingDrinkDTO>(cartToppingDrinkUpdate);
+            }
+            catch(Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
     }
 }

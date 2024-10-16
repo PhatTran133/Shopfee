@@ -18,15 +18,28 @@ namespace Repositories.AutoMapper
             CreateMap<Cart, CartDTO>()
                 .ForMember(dest => dest.CartItems, opt => opt.MapFrom(src => src.CartToppingDrinks))
                 .ReverseMap();
-            CreateMap<ToppingDrinkRequestDTO, CartToppingDrink>();
+            CreateMap<AddToCartRequestDTO, CartToppingDrink>();
             CreateMap<CartToppingDrink, CartToppingDrinkDTO>()
                 .ForMember(dest => dest.Drink, opt => opt.MapFrom(src => src.ToppingDrink.Drink))
                 .ForMember(dest => dest.Topping, opt => opt.MapFrom(src => src.ToppingDrink.Topping))
                 .ReverseMap();
+            CreateMap<UpdateCartItemRequestDTO, CartToppingDrink>().ReverseMap();
             CreateMap<Drink, DrinkDTO>().ReverseMap();
             CreateMap<Topping, ToppingDTO>().ReverseMap();
+
+            CreateMap<TblOrder, OrderDTO>()
+                .ForMember(dest => dest.OrderToppingDrinkDTOs, opt => opt.MapFrom(src => src.OrderToppingDrinks))
+                .ReverseMap();
+            CreateMap<CartToppingDrink, OrderToppingDrink>()
+                .ForMember(dest => dest.Id, opt => opt.Ignore())
+                .ForMember(dest => dest.ToppingDrinkId, opt => opt.MapFrom(src => src.ToppingDrinkId)) // Map ToppingDrinkId directly
+                .ForMember(dest => dest.ToppingDrink, opt => opt.Ignore()) // Ignore ToppingDrink to avoid tracking issues
+                .ReverseMap();
+            CreateMap<CreateOrderItemRequestDTO, OrderToppingDrink>().ReverseMap();
+            CreateMap<OrderToppingDrink, OrderToppingDrinkDTO>()
+                .ForMember(dest => dest.Drink, opt => opt.MapFrom(src => src.ToppingDrink.Drink))
+                .ForMember(dest => dest.Topping, opt => opt.MapFrom(src => src.ToppingDrink.Topping))
+                .ReverseMap();
         }
-
-
     }
 }

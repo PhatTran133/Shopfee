@@ -9,7 +9,11 @@ namespace BussinessObjects.Models
         public int? Quantity { get; set; }
         public int? OrderId { get; set; }
         public int? ToppingDrinkId { get; set; }
-
+        public string? Variant { get; set; }
+        public string? Size { get; set; }
+        public string? Sugar { get; set; }
+        public string? Iced { get; set; }
+        public string? Note { get; set; }
         public virtual TblOrder? Order { get; set; }
         public virtual DrinkTopping? ToppingDrink { get; set; }
     }
