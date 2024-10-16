@@ -14,6 +14,7 @@ namespace BussinessObjects.Models
         public string? Sugar { get; set; }
         public string? Iced {  get; set; }
         public string? Note {  get; set; }
+        public int Total {  get; set; }
         public virtual Cart? Cart { get; set; }
         public virtual DrinkTopping? ToppingDrink { get; set; }
     }

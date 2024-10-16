@@ -44,5 +44,10 @@ namespace Repositories
             _context.CartToppingDrinks.Update(cartToppingDrink);
             await _context.SaveChangesAsync();
         }
+
+        public async Task<int> CalculateTotal()
+        {
+            return await _context.CartToppingDrinks.SumAsync(ci => ci.Total);
+        }
     }
 }
