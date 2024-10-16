@@ -97,7 +97,7 @@ namespace PRM392_CafeOnline_BE_API.Controllers
                 return NotFound($"No drinks found for category '{categoryName}'.");
             }
 
-            return Ok(result);
+            return Ok(new JsonResponse<List<DrinkDTO>>(result, 200, "Get Drink List By Category Sucessfully"));
         }
 
         [HttpGet("{drinkId}/details")]
@@ -108,7 +108,7 @@ namespace PRM392_CafeOnline_BE_API.Controllers
             {
                 return NotFound(); // Trả về 404 nếu không tìm thấy đồ uống
             }
-            return Ok(drinkDetail); // Trả về thông tin chi tiết đồ uống
+            return Ok(new JsonResponse<DrinkDetailDTO>(drinkDetail, 200, "Get Drink Detail Sucessfully")); // Trả về thông tin chi tiết đồ uống
         }
 
     }
