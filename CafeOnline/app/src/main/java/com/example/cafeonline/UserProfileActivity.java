@@ -82,7 +82,7 @@ public class UserProfileActivity extends AppCompatActivity {
         });
     }
     private int getUserIdFromPreferences() {
-        SharedPreferences sharedPreferences = getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
+        SharedPreferences sharedPreferences = getSharedPreferences("KooheePrefs", MODE_PRIVATE);
         return sharedPreferences.getInt("userId", 0); // Returns null if no userId is found
     }
 }

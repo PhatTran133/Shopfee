@@ -119,7 +119,7 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
     private void saveUserIdToPreferences(int userId) {
-        SharedPreferences sharedPreferences = getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
+        SharedPreferences sharedPreferences = getSharedPreferences("KooheePrefs", MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putInt("userId", userId);
         editor.apply();

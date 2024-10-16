@@ -219,7 +219,7 @@
                         android:layout_height="wrap_content"
                         android:textSize="@dimen/text_size_small"
                         android:textColor="@color/textColorHeading"
-                        android:layout_toStartOf="@+id/tv_size_regular"
+                        android:layout_toStartOf="@+id/tv_size_small"
                         android:layout_marginEnd="@dimen/define_dimen_10"
                         android:layout_centerVertical="true"
                         android:text="@string/label_size"/>
