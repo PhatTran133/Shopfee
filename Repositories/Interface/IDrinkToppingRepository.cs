@@ -10,5 +10,7 @@ namespace Repositories.Interface
     public interface IDrinkToppingRepository
     {
         Task<DrinkTopping?> FindByIdAsync(int id);
+        Task AddDrinkTopping(DrinkTopping drinkTopping);
+        Task<DrinkTopping?> FindByDrinkIdAndToppingId(int drinkId, int toppingId);
     }
 }

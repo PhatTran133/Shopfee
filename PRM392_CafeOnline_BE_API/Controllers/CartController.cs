@@ -32,12 +32,12 @@ namespace PRM392_CafeOnline_BE_API.Controllers
                 return StatusCode(500, ex.Message);
             }
         }
-        [HttpGet("{cartId}")]
-        public async Task<IActionResult> GetCartById(int cartId)
+        [HttpGet("{userId}")]
+        public async Task<IActionResult> GetCartByUserId(int userId)
         {
             try
             {
-                var cart = await _cartService.GetCartById(cartId);
+                var cart = await _cartService.GetCartByUserId(userId);
                 return Ok(new JsonResponse<CartDTO>(cart, 200, "Get cart successfully"));
             }catch(Exception ex)
             {

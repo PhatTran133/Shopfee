@@ -11,7 +11,7 @@ namespace Repositories.Interface
     public interface ICartToppingDrinkRepository
     {
         Task<CartToppingDrink?> GetCartToppingDrinkByIdAsync(int id);  
-        Task<CartToppingDrink?> GetCartToppingDrinkByCartIdAsync(int cartId, int toppingDrinkId);
+        Task<CartToppingDrink?> GetCartToppingDrinkByCartIdAsync(int cartId, int drinkId);
         Task AddCartItemAsync(CartToppingDrink cartToppingDrink);
         Task UpdateCartItemAsync(CartToppingDrink cartToppingDrink);
         Task RemoveCartItemAsync(CartToppingDrink cartToppingDrink);

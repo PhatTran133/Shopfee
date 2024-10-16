@@ -30,9 +30,8 @@ namespace PRM392_CafeOnline_BE_API.Services
         {
             try
             {
-                Cart cart;
-                cart = await _cartRepository.GetCartByIdAsync(requestDTO.CartId);
-                if (cart == null || requestDTO.CartId == 0)
+                var cart = await _cartRepository.GetCartByUserIdAsync(requestDTO.UserId);
+                if (cart == null)
                 {
                     cart = new Cart()
                     {
@@ -42,22 +41,46 @@ namespace PRM392_CafeOnline_BE_API.Services
                     };
 
                     await _cartRepository.CreateCartAsync(cart);
-                    requestDTO.CartId = cart.Id;
-                }
-                var cartToppingDrinkExist = await _cartToppingDrinkRepository.GetCartToppingDrinkByCartIdAsync(requestDTO.CartId, requestDTO.ToppingDrinkId);
-                if (cartToppingDrinkExist != null)
-                {
-                    await CalculateTotalPrice(cartToppingDrinkExist, requestDTO.Quantity, requestDTO.CartId, OperationEnums.ADD);
-
-                    cartToppingDrinkExist.Quantity += requestDTO.Quantity;
-
-                    await _cartToppingDrinkRepository.UpdateCartItemAsync(cartToppingDrinkExist);
-
-                    return _mapper.Map<CartToppingDrinkDTO>(cartToppingDrinkExist);
                 }
                 var cartToppingDrink = _mapper.Map<CartToppingDrink>(requestDTO);
+
+                if (requestDTO.Toppings != null)
+                {
+                    foreach (var topping in requestDTO.Toppings)
+                    {
+                        var existingToppingDrink = await _drinkToppingRepository.FindByDrinkIdAndToppingId(requestDTO.DrinkId, topping.Id);
+                        if (existingToppingDrink == null)
+                        {
+                            existingToppingDrink = new DrinkTopping
+                            {
+                                ToppingId = topping.Id,
+                                DrinkId = requestDTO.DrinkId
+                            };
+                            await _drinkToppingRepository.AddDrinkTopping(existingToppingDrink);
+                        }
+                        var cartToppingDrinkExist = await _cartToppingDrinkRepository.GetCartToppingDrinkByCartIdAsync(cart.Id, existingToppingDrink.Id);
+                        if (cartToppingDrinkExist != null)
+                        {
+
+                            cartToppingDrinkExist.Quantity += requestDTO.Quantity;
+
+                            await _cartToppingDrinkRepository.UpdateCartItemAsync(cartToppingDrinkExist);
+
+                            //return _mapper.Map<CartToppingDrinkDTO>(cartToppingDrinkExist);
+                        }
+
+                        cartToppingDrink.CartId = cart.Id;
+                        cartToppingDrink.ToppingDrinkId = existingToppingDrink.Id;
+                    }
+                }
                 await _cartToppingDrinkRepository.AddCartItemAsync(cartToppingDrink);
-                await CalculateTotalPrice(cartToppingDrink, requestDTO.Quantity, cart.Id, OperationEnums.ADD);
+
+                if (cart.TotalPrice != null)
+                {
+                    cart.TotalPrice += requestDTO.Total;
+                }
+                cart.TotalPrice = requestDTO.Total;
+                await _cartRepository.UpdateCartAsync(cart);
 
                 return _mapper.Map<CartToppingDrinkDTO>(cartToppingDrink);
             }
@@ -70,7 +93,7 @@ namespace PRM392_CafeOnline_BE_API.Services
         private async Task CalculateTotalPrice(CartToppingDrink cartToppingDrink, int quantity, int cartId, OperationEnums operationEnums)
         {
             var cart = await _cartRepository.GetCartByIdAsync((int)cartId);
-            if(cart.CartToppingDrinks.Count == 0)
+            if (cart.CartToppingDrinks.Count == 0)
             {
                 cart.TotalPrice = 0;
                 await _cartRepository.UpdateCartAsync(cart);
@@ -104,10 +127,10 @@ namespace PRM392_CafeOnline_BE_API.Services
             cartToppingDrink.ToppingDrink.Topping = topping;
         }
 
-        public async Task<IEnumerable<CartDTO>> GetAllCartsByUserId(int userId)
+        public async Task<CartDTO> GetCartByUserId(int userId)
         {
-            var carts = await _cartRepository.GetCartsByUserIdAsync(userId);
-            return _mapper.Map<List<CartDTO>>(carts);
+            var cart = await _cartRepository.GetCartByUserIdAsync(userId);
+            return _mapper.Map<CartDTO>(cart);
         }
 
         public async Task<CartDTO> GetCartById(int cartId)
@@ -116,7 +139,8 @@ namespace PRM392_CafeOnline_BE_API.Services
             {
                 var cart = await _cartRepository.GetCartByIdAsync(cartId);
                 return _mapper.Map<CartDTO>(cart);
-            }catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 throw new Exception("Cart not found");
             }
@@ -133,7 +157,8 @@ namespace PRM392_CafeOnline_BE_API.Services
                 }
                 await CalculateTotalPrice(cartItem, (int)cartItem.Quantity, (int)cartItem.CartId, OperationEnums.SUBSTRACT);
                 await _cartToppingDrinkRepository.RemoveCartItemAsync(cartItem);
-            }catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 throw new Exception(ex.Message);
             }
@@ -144,12 +169,12 @@ namespace PRM392_CafeOnline_BE_API.Services
             try
             {
                 var cartToppingDrinkExist = await _cartToppingDrinkRepository.GetCartToppingDrinkByIdAsync(cartToppingDrinkId);
-                if(cartToppingDrinkExist == null)
+                if (cartToppingDrinkExist == null)
                 {
                     throw new Exception("Cart item not found");
                 }
 
-                if(cartToppingDrinkExist.CartId == null)
+                if (cartToppingDrinkExist.CartId == null)
                 {
                     throw new Exception("Invalid cart item");
                 }
@@ -184,7 +209,7 @@ namespace PRM392_CafeOnline_BE_API.Services
 
                 return _mapper.Map<CartToppingDrinkDTO>(cartToppingDrinkUpdate);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 throw new Exception(ex.Message);
             }
