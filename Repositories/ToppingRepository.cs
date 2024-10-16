@@ -1,4 +1,5 @@
-﻿using BussinessObjects.Models;
+﻿using BussinessObjects.DTO;
+using BussinessObjects.Models;
 using Microsoft.EntityFrameworkCore;
 using Repositories.Interface;
 using System;
@@ -16,6 +17,12 @@ namespace Repositories
         {
             _context = new CoffeeShopContext();
         }
+
+        public async Task<List<Topping>> GetAllTopping()
+        {
+            return await _context.Toppings.ToListAsync();
+        }
+
         public async Task<Topping?> GetToppingByIdAsync(int id)
         {
             return await _context.Toppings.FirstOrDefaultAsync(x => x.Id == id);
