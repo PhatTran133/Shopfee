@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.cafeonline.R;
 import com.example.cafeonline.model.response.ToppingResponse;
 
+import java.text.DecimalFormat;
 import java.util.List;
 
 public class ToppingAdapter extends RecyclerView.Adapter<ToppingAdapter.ToppingViewHolder> {
@@ -74,7 +75,9 @@ public class ToppingAdapter extends RecyclerView.Adapter<ToppingAdapter.ToppingV
         // Hàm bind để hiển thị dữ liệu topping
         public void bind(ToppingResponse topping) {
             tvName.setText(topping.getName());
-            tvPrice.setText(String.valueOf(topping.getPrice()));
+            DecimalFormat decimalFormat = new DecimalFormat("#,###");
+            String formattedPrice = decimalFormat.format(topping.getPrice());
+            tvPrice.setText(formattedPrice);
         }
     }
 }

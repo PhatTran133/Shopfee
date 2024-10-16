@@ -25,6 +25,7 @@ import com.example.cafeonline.model.response.ToppingResponse;
 import com.example.cafeonline.model.response.UserResponse;
 import com.google.gson.Gson;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -125,7 +126,9 @@ public class DrinkDetailActivity extends AppCompatActivity {
                         tvName.setText(drink.getName());
                         tvDescription.setText(drink.getDescription());
                         price = drink.getPrice();
-                        tvPrice.setText(String.valueOf(drink.getPrice()));
+                        DecimalFormat decimalFormat = new DecimalFormat("#,###");
+                        String formattedPrice = decimalFormat.format(drink.getPrice());
+                        tvPrice.setText(formattedPrice + " VND");
                     } else {
                         Toast.makeText(DrinkDetailActivity.this, apiResponse.getValue().getMessage(), Toast.LENGTH_SHORT).show();
                     }
@@ -230,7 +233,9 @@ public class DrinkDetailActivity extends AppCompatActivity {
     private void updateTotalPrice() {
         double drinkPrice = price;
         double finalPrice = (drinkPrice * count) + totalPrice;
-        tvTotal.setText(String.valueOf(finalPrice));
+        DecimalFormat decimalFormat = new DecimalFormat("#,###");
+        String formattedPrice = decimalFormat.format(finalPrice);
+        tvTotal.setText(formattedPrice + " VND");
     }
 
 
