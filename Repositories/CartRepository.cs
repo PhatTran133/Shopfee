@@ -41,20 +41,27 @@ namespace Repositories
                 .FirstOrDefaultAsync(x => x.Id == cartId);
         }
 
-        public async Task<IEnumerable<Cart?>> GetCartsByUserIdAsync(int userId)
+        public async Task<Cart?> GetCartByUserIdAsync(int userId)
         {
             return await _context.Carts
                 .Include(c => c.CartToppingDrinks)
                 .ThenInclude(ct => ct.ToppingDrink)
                 .ThenInclude(d => d.Drink)
-                .Where(x => x.UserId == userId)
-                .ToListAsync();
+                .Include(c => c.CartToppingDrinks)
+                .ThenInclude(ct => ct.ToppingDrink)
+                .ThenInclude(t => t.Topping)
+                .FirstOrDefaultAsync(x => x.UserId == userId);
         }
 
         public async Task RemoveCartAsync(Cart cart)
         {
             _context.Carts.Remove(cart);
             await _context.SaveChangesAsync();
+        }
+
+        public async Task<List<Cart>> GetCartsByUserId(int userId)
+        {
+            return await _context.Carts.Where(x => x.UserId == userId).ToListAsync();
         }
     }
 }
