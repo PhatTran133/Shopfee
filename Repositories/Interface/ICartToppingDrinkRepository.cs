@@ -11,9 +11,10 @@ namespace Repositories.Interface
     public interface ICartToppingDrinkRepository
     {
         Task<CartToppingDrink?> GetCartToppingDrinkByIdAsync(int id);  
-        Task<CartToppingDrink?> GetCartToppingDrinkByCartIdAsync(int cartId, int drinkId);
+        Task<CartToppingDrink?> GetCartToppingDrinkByCartIdAsync(int cartId, int drinkToppingId);
         Task AddCartItemAsync(CartToppingDrink cartToppingDrink);
         Task UpdateCartItemAsync(CartToppingDrink cartToppingDrink);
         Task RemoveCartItemAsync(CartToppingDrink cartToppingDrink);
+        Task<int> CalculateTotal();
     }
 }
