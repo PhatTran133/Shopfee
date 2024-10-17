@@ -8,6 +8,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.cafeonline.R;
 import com.example.cafeonline.model.response.DrinkResponse;
 
@@ -49,7 +50,7 @@ public class DrinkAdapter extends RecyclerView.Adapter<DrinkAdapter.DrinkViewHol
             public DrinkViewHolder(@NonNull View itemView) {
                 super(itemView);
                 tvName = itemView.findViewById(R.id.tv_name);
-                tvPrice = itemView.findViewById(R.id.tv_price);
+                tvPrice = itemView.findViewById(R.id.tv_price_sale);
                 tvCategoryName=itemView.findViewById(R.id.tv_category_name);
                 imageView = itemView.findViewById(R.id.img_drink);
 

@@ -8,6 +8,8 @@ import com.example.cafeonline.model.response.ApiResponse;
 import com.example.cafeonline.model.response.DrinkResponse;
 import com.example.cafeonline.model.response.UserResponse;
 
+import java.util.List;
+
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
@@ -20,5 +22,5 @@ public interface DrinkApiService {
     @GET("/api/Drink/{drinkId}/details")
     Call<ApiResponse<DrinkResponse>> getDrinkDetail(@Path("drinkId") int drinkId);
     @GET("/api/Drink/filter")
-    Call<ApiResponse<DrinkResponse>> getDrinkFilter(@Body DrinkRequestModel drinkRequestModel);
+    Call<ApiResponse<List<DrinkResponse>>> getDrinkFilter();
 }
