@@ -48,11 +48,11 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         int userId = getUserIdFromPreferences();
         UserApiService authService = ApiService.createService(UserApiService.class);
-        setContentView(R.layout.activity_main);
+//        setContentView(R.layout.activity_main);
 
 //    ĐỪNG XÓA COMMENT NÀY
-//        Intent intent = new Intent(MainActivity.this, DrinkDetailActivity.class);
-//        startActivity(intent);
+        Intent intent = new Intent(MainActivity.this, DrinkDetailActivity.class);
+        startActivity(intent);
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
 
@@ -120,7 +120,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private int getUserIdFromPreferences() {
-        SharedPreferences sharedPreferences = getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
+        SharedPreferences sharedPreferences = getSharedPreferences("KooheePrefs", MODE_PRIVATE);
         return sharedPreferences.getInt("userId", 0); // Returns null if no userId is found
     }
 }

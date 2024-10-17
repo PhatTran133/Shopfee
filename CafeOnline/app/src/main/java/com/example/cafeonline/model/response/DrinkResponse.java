@@ -7,11 +7,11 @@ public class DrinkResponse {
     private int id;
     private String name;
     private String description;
-    private BigDecimal price;
+    private double price;
     private String categoryName;
     private List<String> toppingNames;
 
-    public DrinkResponse(int id, String name, String description, BigDecimal price, String categoryName, List<String> toppingNames) {
+    public DrinkResponse(int id, String name, String description, double price, String categoryName, List<String> toppingNames) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -44,11 +44,11 @@ public class DrinkResponse {
         this.description = description;
     }
 
-    public BigDecimal getPrice() {
+    public double getPrice() {
         return price;
     }
 
-    public void setPrice(BigDecimal price) {
+    public void setPrice(double price) {
         this.price = price;
     }
 

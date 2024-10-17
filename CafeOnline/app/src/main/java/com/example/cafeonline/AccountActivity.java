@@ -33,7 +33,7 @@ public class AccountActivity  extends AppCompatActivity {
         imgBack.setOnClickListener(v -> onBackPressed());
     }
     private void clearUserIdFromPreferences() {
-        SharedPreferences sharedPreferences = getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
+        SharedPreferences sharedPreferences = getSharedPreferences("KooheePrefs", MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.remove("userId");
         editor.apply();
