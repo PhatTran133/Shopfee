@@ -2,9 +2,14 @@ package com.example.cafeonline;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.icu.math.BigDecimal;
+import android.net.Uri;
 import android.os.Bundle;
+import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -12,15 +17,19 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.cafeonline.adapter.ToppingAdapter;
 import com.example.cafeonline.api.ApiService;
 import com.example.cafeonline.api.CartApiService;
 import com.example.cafeonline.api.DrinkApiService;
 import com.example.cafeonline.api.ToppingApiService;
+import com.example.cafeonline.api.UserApiService;
 import com.example.cafeonline.model.request.AddToCartRequest;
+import com.example.cafeonline.model.request.LoginRequest;
 import com.example.cafeonline.model.response.ApiResponse;
 import com.example.cafeonline.model.response.DrinkResponse;
 import com.example.cafeonline.model.response.ToppingResponse;
+import com.example.cafeonline.model.response.UserResponse;
 import com.google.gson.Gson;
 
 import java.text.DecimalFormat;
@@ -32,7 +41,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class DrinkDetailActivity extends AppCompatActivity {
-    private ImageView imgBack;
+    private ImageView imgBack, imageDrink;
     private TextView tvName, tvDescription, tvPrice, tvSub, tvAdd, tvCount, tvTotal, tvAddToCart;
     private EditText edtNote;
     private TextView selectedVariant = null;
@@ -56,8 +65,10 @@ public class DrinkDetailActivity extends AppCompatActivity {
         imgBack = findViewById(R.id.img_toolbar_back);
         imgBack.setOnClickListener(v -> onBackPressed());
 
+        imageDrink = findViewById(R.id.img_drink);
+
         tvName = findViewById(R.id.tv_name);
-        tvDescription = findViewById(R.id.tv_category_name);
+        tvDescription = findViewById(R.id.tv_description);
         tvPrice = findViewById(R.id.tv_price_sale);
 
         tvCount = findViewById(R.id.tv_count);
@@ -126,6 +137,9 @@ public class DrinkDetailActivity extends AppCompatActivity {
                     ApiResponse<DrinkResponse> apiResponse = response.body();
                     if ("200".equals(apiResponse.getValue().getStatus())) {
                         DrinkResponse drink = apiResponse.getValue().getData();
+                        Glide.with(DrinkDetailActivity.this)
+                                .load(drink.getImage())  // URL từ drink.getImage()
+                                .into(imageDrink);
                         tvName.setText(drink.getName());
                         tvDescription.setText(drink.getDescription());
                         price = drink.getPrice();
