@@ -3,6 +3,7 @@ package com.example.cafeonline;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.icu.math.BigDecimal;
+import android.net.Uri;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -16,6 +17,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.cafeonline.adapter.ToppingAdapter;
 import com.example.cafeonline.api.ApiService;
 import com.example.cafeonline.api.CartApiService;
@@ -39,7 +41,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class DrinkDetailActivity extends AppCompatActivity {
-    private ImageView imgBack;
+    private ImageView imgBack, imageDrink;
     private TextView tvName, tvDescription, tvPrice, tvSub, tvAdd, tvCount, tvTotal, tvAddToCart;
     private EditText edtNote;
     private TextView selectedVariant = null;
@@ -62,6 +64,8 @@ public class DrinkDetailActivity extends AppCompatActivity {
 
         imgBack = findViewById(R.id.img_toolbar_back);
         imgBack.setOnClickListener(v -> onBackPressed());
+
+        imageDrink = findViewById(R.id.img_drink);
 
         tvName = findViewById(R.id.tv_name);
         tvDescription = findViewById(R.id.tv_description);
@@ -133,6 +137,9 @@ public class DrinkDetailActivity extends AppCompatActivity {
                     ApiResponse<DrinkResponse> apiResponse = response.body();
                     if ("200".equals(apiResponse.getValue().getStatus())) {
                         DrinkResponse drink = apiResponse.getValue().getData();
+                        Glide.with(DrinkDetailActivity.this)
+                                .load(drink.getImage())  // URL từ drink.getImage()
+                                .into(imageDrink);
                         tvName.setText(drink.getName());
                         tvDescription.setText(drink.getDescription());
                         price = drink.getPrice();
