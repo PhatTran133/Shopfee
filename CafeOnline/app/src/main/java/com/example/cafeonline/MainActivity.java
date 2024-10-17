@@ -7,6 +7,9 @@ import android.os.Bundle;
 import com.denzcoskun.imageslider.ImageSlider;
 import com.denzcoskun.imageslider.constants.ScaleTypes;
 import com.denzcoskun.imageslider.models.SlideModel;
+import com.example.cafeonline.api.DrinkApiService;
+import com.example.cafeonline.model.request.DrinkRequestModel;
+import com.example.cafeonline.model.response.DrinkResponse;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import androidx.activity.EdgeToEdge;
@@ -30,6 +33,7 @@ import com.example.cafeonline.api.UserApiService;
 import com.example.cafeonline.model.request.LoginRequest;
 import com.example.cafeonline.model.response.ApiResponse;
 import com.example.cafeonline.model.response.UserResponse;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 
@@ -101,6 +105,18 @@ public class MainActivity extends AppCompatActivity {
 
 
         imageSlider.setImageList(slideModels, ScaleTypes.FIT);
+
+       
+
+    }
+    private void loadProducts() {
+        // Gọi API getAllProducts
+        // ...
+
+        // Tạo Intent để chuyển sang màn hình danh sách sản phẩm
+        Intent intent = new Intent(this, DrinkFilterActivity.class);
+        intent.putExtra("products", products); // Truyền danh sách sản phẩm
+        startActivity(intent);
     }
 
     private int getUserIdFromPreferences() {
