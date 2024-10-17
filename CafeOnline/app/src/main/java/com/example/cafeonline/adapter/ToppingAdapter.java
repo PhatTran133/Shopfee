@@ -25,7 +25,6 @@ public class ToppingAdapter extends RecyclerView.Adapter<ToppingAdapter.ToppingV
         void onToppingSelected(int toppingId, double price, boolean isSelected);
     }
 
-    // Sử dụng List<ToppingResponse>
     public ToppingAdapter(List<ToppingResponse> toppingList, OnToppingSelectedListener listener) {
         this.toppingList = toppingList;
         this.onToppingSelectedListener = listener;

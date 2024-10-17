@@ -61,8 +61,6 @@ public class LoginActivity extends AppCompatActivity {
         imgBack.setOnClickListener(v -> onBackPressed());
     }
 
-
-
     private void performLogin() {
         String email = edtEmail.getText().toString().trim();
         String password = edtPassword.getText().toString().trim();
@@ -118,6 +116,7 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
     }
+
     private void saveUserIdToPreferences(int userId) {
         SharedPreferences sharedPreferences = getSharedPreferences("KooheePrefs", MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();

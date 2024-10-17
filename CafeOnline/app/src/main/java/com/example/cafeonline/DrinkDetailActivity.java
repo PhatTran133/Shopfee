@@ -1,8 +1,10 @@
 package com.example.cafeonline;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.icu.math.BigDecimal;
 import android.os.Bundle;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -16,9 +18,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.cafeonline.adapter.ToppingAdapter;
 import com.example.cafeonline.api.ApiService;
+import com.example.cafeonline.api.CartApiService;
 import com.example.cafeonline.api.DrinkApiService;
 import com.example.cafeonline.api.ToppingApiService;
 import com.example.cafeonline.api.UserApiService;
+import com.example.cafeonline.model.request.AddToCartRequest;
+import com.example.cafeonline.model.request.LoginRequest;
 import com.example.cafeonline.model.response.ApiResponse;
 import com.example.cafeonline.model.response.DrinkResponse;
 import com.example.cafeonline.model.response.ToppingResponse;
@@ -35,17 +40,19 @@ import retrofit2.Response;
 
 public class DrinkDetailActivity extends AppCompatActivity {
     private ImageView imgBack;
-    private TextView tvName, tvDescription, tvPrice, tvSub, tvAdd, tvCount, tvTotal;
+    private TextView tvName, tvDescription, tvPrice, tvSub, tvAdd, tvCount, tvTotal, tvAddToCart;
     private EditText edtNote;
-    private int count = 1;
-    private double price = 0;
     private TextView selectedVariant = null;
     private TextView selectedSize = null;
     private TextView selectedSugar = null;
     private TextView selectedIce = null;
     private RecyclerView recyclerView;
-     List<Integer> toppingIdList = new ArrayList<>();
-    private double totalPrice = 0.0;
+    private int count = 1;
+    private double price = 0;
+    List<AddToCartRequest.Topping> toppingIdList = new ArrayList<>();
+    private double totalPrice = 0;
+    private int drinkId = 1;
+    private String note = null;
 
 
     @Override
@@ -53,19 +60,16 @@ public class DrinkDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_drink_detail);
 
-        tvTotal = findViewById(R.id.tv_total);
+        imgBack = findViewById(R.id.img_toolbar_back);
+        imgBack.setOnClickListener(v -> onBackPressed());
 
         tvName = findViewById(R.id.tv_name);
         tvDescription = findViewById(R.id.tv_description);
         tvPrice = findViewById(R.id.tv_price_sale);
 
-        tvSub = findViewById(R.id.tv_sub);
         tvCount = findViewById(R.id.tv_count);
         tvAdd = findViewById(R.id.tv_add);
-
-        imgBack = findViewById(R.id.img_toolbar_back);
-        imgBack.setOnClickListener(v -> onBackPressed());
-
+        tvSub = findViewById(R.id.tv_sub);
         tvSub.setOnClickListener(v -> {
             if (count > 1) { // Giảm count nhưng không cho phép nhỏ hơn 1
                 count--;
@@ -73,6 +77,7 @@ public class DrinkDetailActivity extends AppCompatActivity {
                 updateTotalPrice();
             }
         });
+
         tvAdd.setOnClickListener(v -> {
             count++; // Tăng count
             tvCount.setText(String.valueOf(count));
@@ -83,10 +88,14 @@ public class DrinkDetailActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         edtNote = findViewById((R.id.edt_notes));
+        note = edtNote.getText().toString();
+        tvTotal = findViewById(R.id.tv_total);
 
+        tvAddToCart = findViewById((R.id.tv_add_cart));
+        tvAddToCart.setOnClickListener(v -> addToCart());
+        //region SELECT OPTION
         TextView tvVariantIce = findViewById(R.id.tv_variant_ice);
         TextView tvVariantHot = findViewById(R.id.tv_variant_hot);
-
 
         tvVariantIce.setOnClickListener(v -> selectOption(tvVariantIce, "variant"));
         tvVariantHot.setOnClickListener(v -> selectOption(tvVariantHot, "variant"));
@@ -110,10 +119,11 @@ public class DrinkDetailActivity extends AppCompatActivity {
 
         tvIceNormal.setOnClickListener(v -> selectOption(tvIceNormal, "ice"));
         tvIceLess.setOnClickListener(v -> selectOption(tvIceLess, "ice"));
+        //endregion
 
         //HIỂN THỊ DRINK DETAIL
         //CHỈNH LẠI DRINK ID ĐƯỢC INTENT TRUYỀN VÀO
-        int drinkId = 1;
+
         DrinkApiService drinkService = ApiService.createService(DrinkApiService.class);
         Call<ApiResponse<DrinkResponse>> callApiDrink = drinkService.getDrinkDetail(drinkId);
         callApiDrink.enqueue(new Callback<ApiResponse<DrinkResponse>>() {
@@ -173,7 +183,8 @@ public class DrinkDetailActivity extends AppCompatActivity {
                             @Override
                             public void onToppingSelected(int toppingId, double price, boolean isSelected) {
                                 if (isSelected) {
-                                    toppingIdList.add(toppingId);
+                                    AddToCartRequest.Topping topping = new AddToCartRequest.Topping(toppingId);
+                                    toppingIdList.add(topping);
                                     totalPrice += price;
                                 } else {
                                     toppingIdList.remove(Integer.valueOf(toppingId)); // Remove topping ID from the list
@@ -195,7 +206,6 @@ public class DrinkDetailActivity extends AppCompatActivity {
             }
         });
     }
-
 
     private void selectOption(TextView selectedTextView, String type) {
         TextView previousSelection = null;
@@ -238,5 +248,87 @@ public class DrinkDetailActivity extends AppCompatActivity {
         tvTotal.setText(formattedPrice + " VND");
     }
 
+    private void addToCart() {
+        int userId = getUserIdFromPreferences();
+        if (userId == 0){
+            Intent intent = new Intent(DrinkDetailActivity.this, LoginActivity.class);
+            startActivity(intent);
+            return;
+        }
+        String variant = selectedVariant != null ? selectedVariant.getText().toString() : "";
+        String size = selectedSize != null ? selectedSize.getText().toString() : "";
+        String sugar = selectedSugar != null ? selectedSugar.getText().toString() : "";
+        String ice = selectedIce != null ? selectedIce.getText().toString() : "";
 
+        String totalText = tvTotal.getText().toString().replaceAll("[^\\d]", "");
+        int finalTotalPrice = Integer.parseInt(totalText);
+        if (variant.isEmpty()) {
+            Toast.makeText(DrinkDetailActivity.this, "Please select a variant.", Toast.LENGTH_SHORT).show();
+        } else if (size.isEmpty()) {
+            Toast.makeText(DrinkDetailActivity.this, "Please select a size.", Toast.LENGTH_SHORT).show();
+        } else if (sugar.isEmpty()) {
+            Toast.makeText(DrinkDetailActivity.this, "Please select a sugar level.", Toast.LENGTH_SHORT).show();
+        } else if (ice.isEmpty()) {
+            Toast.makeText(DrinkDetailActivity.this, "Please select an ice level.", Toast.LENGTH_SHORT).show();
+        } else {
+            AddToCartRequest addToCartRequest = new AddToCartRequest(
+                    userId,
+                    drinkId,
+                    count,
+                    finalTotalPrice,
+                    variant,
+                    size,
+                    sugar,
+                    ice,
+                    note,
+                    toppingIdList
+            );
+            CartApiService cartService = ApiService.createService(CartApiService.class);
+            Call<ApiResponse<String>> call = cartService.addToCart(addToCartRequest);
+            call.enqueue(new Callback<ApiResponse<String>>() {
+                @Override
+                public void onResponse(Call<ApiResponse<String>> call, Response<ApiResponse<String>> response) {
+                    System.out.println("Response received");
+                    if (response.isSuccessful() && response.body() != null) {
+                        ApiResponse<String> apiResponse = response.body();
+
+                        if ("200".equals(apiResponse.getValue().getStatus())) {
+                            Toast.makeText(DrinkDetailActivity.this, apiResponse.getValue().getMessage(), Toast.LENGTH_SHORT).show();
+                            // NẾU THÀNH CÔNG CHUYỂN SANG TRANG CART
+                            // ĐANG TEST THỬ CHUYỂN SANG TRANG HOME
+                            Intent intent = new Intent(DrinkDetailActivity.this, MainActivity.class);
+                            startActivity(intent);
+                        } else {
+                            Toast.makeText(DrinkDetailActivity.this, "Add to cart Failed: " + apiResponse.getValue().getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    } else {
+
+                        try {
+                            // Check if error body exists
+                            if (response.errorBody() != null) {
+                                // Deserialize error body to ApiResponse<String>
+                                Gson gson = new Gson();
+                                ApiResponse<String> errorResponse = gson.fromJson(response.errorBody().string(), ApiResponse.class);
+                                Toast.makeText(DrinkDetailActivity.this, "Add to cart Failed: " + errorResponse.getValue().getMessage(), Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(DrinkDetailActivity.this, "Error: Invalid response", Toast.LENGTH_SHORT).show();
+                            }
+                        } catch (Exception e) {
+                            Toast.makeText(DrinkDetailActivity.this, "Error parsing response: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }
+                @Override
+                public void onFailure(Call<ApiResponse<String>> call, Throwable t) {
+                    Toast.makeText(DrinkDetailActivity.this, "Add to cart Failed: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+
+                }
+            });
+        }
+    }
+
+    private int getUserIdFromPreferences() {
+        SharedPreferences sharedPreferences = getSharedPreferences("KooheePrefs", MODE_PRIVATE);
+        return sharedPreferences.getInt("userId", 0);
+    }
 }
