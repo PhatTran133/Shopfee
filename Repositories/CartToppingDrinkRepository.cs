@@ -22,10 +22,10 @@ namespace Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task<CartToppingDrink?> GetCartToppingDrinkByCartIdAsync(int cartId, int toppingDrinkId)
+        public async Task<CartToppingDrink?> GetCartToppingDrinkByCartIdAsync(int cartId, int drinkToppingId)
         {
             return await _context.CartToppingDrinks.Include(c => c.Cart)
-                .FirstOrDefaultAsync(x => x.CartId == cartId && x.ToppingDrinkId == toppingDrinkId);
+                .FirstOrDefaultAsync(x => x.CartId == cartId && x.ToppingDrinkId == drinkToppingId);
         }
 
         public async Task<CartToppingDrink?> GetCartToppingDrinkByIdAsync(int id)
@@ -43,6 +43,11 @@ namespace Repositories
         {
             _context.CartToppingDrinks.Update(cartToppingDrink);
             await _context.SaveChangesAsync();
+        }
+
+        public async Task<int> CalculateTotal()
+        {
+            return await _context.CartToppingDrinks.SumAsync(ci => ci.Total);
         }
     }
 }
