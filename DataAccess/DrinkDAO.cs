@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -53,7 +54,11 @@ namespace DataAccess
                 // Lọc theo Drink Name
                 if (!string.IsNullOrEmpty(name))
                 {
-                    query = query.Where(d => d.Name.Contains(name) && d.IsDeleted == false);
+                    string lowerName = RemoveDiacritics(name.ToLower());
+                    var drinks = await query.Where(d => d.IsDeleted == false).ToListAsync(); 
+
+                    
+                    return drinks.Where(d => RemoveDiacritics(d.Name.ToLower()).Contains(lowerName)).ToList();
                 }
 
                 // Lọc theo Category Name
@@ -101,6 +106,25 @@ namespace DataAccess
                 // Trả về danh sách rỗng trong trường hợp có lỗi (hoặc ném ngoại lệ tuỳ theo yêu cầu)
                 return new List<Drink>();
             }
+        }
+        public static string RemoveDiacritics(string text)
+        {
+            if (string.IsNullOrWhiteSpace(text))
+                return text;
+
+            var normalizedString = text.Normalize(NormalizationForm.FormD);
+            var stringBuilder = new StringBuilder();
+
+            foreach (var c in normalizedString)
+            {
+                var unicodeCategory = CharUnicodeInfo.GetUnicodeCategory(c);
+                if (unicodeCategory != UnicodeCategory.NonSpacingMark)
+                {
+                    stringBuilder.Append(c);
+                }
+            }
+
+            return stringBuilder.ToString().Normalize(NormalizationForm.FormC);
         }
     }
 }
