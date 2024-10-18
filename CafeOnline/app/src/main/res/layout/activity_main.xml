@@ -4,7 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    
+
+    <include layout="@layout/fragment_home"/>
+
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/viewpage_2"
         android:layout_width="match_parent"
@@ -80,5 +82,5 @@
         app:itemIconTint="@color/custom_bottom_navigation"
         app:itemTextColor="@color/custom_bottom_navigation"
         app:labelVisibilityMode="labeled"
-        app:menu="@menu/menu_bottom_navigation" />
+        app:menu="@menu/menu_bottom_navigation"/>
 </RelativeLayout>

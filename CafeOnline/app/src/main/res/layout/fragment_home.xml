@@ -50,12 +50,17 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/define_dimen_150"
             android:layout_marginTop="@dimen/define_dimen_10">
-            
-            <androidx.viewpager2.widget.ViewPager2
-                android:id="@+id/view_pager_drink_featured"
+
+            <com.denzcoskun.imageslider.ImageSlider
+                android:id="@+id/imageSlider"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                />
+                app:iss_auto_cycle="true"
+                app:iss_corner_radius="20"
+                app:iss_delay="3000"
+                app:iss_period="3000"
+                app:iss_title_background="@drawable/gradient" />
+
             <me.relex.circleindicator.CircleIndicator3
                 android:id="@+id/indicator_drink_featured"
                 android:layout_width="wrap_content"
@@ -88,6 +93,13 @@
             android:id="@+id/view_pager_category"
             android:layout_width="match_parent"
             android:layout_height="56dp" />
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rcv_drink"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:focusable="false"
+            android:nestedScrollingEnabled="false"
+            />
     </LinearLayout>
 
 </androidx.core.widget.NestedScrollView>

@@ -1,19 +1,30 @@
 package com.example.cafeonline.model.response;
 
+import java.util.Date;
+
 public class UserResponse {
     private int id;
-    private String fullName;
+    private String username;
     private String email;
-    private String dateOfBirth;
-    private boolean gender;
+    private String password;
     private String phone;
     private String address;
-    private String role;
-    private boolean isVerified;
-    private boolean isGoogleAuthentication;
-    private boolean status;
+    private boolean emailVerified;
+    private Date createdDate;
+    private Date updatedDate;
 
-    // Getters and Setters for each field
+    public UserResponse(int id, String username, String email, String password, String phone, String address, boolean emailVerified, Date createdDate, Date updatedDate) {
+        this.id = id;
+        this.username = username;
+        this.email = email;
+        this.password = password;
+        this.phone = phone;
+        this.address = address;
+        this.emailVerified = emailVerified;
+        this.createdDate = createdDate;
+        this.updatedDate = updatedDate;
+    }
+
     public int getId() {
         return id;
     }
@@ -22,12 +33,12 @@ public class UserResponse {
         this.id = id;
     }
 
-    public String getFullName() {
-        return fullName;
+    public String getUsername() {
+        return username;
     }
 
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getEmail() {
@@ -38,20 +49,12 @@ public class UserResponse {
         this.email = email;
     }
 
-    public String getDateOfBirth() {
-        return dateOfBirth;
+    public String getPassword() {
+        return password;
     }
 
-    public void setDateOfBirth(String dateOfBirth) {
-        this.dateOfBirth = dateOfBirth;
-    }
-
-    public boolean isGender() {
-        return gender;
-    }
-
-    public void setGender(boolean gender) {
-        this.gender = gender;
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public String getPhone() {
@@ -70,36 +73,28 @@ public class UserResponse {
         this.address = address;
     }
 
-    public String getRole() {
-        return role;
+    public boolean isEmailVerified() {
+        return emailVerified;
     }
 
-    public void setRole(String role) {
-        this.role = role;
+    public void setEmailVerified(boolean emailVerified) {
+        this.emailVerified = emailVerified;
     }
 
-    public boolean isVerified() {
-        return isVerified;
+    public Date getCreatedDate() {
+        return createdDate;
     }
 
-    public void setVerified(boolean isVerified) {
-        this.isVerified = isVerified;
+    public void setCreatedDate(Date createdDate) {
+        this.createdDate = createdDate;
     }
 
-    public boolean isGoogleAuthentication() {
-        return isGoogleAuthentication;
+    public Date getUpdatedDate() {
+        return updatedDate;
     }
 
-    public void setGoogleAuthentication(boolean isGoogleAuthentication) {
-        this.isGoogleAuthentication = isGoogleAuthentication;
-    }
-
-    public boolean isStatus() {
-        return status;
-    }
-
-    public void setStatus(boolean status) {
-        this.status = status;
+    public void setUpdatedDate(Date updatedDate) {
+        this.updatedDate = updatedDate;
     }
 }
 

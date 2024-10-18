@@ -46,4 +46,7 @@ dependencies {
 
     implementation(libs.retrofit)
     implementation(libs.retrofit.gson)
+    implementation(libs.imageSlideshow)
+    implementation(libs.glide)
+    annotationProcessor(libs.glide.compiler)
 }
