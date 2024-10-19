@@ -9,6 +9,7 @@ import com.denzcoskun.imageslider.ImageSlider;
 import com.denzcoskun.imageslider.constants.ScaleTypes;
 import com.denzcoskun.imageslider.models.SlideModel;
 import com.example.cafeonline.adapter.DrinkAdapter;
+import com.example.cafeonline.adapter.ToppingAdapter;
 import com.example.cafeonline.api.DrinkApiService;
 import com.example.cafeonline.model.request.DrinkRequestModel;
 import com.example.cafeonline.model.response.DrinkResponse;
@@ -24,6 +25,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -56,6 +58,7 @@ public class MainActivity extends AppCompatActivity {
         int userId = getUserIdFromPreferences();
         recyclerView = findViewById(R.id.rcv_drink);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
 
 
 //    ĐỪNG XÓA COMMENT NÀY
@@ -125,8 +128,9 @@ public class MainActivity extends AppCompatActivity {
                 if (response.isSuccessful()) {
                     ApiResponse<List<DrinkResponse>> apiResponse = response.body();
                     if ("200".equals(apiResponse.getValue().getStatus())) {
-                        List<DrinkResponse> drink = apiResponse.getValue().getData();
-                        DrinkAdapter adapter = new DrinkAdapter(drink);
+                        List<DrinkResponse> drinkList = apiResponse.getValue().getData();
+
+                        DrinkAdapter adapter = new DrinkAdapter(drinkList, null);
                         recyclerView.setAdapter(adapter);
                     } else {
                         Toast.makeText(MainActivity.this, apiResponse.getValue().getMessage(), Toast.LENGTH_SHORT).show();

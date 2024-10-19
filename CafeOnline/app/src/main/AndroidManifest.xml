@@ -20,13 +20,15 @@
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+                <action
+                    android:name="android.intent.action.MAIN"
+                    android:exported="true" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
-<!--        USER-->
+        <!--        USER-->
         <activity
             android:name="com.example.cafeonline.LoginActivity"
             android:exported="true" />
@@ -49,7 +51,7 @@
             android:name="com.example.cafeonline.UserProfileActivity"
             android:exported="true" />
 
-<!--        DRINK-->
+        <!--        DRINK-->
         <activity
             android:name="com.example.cafeonline.DrinkDetailActivity"
             android:exported="true" />
