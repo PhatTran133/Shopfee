@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -26,7 +27,10 @@ import com.example.cafeonline.model.response.ApiResponse;
 import com.example.cafeonline.model.response.DrinkResponse;
 import com.google.gson.Gson;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import retrofit2.Call;
@@ -37,18 +41,17 @@ public class HomeFragment extends Fragment {
     private RecyclerView recyclerView;
     private ImageSlider imageSlider;
     private Button btnSearch;
-
+    private EditText search;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         // Inflate layout của Fragment
         View rootView = inflater.inflate(R.layout.fragment_home, container, false);
-
+        search = rootView.findViewById(R.id.edt_search_name);
         btnSearch = rootView.findViewById(R.id.btn_search);
-        btnSearch.setOnClickListener(v -> {
-            Toast.makeText(getContext(), "SEARCH", Toast.LENGTH_SHORT).show();
-        });
+
+        btnSearch.setOnClickListener(v -> getDrinkData());
 
         // Lấy RecyclerView và ImageSlider từ layout của Fragment
         recyclerView = rootView.findViewById(R.id.rcv_drink_home);
@@ -71,8 +74,21 @@ public class HomeFragment extends Fragment {
     }
 
     private void getDrinkData() {
+        String name = search.getText().toString().trim();
+        String category = search.getText().toString().trim();
+        String size = search.getText().toString().trim();
+
+//        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+//        try {
+//            Date startDate = sdf.parse(search.getText().toString().trim());
+//            Date endDate = sdf.parse(search.getText().toString().trim());
+//        } catch (ParseException e) {
+//            throw new RuntimeException(e);
+//        }
+//        double maxPrice = double.(search.getText().toString().trim());
+//        double minPrice = Double.parseDouble(search.getText().toString().trim());
         DrinkApiService drinkService = ApiService.createService(DrinkApiService.class);
-        retrofit2.Call<ApiResponse<List<DrinkResponse>>> callApiDrink = drinkService.getDrinkFilter();
+        retrofit2.Call<ApiResponse<List<DrinkResponse>>> callApiDrink = drinkService.getDrinkFilter(name, category, size);
         callApiDrink.enqueue(new Callback<ApiResponse<List<DrinkResponse>>>() {
             @Override
             public void onResponse(retrofit2.Call<ApiResponse<List<DrinkResponse>>> callApiDrink, Response<ApiResponse<List<DrinkResponse>>> response) {

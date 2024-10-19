@@ -26,6 +26,13 @@ public interface DrinkApiService {
     //PHAT
     @GET("/api/Drink/{drinkId}/details")
     Call<ApiResponse<DrinkResponse>> getDrinkDetail(@Path("drinkId") int drinkId);
+
     @GET("/api/Drink/filter")
-    Call<ApiResponse<List<DrinkResponse>>> getDrinkFilter(@Query("name") String name );
+    Call<ApiResponse<List<DrinkResponse>>> getDrinkFilter(@Query("name") String name,
+                                                          @Query("category") String categoryName,
+                                                          @Query("size") String size);
+//                                                          @Query("minPrice") double minPrice,
+//                                                          @Query("maxPrice") double maxPrice);
+//                                                          @Query("startDate") Date startDate,
+//                                                          @Query("endDate") Date endDate);
 }
