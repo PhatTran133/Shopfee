@@ -19,5 +19,6 @@ namespace Repositories.Interface
         Task<UserDTO> LoginAsync(LoginRequestDTO requestDTO);
         Task<UserDTO> GetUserByUnverifiedEmailAsync(string email);
         Task VerifyUserAccountAsync(int id);
+        Task DeleteExpiredUsersAsync();
     }
 }

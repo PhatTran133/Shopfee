@@ -65,8 +65,8 @@ namespace Repositories
                 Password = requestDTO.Password,
                 Address = requestDTO.Address,
                 Phone = requestDTO.Phone,
-                CreatedDate = DateTime.Now,
-                UpdatedDate = DateTime.Now,
+                CreatedDate = DateTime.UtcNow.AddHours(7),
+                UpdatedDate = DateTime.UtcNow.AddHours(7),
                 EmailVerified = false
             };
 
@@ -99,6 +99,33 @@ namespace Repositories
             user.EmailVerified = true;           
             _context.TblUsers.Update(user);
             await _context.SaveChangesAsync();
+        }
+
+
+        public async Task DeleteExpiredUsersAsync()
+        {
+            var currentTime = DateTime.UtcNow.AddHours(7);
+
+            var expiredOtp = await _context.Otps
+                .Where(x => x.ExpiryTime < currentTime)
+                .ToListAsync();
+
+            if (expiredOtp.Any())
+            {
+                var expiredEmails = expiredOtp.Select(x => x.Email).ToList();                               
+                var expiredUsers = await _context.TblUsers
+                    .Where(user => expiredEmails.Contains(user.Email) && !user.EmailVerified)
+                    .ToListAsync();
+
+                if (expiredUsers.Any())
+                {
+                    _context.TblUsers.RemoveRange(expiredUsers);
+                }
+
+                _context.Otps.RemoveRange(expiredOtp);
+
+                await _context.SaveChangesAsync();
+            }
         }
     }
 
