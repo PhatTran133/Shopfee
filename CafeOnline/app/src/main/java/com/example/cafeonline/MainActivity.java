@@ -2,9 +2,20 @@ package com.example.cafeonline;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 
 import com.example.cafeonline.ui.HomeFragment;
+import com.bumptech.glide.Glide;
+import com.denzcoskun.imageslider.ImageSlider;
+import com.denzcoskun.imageslider.constants.ScaleTypes;
+import com.denzcoskun.imageslider.models.SlideModel;
+import com.example.cafeonline.service.NotificationService;
+import com.example.cafeonline.adapter.DrinkAdapter;
+import com.example.cafeonline.api.DrinkApiService;
+import com.example.cafeonline.model.request.DrinkRequestModel;
+import com.example.cafeonline.model.response.DrinkResponse;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -77,4 +88,5 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences sharedPreferences = getSharedPreferences("KooheePrefs", MODE_PRIVATE);
         return sharedPreferences.getInt("userId", 0); // Returns null if no userId is found
     }
+
 }
