@@ -2,6 +2,8 @@ package com.example.cafeonline;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 
 import com.bumptech.glide.Glide;
@@ -117,6 +119,12 @@ public class MainActivity extends AppCompatActivity {
 
 
         imageSlider.setImageList(slideModels, ScaleTypes.FIT);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (checkSelfPermission(android.Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(new String[]{android.Manifest.permission.POST_NOTIFICATIONS}, 1);
+            }
+        }
 
         // Gọi Service để hiển thị notification
         Intent serviceIntent = new Intent(this, NotificationService.class);

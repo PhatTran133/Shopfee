@@ -8,6 +8,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.IBinder;
+import android.util.Log;
+import android.widget.Toast;
+
 import androidx.core.app.NotificationCompat;
 
 import com.example.cafeonline.MainActivity;
@@ -22,6 +25,8 @@ public class NotificationService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        Log.d("NotificationService", "Service started");
+        Toast.makeText(this, "Service started", Toast.LENGTH_SHORT).show();
         // Tạo notification channel khi Service khởi động
         createNotificationChannel();
         // Hiển thị notification khi Service khởi động
@@ -29,7 +34,7 @@ public class NotificationService extends Service {
         return START_NOT_STICKY;
     }
 
-    // Tạo Notification Channel cho Android 8.0 trở lên
+    // Tạo Notification Channel
     private void createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             String channelId = "my_channel_id";
@@ -39,11 +44,13 @@ public class NotificationService extends Service {
             NotificationChannel channel = new NotificationChannel(channelId, name, importance);
             channel.setDescription(description);
 
-            // Đăng ký channel với hệ thống
+            Log.d("NotificationService", "Notification channel created");
+
             NotificationManager notificationManager = getSystemService(NotificationManager.class);
             notificationManager.createNotificationChannel(channel);
         }
     }
+
 
     // Hiển thị thông báo
     private void showNotification() {
