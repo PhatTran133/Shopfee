@@ -30,6 +30,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager2.widget.ViewPager2;
 
 
 import com.example.cafeonline.api.ApiService;
@@ -41,6 +42,7 @@ import com.google.gson.Gson;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import retrofit2.Call;
@@ -49,11 +51,17 @@ import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
+    private EditText search;
+    private String name, categoryName, size;
+    private double minPrice,maxPrice;
+    private Date startDate,endDate;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         int userId = getUserIdFromPreferences();
+        search = findViewById(R.id.edt_search_name);
+
         recyclerView = findViewById(R.id.rcv_drink);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
@@ -109,16 +117,18 @@ public class MainActivity extends AppCompatActivity {
         ArrayList<SlideModel> slideModels = new ArrayList<>();
         //Add ảnh vào slider
 
-        slideModels.add(new SlideModel(R.drawable.drink_example, ScaleTypes.FIT));
+        slideModels.add(new SlideModel(R.drawable.drink_example, ScaleTypes.CENTER_CROP));
         slideModels.add(new SlideModel(R.drawable.ic_logo, ScaleTypes.FIT));
         slideModels.add(new SlideModel(R.drawable.ic_splash, ScaleTypes.FIT));
         slideModels.add(new SlideModel(R.drawable.drink_example, ScaleTypes.FIT));
 
 
         imageSlider.setImageList(slideModels, ScaleTypes.FIT);
-
+        name= search.getText().toString();
+        categoryName=search.getText().toString();
+        size=search.getText().toString();
         DrinkApiService drinkService = ApiService.createService(DrinkApiService.class);
-        Call<ApiResponse<List<DrinkResponse>>> callApiDrink = drinkService.getDrinkFilter();
+        Call<ApiResponse<List<DrinkResponse>>> callApiDrink = drinkService.getDrinkFilter(name);
         callApiDrink.enqueue(new Callback<ApiResponse<List<DrinkResponse>>>() {
             @Override
             public void onResponse(Call<ApiResponse<List<DrinkResponse>>> callApiDrink, Response<ApiResponse<List<DrinkResponse>>> response) {
@@ -137,7 +147,7 @@ public class MainActivity extends AppCompatActivity {
                         if (response.errorBody() != null) {
                             // Deserialize error body to ApiResponse<String>
                             Gson gson = new Gson();
-                            ApiResponse<String> errorResponse = gson.fromJson(response.errorBody().string(), ApiResponse.class);
+                            ApiResponse errorResponse = gson.fromJson(response.errorBody().string(), ApiResponse.class);
                             System.out.println(errorResponse.getValue().getMessage());
                             Toast.makeText(MainActivity.this, "Fetch Failed: " + errorResponse.getValue().getMessage(), Toast.LENGTH_SHORT).show();
                         } else {
