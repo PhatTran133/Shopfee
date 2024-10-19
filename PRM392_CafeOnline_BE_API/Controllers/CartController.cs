@@ -22,8 +22,11 @@ namespace PRM392_CafeOnline_BE_API.Controllers
             try
             {
                 var cartItem = await _cartService.AddToCart(toppingDrinkRequestDTO);
-                return Ok(new JsonResponse<CartToppingDrinkDTO>(cartItem, 200, "Add to cart successfully"));
-            }catch(Exception ex)
+                if(cartItem != null) 
+                     return Ok(new JsonResponse<string>("Add to cart successfully", 200, "Add to cart successfully"));
+                return BadRequest(new JsonResponse<string>(null, 400, "Fail to add to cart"));
+            }
+            catch(Exception ex)
             {
                 if (ex.Message != null)
                 {
