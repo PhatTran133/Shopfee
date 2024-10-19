@@ -26,6 +26,7 @@ public class NotificationService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.d("NotificationService", "Service started");
+        Toast.makeText(this, "Service started", Toast.LENGTH_SHORT).show();
         // Tạo notification channel khi Service khởi động
         createNotificationChannel();
         // Hiển thị notification khi Service khởi động
