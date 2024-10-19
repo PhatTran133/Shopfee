@@ -65,16 +65,6 @@ public class DrinkAdapter extends RecyclerView.Adapter<DrinkAdapter.DrinkViewHol
             imageView = itemView.findViewById(R.id.img_drink);
             linearLayoutItemDrink = itemView.findViewById(R.id.layout_item_drink);
 
-            linearLayoutItemDrink.setOnClickListener(new View.OnClickListener() {
-                public void onClick(View v) {
-                    DrinkResponse drink = drinkList.get(getAdapterPosition()); // Lấy vị trí item được click
-
-                        Intent intent = new Intent(itemView.getContext(), DrinkDetailActivity.class);
-                        intent.putExtra("drinkId", drink.getId());
-                        itemView.getContext().startActivity(intent);
-
-                }
-            });
         }
 
         public void bind(DrinkResponse drink) {
