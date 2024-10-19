@@ -2,12 +2,15 @@ package com.example.cafeonline;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 
 import com.bumptech.glide.Glide;
 import com.denzcoskun.imageslider.ImageSlider;
 import com.denzcoskun.imageslider.constants.ScaleTypes;
 import com.denzcoskun.imageslider.models.SlideModel;
+import com.example.cafeonline.service.NotificationService;
 import com.example.cafeonline.adapter.DrinkAdapter;
 import com.example.cafeonline.api.DrinkApiService;
 import com.example.cafeonline.model.request.DrinkRequestModel;
@@ -117,6 +120,16 @@ public class MainActivity extends AppCompatActivity {
 
         imageSlider.setImageList(slideModels, ScaleTypes.FIT);
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (checkSelfPermission(android.Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(new String[]{android.Manifest.permission.POST_NOTIFICATIONS}, 1);
+            }
+        }
+
+        // Gọi Service để hiển thị notification
+        Intent serviceIntent = new Intent(this, NotificationService.class);
+        startService(serviceIntent);
+
         DrinkApiService drinkService = ApiService.createService(DrinkApiService.class);
         Call<ApiResponse<List<DrinkResponse>>> callApiDrink = drinkService.getDrinkFilter();
         callApiDrink.enqueue(new Callback<ApiResponse<List<DrinkResponse>>>() {
@@ -156,7 +169,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-       
+
 
     }
 //    private void loadProducts() {
@@ -173,4 +186,5 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences sharedPreferences = getSharedPreferences("KooheePrefs", MODE_PRIVATE);
         return sharedPreferences.getInt("userId", 0); // Returns null if no userId is found
     }
+
 }
