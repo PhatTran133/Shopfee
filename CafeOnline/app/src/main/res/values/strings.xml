@@ -31,6 +31,7 @@
     <string name="have_account">Already have an account?</string>
     <string name="have_not_account">Do not have an account?</string>
     <string name="login">Login</string>
+    <string name="search">Search</string>
     <string name="forgot_password">Forgot password?</string>
     //<string name="feedback" translatable="false">Phản hồi</string>
     //<string name="contact" translatable="false">Liên hệ</string>
@@ -43,10 +44,10 @@
     <string name="full_name">Full name:</string>
     <string name="updt_username">User name</string>
     <string name="updt_phone">Phone number</string>
-    <string name="updt_address">Address:</string>
+    <string name="updt_address">Address</string>
     <string name="address">Address</string>
-    <string name="phone_number">Phone number:</string>
-    <string name="address_title">Delivery address:</string>
+    <string name="phone_number">Phone number</string>
+    <string name="address_title">Delivery address</string>
     <string name="profile">Profile</string>
     <string name="label_full_name">Full name (*)</string>
     <string name="label_phone">Phone number (*)</string>
@@ -107,6 +108,7 @@
     <string name="label_notes" translatable="false">Notes</string>
     <string name="label_total" translatable="false">Total</string>
     <string name="label_add_order" translatable="false">Add to your order</string>
+    <string name="label_add_cart" translatable="false">Add to your cart</string>
 
     <string name="label_rating_review_order" translatable="false">Đánh giá quá trình giao hàng cho đơn hàng này</string>
     <string name="label_rating_review_drink" translatable="false">Bạn cảm thấy đồ uống này như thế nào?</string>

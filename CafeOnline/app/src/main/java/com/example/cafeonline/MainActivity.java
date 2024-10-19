@@ -4,10 +4,15 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
+import com.bumptech.glide.Glide;
 import com.denzcoskun.imageslider.ImageSlider;
 import com.denzcoskun.imageslider.constants.ScaleTypes;
 import com.denzcoskun.imageslider.models.SlideModel;
 import com.example.cafeonline.service.NotificationService;
+import com.example.cafeonline.adapter.DrinkAdapter;
+import com.example.cafeonline.api.DrinkApiService;
+import com.example.cafeonline.model.request.DrinkRequestModel;
+import com.example.cafeonline.model.response.DrinkResponse;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import androidx.activity.EdgeToEdge;
@@ -24,6 +29,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 
 import com.example.cafeonline.api.ApiService;
@@ -31,27 +38,33 @@ import com.example.cafeonline.api.UserApiService;
 import com.example.cafeonline.model.request.LoginRequest;
 import com.example.cafeonline.model.response.ApiResponse;
 import com.example.cafeonline.model.response.UserResponse;
+import com.google.gson.Gson;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
-
+    private RecyclerView recyclerView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        int userId = getUserIdFromPreferences();
-        UserApiService authService = ApiService.createService(UserApiService.class);
         setContentView(R.layout.activity_main);
+        int userId = getUserIdFromPreferences();
+        recyclerView = findViewById(R.id.rcv_drink);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
 
 //    ĐỪNG XÓA COMMENT NÀY
 //        Intent intent = new Intent(MainActivity.this, DrinkDetailActivity.class);
 //        startActivity(intent);
 
-        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+        //region Bottom Nav
+                BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
 
         bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
             if (item.getItemId() == R.id.nav_home) {
@@ -89,12 +102,14 @@ public class MainActivity extends AppCompatActivity {
             }
             return false;
         });
+        //endregion
 
         //kiếm id của image slider
         ImageSlider imageSlider = findViewById(R.id.imageSlider);
         //tạo array list cho ảnh trong slider
         ArrayList<SlideModel> slideModels = new ArrayList<>();
         //Add ảnh vào slider
+
         slideModels.add(new SlideModel(R.drawable.drink_example, ScaleTypes.FIT));
         slideModels.add(new SlideModel(R.drawable.ic_logo, ScaleTypes.FIT));
         slideModels.add(new SlideModel(R.drawable.ic_splash, ScaleTypes.FIT));
@@ -106,10 +121,62 @@ public class MainActivity extends AppCompatActivity {
         // Gọi Service để hiển thị notification
         Intent serviceIntent = new Intent(this, NotificationService.class);
         startService(serviceIntent);
+
+        DrinkApiService drinkService = ApiService.createService(DrinkApiService.class);
+        Call<ApiResponse<List<DrinkResponse>>> callApiDrink = drinkService.getDrinkFilter();
+        callApiDrink.enqueue(new Callback<ApiResponse<List<DrinkResponse>>>() {
+            @Override
+            public void onResponse(Call<ApiResponse<List<DrinkResponse>>> callApiDrink, Response<ApiResponse<List<DrinkResponse>>> response) {
+                if (response.isSuccessful()) {
+                    ApiResponse<List<DrinkResponse>> apiResponse = response.body();
+                    if ("200".equals(apiResponse.getValue().getStatus())) {
+                        List<DrinkResponse> drink = apiResponse.getValue().getData();
+                        DrinkAdapter adapter = new DrinkAdapter(drink);
+                        recyclerView.setAdapter(adapter);
+                    } else {
+                        Toast.makeText(MainActivity.this, apiResponse.getValue().getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    try {
+                        // Check if error body exists
+                        if (response.errorBody() != null) {
+                            // Deserialize error body to ApiResponse<String>
+                            Gson gson = new Gson();
+                            ApiResponse<String> errorResponse = gson.fromJson(response.errorBody().string(), ApiResponse.class);
+                            System.out.println(errorResponse.getValue().getMessage());
+                            Toast.makeText(MainActivity.this, "Fetch Failed: " + errorResponse.getValue().getMessage(), Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(MainActivity.this, "Error", Toast.LENGTH_SHORT).show();
+                        }
+                    } catch (Exception e) {
+                        Toast.makeText(MainActivity.this, "Error parsing response: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        System.out.println(e.getMessage());
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ApiResponse<List<DrinkResponse>>> call, Throwable t) {
+                Toast.makeText(MainActivity.this, "Network error", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+
+
     }
+//    private void loadProducts() {
+//        // Gọi API getAllProducts
+//        // ...
+//s
+//        // Tạo Intent để chuyển sang màn hình danh sách sản phẩm
+//        Intent intent = new Intent(this, DrinkFilterActivity.class);
+//        intent.putExtra("products", products); // Truyền danh sách sản phẩm
+//        startActivity(intent);
+//    }
 
     private int getUserIdFromPreferences() {
-        SharedPreferences sharedPreferences = getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
+        SharedPreferences sharedPreferences = getSharedPreferences("KooheePrefs", MODE_PRIVATE);
         return sharedPreferences.getInt("userId", 0); // Returns null if no userId is found
     }
+
 }

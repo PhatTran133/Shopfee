@@ -5,14 +5,16 @@ import java.util.List;
 
 public class DrinkResponse {
     private int id;
+    private String image;
     private String name;
     private String description;
-    private BigDecimal price;
+    private double price;
     private String categoryName;
     private List<String> toppingNames;
 
-    public DrinkResponse(int id, String name, String description, BigDecimal price, String categoryName, List<String> toppingNames) {
+    public DrinkResponse(int id, String image, String name, String description, double price, String categoryName, List<String> toppingNames) {
         this.id = id;
+        this.image = image;
         this.name = name;
         this.description = description;
         this.price = price;
@@ -26,6 +28,14 @@ public class DrinkResponse {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
 
     public String getName() {
@@ -44,11 +54,11 @@ public class DrinkResponse {
         this.description = description;
     }
 
-    public BigDecimal getPrice() {
+    public double getPrice() {
         return price;
     }
 
-    public void setPrice(BigDecimal price) {
+    public void setPrice(double price) {
         this.price = price;
     }
 
