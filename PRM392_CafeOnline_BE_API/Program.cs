@@ -89,6 +89,9 @@ builder.Services.AddScoped<IDrinkService, DrinkService>();
 builder.Services.AddScoped<IToppingService, ToppingService>();
 builder.Services.AddScoped<IToppingRepository, ToppingRepository>();
 
+builder.Services.AddTransient<IPaymentService, PaymentService>();
+builder.Services.AddTransient<IVnPayService, VNPayService>();
+
 
 var app = builder.Build();
 
