@@ -1,9 +1,13 @@
 services:
   app:
-    build: ./
-    # image: kreden35/lab2-client
+    # build: ./
+    image: tuankiet1201/helloworld:thehell
     ports:
       - 7079:7079
+    networks:
+      - testing
+networks:
+  testing:
 
   # client:
   #   # build: ./Lab01_BookStoreOData8-2/

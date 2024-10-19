@@ -1,17 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace DataAccess.Models
+namespace BussinessObjects.DTO
 {
-    public partial class TblNotification
+    public class CartDTO
     {
         public int Id { get; set; }
         public int? UserId { get; set; }
-        public string? Content { get; set; }
         public DateTime? CreatedDate { get; set; }
         public DateTime? UpdatedDate { get; set; }
-        public DateTime? DeletedDate { get; set; }
-
-        public virtual TblUser? User { get; set; }
+        public decimal? TotalPrice { get; set; }
+        public List<CartToppingDrinkDTO>? CartItems { get; set; }
     }
 }
