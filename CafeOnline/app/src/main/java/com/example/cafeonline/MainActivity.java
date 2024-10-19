@@ -2,33 +2,26 @@ package com.example.cafeonline;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 
+import com.example.cafeonline.ui.HomeFragment;
 import com.bumptech.glide.Glide;
 import com.denzcoskun.imageslider.ImageSlider;
 import com.denzcoskun.imageslider.constants.ScaleTypes;
 import com.denzcoskun.imageslider.models.SlideModel;
+import com.example.cafeonline.service.NotificationService;
 import com.example.cafeonline.adapter.DrinkAdapter;
 import com.example.cafeonline.api.DrinkApiService;
 import com.example.cafeonline.model.request.DrinkRequestModel;
 import com.example.cafeonline.model.response.DrinkResponse;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
-import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.TextView;
-import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
@@ -59,6 +52,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        if (savedInstanceState == null) {
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_container, new HomeFragment())
+                    .commit();
+        }
         int userId = getUserIdFromPreferences();
         search = findViewById(R.id.edt_search_name);
 
@@ -159,28 +157,16 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
             }
+        }
 
-            @Override
-            public void onFailure(Call<ApiResponse<List<DrinkResponse>>> call, Throwable t) {
-                Toast.makeText(MainActivity.this, "Network error", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-       
-
+        // Gọi Service để hiển thị notification
+        Intent serviceIntent = new Intent(this, NotificationService.class);
+        startService(serviceIntent);
     }
-//    private void loadProducts() {
-//        // Gọi API getAllProducts
-//        // ...
-//s
-//        // Tạo Intent để chuyển sang màn hình danh sách sản phẩm
-//        Intent intent = new Intent(this, DrinkFilterActivity.class);
-//        intent.putExtra("products", products); // Truyền danh sách sản phẩm
-//        startActivity(intent);
-//    }
 
     private int getUserIdFromPreferences() {
         SharedPreferences sharedPreferences = getSharedPreferences("KooheePrefs", MODE_PRIVATE);
         return sharedPreferences.getInt("userId", 0); // Returns null if no userId is found
     }
+
 }
