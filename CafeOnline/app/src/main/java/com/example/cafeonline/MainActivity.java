@@ -7,6 +7,7 @@ import android.os.Bundle;
 import com.denzcoskun.imageslider.ImageSlider;
 import com.denzcoskun.imageslider.constants.ScaleTypes;
 import com.denzcoskun.imageslider.models.SlideModel;
+import com.example.cafeonline.service.NotificationService;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import androidx.activity.EdgeToEdge;
@@ -101,6 +102,10 @@ public class MainActivity extends AppCompatActivity {
 
 
         imageSlider.setImageList(slideModels, ScaleTypes.FIT);
+
+        // Gọi Service để hiển thị notification
+        Intent serviceIntent = new Intent(this, NotificationService.class);
+        startService(serviceIntent);
     }
 
     private int getUserIdFromPreferences() {
