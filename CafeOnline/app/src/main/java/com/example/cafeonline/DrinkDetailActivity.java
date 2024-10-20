@@ -127,6 +127,7 @@ public class DrinkDetailActivity extends AppCompatActivity {
 
         //HIỂN THỊ DRINK DETAIL
         //CHỈNH LẠI DRINK ID ĐƯỢC INTENT TRUYỀN VÀO
+        drinkId = getIntent().getIntExtra("drinkId", -1);
 
         DrinkApiService drinkService = ApiService.createService(DrinkApiService.class);
         Call<ApiResponse<DrinkResponse>> callApiDrink = drinkService.getDrinkDetail(drinkId);
