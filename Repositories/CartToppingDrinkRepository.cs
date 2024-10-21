@@ -45,9 +45,23 @@ namespace Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task<int> CalculateTotal()
+        public async Task<int> CalculateTotal(int cartId)
         {
-            return await _context.CartToppingDrinks.SumAsync(ci => ci.Total);
+            return await _context.CartToppingDrinks
+                  .Where(ctd => ctd.CartId == cartId)
+                  .Join(
+                      _context.DrinkToppings,
+                      cartToppingDrink => cartToppingDrink.ToppingDrinkId,
+                      drinkTopping => drinkTopping.Id,
+                      (cartToppingDrink, drinkTopping) => new
+                      {
+                          CartToppingDrink = cartToppingDrink,
+                          DrinkId = drinkTopping.DrinkId
+                      }
+                  )
+                  .GroupBy(x => x.DrinkId)
+                  .Select(g => g.First().CartToppingDrink.Total)
+                  .SumAsync();
         }
     }
 }
