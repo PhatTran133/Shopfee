@@ -30,11 +30,10 @@ namespace PRM392_CafeOnline_BE_API.Services
         {
             try
             {
-                bool itemUpdated = false;
                 var cart = await _cartRepository.GetCartByUserIdAsync(requestDTO.UserId);
                 if (cart == null)
                 {
-                    cart = new Cart()
+                    cart = new Cart
                     {
                         CreatedDate = DateTime.Now,
                         UpdatedDate = DateTime.Now,
@@ -43,9 +42,10 @@ namespace PRM392_CafeOnline_BE_API.Services
 
                     await _cartRepository.CreateCartAsync(cart);
                 }
-                var cartToppingDrink = _mapper.Map<CartToppingDrink>(requestDTO);
 
-                if (requestDTO.Toppings != null)
+                CartToppingDrink lastAddedCartToppingDrink = null;
+
+                if (requestDTO.Toppings != null && requestDTO.Toppings.Any())
                 {
                     foreach (var topping in requestDTO.Toppings)
                     {
@@ -59,36 +59,49 @@ namespace PRM392_CafeOnline_BE_API.Services
                             };
                             await _drinkToppingRepository.AddDrinkTopping(existingToppingDrink);
                         }
+
                         var cartToppingDrinkExist = await _cartToppingDrinkRepository.GetCartToppingDrinkByCartIdAsync(cart.Id, existingToppingDrink.Id);
                         if (cartToppingDrinkExist != null)
                         {
-
-                            cartToppingDrinkExist.Quantity += cartToppingDrink.Quantity;
-                            cartToppingDrinkExist.Total += cartToppingDrink.Total;
-                            await _cartToppingDrinkRepository.UpdateCartItemAsync(cartToppingDrinkExist);
-
-                            itemUpdated = true;
+                            // Skip if the item already exists in the cart
+                            continue;
                         }
 
+                        // Use the mapped cartToppingDrink for adding each topping
+                        var cartToppingDrink = _mapper.Map<CartToppingDrink>(requestDTO);
                         cartToppingDrink.CartId = cart.Id;
                         cartToppingDrink.ToppingDrinkId = existingToppingDrink.Id;
+
+                        // Add the cart item
+                        await _cartToppingDrinkRepository.AddCartItemAsync(cartToppingDrink);
+
+                        // Track the last added cart topping drink
+                        lastAddedCartToppingDrink = cartToppingDrink;
                     }
                 }
-                if (!itemUpdated)
+                else
                 {
+                    // If there are no toppings, add the cartToppingDrink directly
+                    var cartToppingDrink = _mapper.Map<CartToppingDrink>(requestDTO);
+                    cartToppingDrink.CartId = cart.Id;
                     cartToppingDrink.Total = requestDTO.Total;
 
                     await _cartToppingDrinkRepository.AddCartItemAsync(cartToppingDrink);
+
+                    // Track the last added cart topping drink
+                    lastAddedCartToppingDrink = cartToppingDrink;
                 }
 
-                cart.TotalPrice = await _cartToppingDrinkRepository.CalculateTotal();
+                // Update the cart's total price
+                cart.TotalPrice = await _cartToppingDrinkRepository.CalculateTotal(cart.Id);
                 await _cartRepository.UpdateCartAsync(cart);
 
-                return _mapper.Map<CartToppingDrinkDTO>(cartToppingDrink);
+                // Return the mapped DTO for the last added cart topping drink
+                return _mapper.Map<CartToppingDrinkDTO>(lastAddedCartToppingDrink);
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                throw;
             }
         }
 
