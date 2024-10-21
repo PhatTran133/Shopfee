@@ -47,10 +47,21 @@ namespace Repositories
 
         public async Task<int> CalculateTotal(int cartId)
         {
-            return await _context
-                .CartToppingDrinks
-                .Where(c => c.CartId == cartId)
-                .SumAsync(ci => ci.Total);
+            return await _context.CartToppingDrinks
+                  .Where(ctd => ctd.CartId == cartId)
+                  .Join(
+                      _context.DrinkToppings,
+                      cartToppingDrink => cartToppingDrink.ToppingDrinkId,
+                      drinkTopping => drinkTopping.Id,
+                      (cartToppingDrink, drinkTopping) => new
+                      {
+                          CartToppingDrink = cartToppingDrink,
+                          DrinkId = drinkTopping.DrinkId
+                      }
+                  )
+                  .GroupBy(x => x.DrinkId)
+                  .Select(g => g.First().CartToppingDrink.Total)
+                  .SumAsync();
         }
     }
 }
