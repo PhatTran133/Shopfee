@@ -5,12 +5,6 @@ namespace BussinessObjects.Models
 {
     public partial class TblOrder
     {
-        public TblOrder()
-        {
-            OrderToppingDrinks = new HashSet<OrderToppingDrink>();
-            Payments = new HashSet<Payment>();
-        }
-
         public int Id { get; set; }
         public int? UserId { get; set; }
         public decimal? Total { get; set; }
@@ -20,7 +14,7 @@ namespace BussinessObjects.Models
         public DateTime? DeletedDate { get; set; }
 
         public virtual TblUser? User { get; set; }
-        public virtual ICollection<OrderToppingDrink> OrderToppingDrinks { get; set; }
-        public virtual ICollection<Payment> Payments { get; set; }
+        public virtual ICollection<OrderItem> OrderItems { get; set; } = null!;
+        public virtual ICollection<Payment>? Payments { get; set; }
     }
 }

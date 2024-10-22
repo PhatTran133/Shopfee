@@ -15,7 +15,6 @@ namespace BussinessObjects.DTO
         public DateTime? CreatedDate { get; set; }
         public DateTime? UpdatedDate { get; set; }
         public DateTime? DeletedDate { get; set; }
-        public UserDTO? User {  get; set; }
-        public IEnumerable<OrderToppingDrinkDTO> OrderToppingDrinkDTOs { get; set; } = null!;
+        public List<OrderItemDTO> OrderItemDTOs { get; set; } = null!;
     }
 }

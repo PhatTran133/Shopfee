@@ -32,25 +32,20 @@ namespace Repositories
         public async Task<Cart?> GetCartByIdAsync(int cartId)
         {
             return await _context.Carts
-                .Include(c => c.CartToppingDrinks)
-                .ThenInclude(ct => ct.ToppingDrink)
-                .ThenInclude(d => d.Drink)
-                .Include(c => c.CartToppingDrinks)
-                .ThenInclude(ct => ct.ToppingDrink)
-                .ThenInclude(td => td.Topping)
                 .FirstOrDefaultAsync(x => x.Id == cartId);
         }
 
         public async Task<Cart?> GetCartByUserIdAsync(int userId)
         {
             return await _context.Carts
-                .Include(c => c.CartToppingDrinks)
-                .ThenInclude(ct => ct.ToppingDrink)
-                .ThenInclude(d => d.Drink)
-                .Include(c => c.CartToppingDrinks)
-                .ThenInclude(ct => ct.ToppingDrink)
-                .ThenInclude(t => t.Topping)
-                .FirstOrDefaultAsync(x => x.UserId == userId);
+                .Include(c => c.User) 
+                .Include(c => c.CartItems)
+                    .ThenInclude(ci => ci.Drink) 
+                .Include(c => c.CartItems)
+                    .ThenInclude(ci => ci.CartItemToppings) 
+                    .ThenInclude(cit => cit.Topping) 
+                .Where(c => c.UserId == userId)
+                .FirstOrDefaultAsync();
         }
 
         public async Task RemoveCartAsync(Cart cart)

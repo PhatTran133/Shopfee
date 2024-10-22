@@ -48,8 +48,6 @@ namespace Repositories
         {
             var drinkDetail = await _context.Drinks
        .Include(d => d.Category) // JOIN với bảng Categories
-       .Include(d => d.DrinkToppings) // JOIN với bảng DrinkToppings
-           .ThenInclude(dt => dt.Topping) // JOIN với bảng Toppings
        .Where(d => d.Id == drinkId)
        .Select(d => new DrinkDetailDTO
        {
@@ -62,7 +60,6 @@ namespace Repositories
            Image = d.Image,
            CreatedDate = d.CreatedDate,
            UpdatedDate = d.UpdatedDate,
-           ToppingNames = d.DrinkToppings.Select(dt => dt.Topping.Name).ToList() // Lấy danh sách tên toppings
        })
        .FirstOrDefaultAsync(); // Lấy một đối tượng duy nhất
 

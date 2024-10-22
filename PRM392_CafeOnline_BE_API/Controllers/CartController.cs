@@ -23,7 +23,7 @@ namespace PRM392_CafeOnline_BE_API.Controllers
             {
                 var cartItem = await _cartService.AddToCart(toppingDrinkRequestDTO);
                 if(cartItem != null) 
-                     return Ok(new JsonResponse<string>("Add to cart successfully", 200, "Add to cart successfully"));
+                     return Ok(new JsonResponse<CartItemDTO>(cartItem, 200, "Add to cart successfully"));
                 return BadRequest(new JsonResponse<string>(null, 400, "Failed to add to cart"));
             }
             catch(Exception ex)
@@ -51,13 +51,13 @@ namespace PRM392_CafeOnline_BE_API.Controllers
                 return StatusCode(500, ex.Message);
             }
         }
-        [HttpPut("{cartToppingDrinkId}")]
-        public async Task<IActionResult> UpdateCartItem(int cartToppingDrinkId, [FromBody] UpdateCartItemRequestDTO updateCartItemRequestDTO)
+        [HttpPut("{cartItemId}")]
+        public async Task<IActionResult> UpdateCartItem(int cartItemId, [FromBody] UpdateCartItemRequestDTO updateCartItemRequestDTO)
         {
             try
             {
-                var cartItem = await _cartService.UpdateCartItem(cartToppingDrinkId, updateCartItemRequestDTO);
-                return Ok(new JsonResponse<CartToppingDrinkDTO>(cartItem, 200, "Update successfully"));
+                var cartItem = await _cartService.UpdateCartItem(cartItemId, updateCartItemRequestDTO);
+                return Ok(new JsonResponse<CartItemDTO>(cartItem, 200, "Update successfully"));
             }
             catch (Exception ex)
             {
