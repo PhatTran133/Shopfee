@@ -22,10 +22,20 @@ namespace Repositories
             await _context.SaveChangesAsync();
         }
 
+        public async Task<TblOrder?> GetOrderByIdAsync(int id)
+        {
+            return await _context.TblOrders
+                .Include(o => o.OrderItems)
+                    .ThenInclude(oi => oi.Drink)
+                .Include(o => o.OrderItems) 
+                    .ThenInclude(oi => oi.OrderItemToppings) 
+                    .ThenInclude(oit => oit.Topping)
+                .FirstOrDefaultAsync(x => x.Id == id);
+        }
+
         public async Task<IEnumerable<TblOrder>> GetOrdersFilterByStatus(bool status, bool paymentCreated, int userId)
         {
             return await _context.TblOrders
-                .Include(o => o.User)
                 .Include(o => o.OrderItems)
                     .ThenInclude(oi => oi.Drink)
                 .Include(o => o.OrderItems) // Start from OrderItems

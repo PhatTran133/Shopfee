@@ -21,6 +21,6 @@ namespace BussinessObjects.Models
 
         public virtual TblOrder Order { get; set; } = null!;
         public virtual Drink? Drink { get; set; }
-        public ICollection<OrderItemTopping>? OrderItemToppings { get; set; }
+        public ICollection<OrderItemTopping> OrderItemToppings { get; set; } = null!;
     }
 }

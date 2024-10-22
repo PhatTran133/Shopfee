@@ -7,5 +7,6 @@ namespace PRM392_CafeOnline_BE_API.Services.Interfaces
     {
         Task<OrderDTO> CreateOrder(CreateOrderItemRequestDTO createOrderItemRequestDTO);
         Task<IEnumerable<OrderDTO>> GetOrdersByStatus(OrderStatus orderStatus, int userId);
+        Task<OrderDTO> GetOrderByIdAsync(int id);
     }
 }

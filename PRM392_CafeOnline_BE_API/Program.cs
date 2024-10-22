@@ -77,6 +77,8 @@ builder.Services.AddScoped<ICartService, CartService>();
 builder.Services.AddScoped<IToppingRepository, ToppingRepository>();
 
 builder.Services.AddScoped<IOrderRepository, TblOrderRepository>();
+builder.Services.AddScoped<IOrderItemRepository, OrderItemRepository>();
+builder.Services.AddScoped<IOrderItemToppingRepository, OrderItemToppingRepository>();
 builder.Services.AddScoped<IOrderService, OrderService>();
 
 builder.Services.AddScoped<IUserRepository, TblUserRepository>();

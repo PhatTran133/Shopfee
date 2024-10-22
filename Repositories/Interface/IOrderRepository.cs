@@ -12,5 +12,6 @@ namespace Repositories.Interface
         Task CreateOrder(TblOrder tblOrder);
         Task UpdateOrder(TblOrder tblOrder);
         Task<IEnumerable<TblOrder>> GetOrdersFilterByStatus(bool status, bool paymentCreated, int userId);
+        Task<TblOrder?> GetOrderByIdAsync(int id);
     }
 }
