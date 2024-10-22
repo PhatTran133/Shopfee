@@ -14,16 +14,30 @@ import com.denzcoskun.imageslider.models.SlideModel;
 import com.example.cafeonline.service.NotificationService;
 import com.example.cafeonline.adapter.DrinkAdapter;
 import com.example.cafeonline.api.DrinkApiService;
-import com.example.cafeonline.model.request.DrinkRequestModel;
 import com.example.cafeonline.model.response.DrinkResponse;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import android.widget.Toast;
+
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+
+import com.example.cafeonline.api.ApiService;
+import com.example.cafeonline.model.response.ApiResponse;
+import com.google.gson.Gson;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import android.widget.Button;
 
 import androidx.recyclerview.widget.RecyclerView;
-
 
 public class MainActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
@@ -61,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
                     return true;
                 }
                 //Rồi thì sang screen đơn hàng
-                Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                Intent intent = new Intent(MainActivity.this, CartActivity.class);
                 startActivity(intent);
                 return true;
             } else if (item.getItemId() == R.id.nav_account) {
@@ -91,6 +105,8 @@ public class MainActivity extends AppCompatActivity {
 
         // Gọi Service để hiển thị notification
         Intent serviceIntent = new Intent(this, NotificationService.class);
+        serviceIntent.putExtra("title", "Welcome to Koohee"); // Truyền title
+        serviceIntent.putExtra("text", "Lào gì cũng tôn" + userId); // Truyền text
         startService(serviceIntent);
     }
 

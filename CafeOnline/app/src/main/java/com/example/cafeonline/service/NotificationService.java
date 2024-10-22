@@ -17,6 +17,12 @@ import com.example.cafeonline.MainActivity;
 import com.example.cafeonline.R;
 
 public class NotificationService extends Service {
+    private String title = "";
+    private String text = "";
+
+    public NotificationService() {
+        // Constructor không tham số là bắt buộc cho Service
+    }
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -25,12 +31,15 @@ public class NotificationService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        if (intent != null) {
+            title = intent.getStringExtra("title");
+            text = intent.getStringExtra("text");
+        }
         Log.d("NotificationService", "Service started");
-        Toast.makeText(this, "Service started", Toast.LENGTH_SHORT).show();
         // Tạo notification channel khi Service khởi động
         createNotificationChannel();
         // Hiển thị notification khi Service khởi động
-        showNotification();
+        showNotification(title, text);
         return START_NOT_STICKY;
     }
 
@@ -53,14 +62,14 @@ public class NotificationService extends Service {
 
 
     // Hiển thị thông báo
-    private void showNotification() {
+    private void showNotification(String title, String text) {
         Intent intent = new Intent(this, MainActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "my_channel_id")
                 .setSmallIcon(R.drawable.ic_logo)  // Icon nhỏ
-                .setContentTitle("Tiêu đề thông báo")      // Tiêu đề
-                .setContentText("Nội dung thông báo")      // Nội dung
+                .setContentTitle(title)      // Tiêu đề
+                .setContentText(text)      // Nội dung
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)  // Độ ưu tiên
                 .setContentIntent(pendingIntent)           // Gán Intent
                 .setAutoCancel(true);                      // Tự động hủy khi người dùng nhấn vào
