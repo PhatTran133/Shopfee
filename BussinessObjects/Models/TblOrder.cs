@@ -13,7 +13,7 @@ namespace BussinessObjects.Models
         public DateTime? UpdatedDate { get; set; }
         public DateTime? DeletedDate { get; set; }
 
-        public virtual TblUser? User { get; set; }
+        public virtual TblUser User { get; set; } = null!;
         public virtual ICollection<OrderItem> OrderItems { get; set; } = null!;
         public virtual ICollection<Payment>? Payments { get; set; }
     }
