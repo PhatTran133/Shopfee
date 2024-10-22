@@ -6,43 +6,27 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 
-import com.bumptech.glide.Glide;
 import com.denzcoskun.imageslider.ImageSlider;
 import com.denzcoskun.imageslider.constants.ScaleTypes;
 import com.denzcoskun.imageslider.models.SlideModel;
 import com.example.cafeonline.service.NotificationService;
 import com.example.cafeonline.adapter.DrinkAdapter;
 import com.example.cafeonline.api.DrinkApiService;
-import com.example.cafeonline.model.request.DrinkRequestModel;
 import com.example.cafeonline.model.response.DrinkResponse;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
-import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 
 import com.example.cafeonline.api.ApiService;
-import com.example.cafeonline.api.UserApiService;
-import com.example.cafeonline.model.request.LoginRequest;
 import com.example.cafeonline.model.response.ApiResponse;
-import com.example.cafeonline.model.response.UserResponse;
 import com.google.gson.Gson;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 

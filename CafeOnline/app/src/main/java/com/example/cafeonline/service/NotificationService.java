@@ -59,7 +59,7 @@ public class NotificationService extends Service {
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "my_channel_id")
                 .setSmallIcon(R.drawable.ic_logo)  // Icon nhỏ
-                .setContentTitle("Tiêu đề thông báo")      // Tiêu đề
+                .setContentTitle("Your Order")      // Tiêu đề
                 .setContentText("Nội dung thông báo")      // Nội dung
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)  // Độ ưu tiên
                 .setContentIntent(pendingIntent)           // Gán Intent
