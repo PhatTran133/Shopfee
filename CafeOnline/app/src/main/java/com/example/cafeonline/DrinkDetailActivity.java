@@ -250,7 +250,7 @@ public class DrinkDetailActivity extends AppCompatActivity {
 
     private void updateTotalPrice() {
         double drinkPrice = price;
-        double finalPrice = (drinkPrice * count) + totalPrice;
+        double finalPrice = (drinkPrice * count) + (totalPrice * count);
         DecimalFormat decimalFormat = new DecimalFormat("#,###");
         String formattedPrice = decimalFormat.format(finalPrice);
         tvTotal.setText(formattedPrice + " VND");
