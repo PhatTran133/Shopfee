@@ -16,7 +16,7 @@ namespace BussinessObjects.DTO
         public string? Note { get; set; }
         public int Quantity { get; set; }
         public int TotalPrice { get; set; }
-        public DrinkDTO? DrinkDTO { get; set; }
+        public DrinkDTO DrinkDTO { get; set; } = null!;
         public List<OrderItemToppingDTO> OrderItemToppingDTOs { get; set; } = null!;
     }
 }

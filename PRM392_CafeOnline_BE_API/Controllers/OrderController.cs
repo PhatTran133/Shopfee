@@ -48,5 +48,22 @@ namespace PRM392_CafeOnline_BE_API.Controllers
                 return StatusCode(500, new JsonResponse<string>("Internal Error", 500, ex.Message));
             }
         }
+        [HttpGet()]
+        public async Task<IActionResult> GetOrderById([FromQuery]int orderId)
+        {
+            try
+            {
+                var order = await _orderService.GetOrderByIdAsync(orderId);
+                return Ok(new JsonResponse<OrderDTO>(order, 200, "Get Order Successfully"));
+            }
+            catch (Exception ex)
+            {
+                if (ex.Message != null)
+                {
+                    return BadRequest(new JsonResponse<string>("Error", 400, ex.Message));
+                }
+                return StatusCode(500, new JsonResponse<string>("Internal Error", 500, ex.Message));
+            }
+        }
     }
 }

@@ -27,9 +27,15 @@ namespace Repositories.AutoMapper
         private void MapOrder()
         {
             CreateMap<TblOrder, OrderDTO>()
+                .ForMember(dest => dest.OrderItemDTOs, opt => opt.MapFrom(src => src.OrderItems))
                 .ReverseMap();
-            CreateMap<OrderItem, OrderItemDTO>().ReverseMap();
-            CreateMap<OrderItemTopping, OrderItemToppingDTO>().ReverseMap();
+            CreateMap<OrderItem, OrderItemDTO>()
+                .ForMember(dest => dest.DrinkDTO, opt => opt.MapFrom(src => src.Drink))
+                .ForMember(dest => dest.OrderItemToppingDTOs, opt => opt.MapFrom(src => src.OrderItemToppings))
+                .ReverseMap();
+            CreateMap<OrderItemTopping, OrderItemToppingDTO>()
+                .ForMember(dest => dest.Topping, opt => opt.MapFrom(src => src.Topping))
+                .ReverseMap();
         }
 
         private void MapOrderCart()

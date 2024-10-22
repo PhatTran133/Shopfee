@@ -38,24 +38,24 @@ namespace PRM392_CafeOnline_BE_API.Services
                 {
                     throw new Exception("Invalid credentials");
                 }
-                Cart newCart;
-                var existingCart = await _cartRepository.GetCartByUserIdAsync(requestDTO.UserId);
-                if(existingCart == null)
+                Cart cart;
+                cart = await _cartRepository.GetCartByUserIdAsync(requestDTO.UserId);
+                if(cart == null)
                 {
-                    newCart = new Cart
+                    cart = new Cart
                     {
                         UserId = requestDTO.UserId,
                         CreatedDate = DateTime.Now,
                         UpdatedDate = DateTime.Now
                     };
-                    await _cartRepository.CreateCartAsync(newCart);
+                    await _cartRepository.CreateCartAsync(cart);
                 }
 
 
                 var existingDrink = await _drinkRepository.GetDrinkByIdAsync(requestDTO.DrinkId) ?? throw new Exception("Drink not found");
                 var newCartItemDTO = _mapper.Map<CartItemDTO>(requestDTO);
                 var newCartItem = _mapper.Map<CartItem>(newCartItemDTO);
-                newCartItem.CartId = existingCart.Id;
+                newCartItem.CartId = cart.Id;
                 newCartItem.DrinkId = existingDrink.Id;
                 await _cartItemRepository.AddCartItemAsync(newCartItem);
 
