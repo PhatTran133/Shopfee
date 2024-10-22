@@ -105,14 +105,14 @@ public class MainActivity extends AppCompatActivity {
 
         // Gọi Service để hiển thị notification
         Intent serviceIntent = new Intent(this, NotificationService.class);
-        serviceIntent.putExtra("title", "Welcome to Koohee"); // Truyền title
-        serviceIntent.putExtra("text", "Lào gì cũng tôn" + userId); // Truyền text
+        serviceIntent.putExtra("title", "Welcome to Koohee");
+        serviceIntent.putExtra("text", "Welcome: " + userId);
         startService(serviceIntent);
     }
 
     private int getUserIdFromPreferences() {
         SharedPreferences sharedPreferences = getSharedPreferences("KooheePrefs", MODE_PRIVATE);
-        return sharedPreferences.getInt("userId", 0); // Returns null if no userId is found
+        return sharedPreferences.getInt("userId", 0);
     }
 
 }

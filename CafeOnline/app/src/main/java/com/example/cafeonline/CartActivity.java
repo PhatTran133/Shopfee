@@ -22,8 +22,8 @@ public class CartActivity extends AppCompatActivity {
         orderButton.setOnClickListener(v -> {
             // Gọi Service để hiển thị notification
             Intent serviceIntent = new Intent(this, NotificationService.class);
-            serviceIntent.putExtra("title", "Order"); // Truyền title
-            serviceIntent.putExtra("text", "Your order is pending"); // Truyền text
+            serviceIntent.putExtra("title", "Order");
+            serviceIntent.putExtra("text", "Your order is pending");
             startService(serviceIntent);
         });
     }
