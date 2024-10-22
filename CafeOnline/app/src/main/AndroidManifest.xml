@@ -3,8 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
-
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
     <application
         android:allowBackup="true"
@@ -17,48 +16,48 @@
         android:theme="@style/Theme.CafeOnline"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
-
+        <activity
+            android:name=".CartActivity"
+            android:exported="false" />
         <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+                <action
+                    android:name="android.intent.action.MAIN"
+                    android:exported="true" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-
-<!--        USER-->
+        </activity> <!-- USER -->
         <activity
-            android:name="com.example.cafeonline.LoginActivity"
+            android:name=".LoginActivity"
             android:exported="true" />
         <activity
-            android:name="com.example.cafeonline.RegisterActivity"
+            android:name=".RegisterActivity"
             android:exported="true" />
         <activity
-            android:name="com.example.cafeonline.AccountActivity"
+            android:name=".AccountActivity"
             android:exported="true" />
         <activity
-            android:name="com.example.cafeonline.UpdateActivity"
+            android:name=".UpdateActivity"
             android:exported="true" />
         <activity
-            android:name="com.example.cafeonline.ForgotPasswordActivity"
+            android:name=".ForgotPasswordActivity"
             android:exported="true" />
         <activity
-            android:name="com.example.cafeonline.ChangePasswordNotLoginActivity"
+            android:name=".ChangePasswordNotLoginActivity"
             android:exported="true" />
         <activity
-            android:name="com.example.cafeonline.UserProfileActivity"
-            android:exported="true" />
-
-<!--        DRINK-->
+            android:name=".UserProfileActivity"
+            android:exported="true" /> <!-- DRINK -->
         <activity
-            android:name="com.example.cafeonline.DrinkDetailActivity"
+            android:name=".DrinkDetailActivity"
             android:exported="true" />
 
-        <service android:name=".service.NotificationService"
-            android:exported="false"/>
+        <service
+            android:name=".service.NotificationService"
+            android:exported="false" />
     </application>
-
 
 </manifest>
