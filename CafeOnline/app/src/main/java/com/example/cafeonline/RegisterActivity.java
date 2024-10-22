@@ -22,7 +22,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class RegisterActivity extends AppCompatActivity {
-    private EditText edtEmail, edtPassword, edtUsername, edtOTP;
+    private EditText edtEmail, edtPassword, edtUsername, edtOTP, edtPhone, edtAddress;
     private Button btnSendOTP, btnRegister;
     private TextView txtLogin;
     private ImageView imgBack;
@@ -37,6 +37,8 @@ public class RegisterActivity extends AppCompatActivity {
         edtPassword = findViewById(R.id.edt_password);
         edtUsername = findViewById(R.id.edt_username);
         edtOTP = findViewById(R.id.edt_Otp);
+        edtPhone = findViewById((R.id.edt_phone));
+        edtAddress = findViewById((R.id.edt_address));
         btnSendOTP = findViewById(R.id.btn_sendOTP);
         btnRegister = findViewById(R.id.btn_register);
         txtLogin = findViewById(R.id.tv_login);
@@ -55,12 +57,31 @@ public class RegisterActivity extends AppCompatActivity {
         String email = edtEmail.getText().toString().trim();
         String password = edtPassword.getText().toString().trim();
         String userName = edtUsername.getText().toString().trim();
-        if (email.isEmpty() || password.isEmpty() || userName.isEmpty()) {
-            Toast.makeText(this, "Please enter email, password and user name", Toast.LENGTH_SHORT).show();
+        String phone = edtPhone.getText().toString().trim();
+        String address = edtAddress.getText().toString().trim();
+        if (email.isEmpty()) {
+            Toast.makeText(this, "Please enter email", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        else if (password.isEmpty()) {
+            Toast.makeText(this, "Please enter password", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        else if (userName.isEmpty()) {
+            Toast.makeText(this, "Please enter user name", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        else if (phone.isEmpty()) {
+            Toast.makeText(this, "Please enter phone number", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        else if (address.isEmpty()) {
+            Toast.makeText(this, "Please enter address", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        RegisterRequest registerRequest = new RegisterRequest(userName,email,password,"1234567890","TPHCM");
+
+        RegisterRequest registerRequest = new RegisterRequest(userName,email,password,phone,address);
         UserApiService authService = ApiService.createService(UserApiService.class);
         Call<ApiResponse<String>> call = authService.registerUser(registerRequest);
         call.enqueue(new Callback<ApiResponse<String>>(){
