@@ -15,6 +15,6 @@ namespace Repositories.Interface
         Task AddCartItemAsync(CartToppingDrink cartToppingDrink);
         Task UpdateCartItemAsync(CartToppingDrink cartToppingDrink);
         Task RemoveCartItemAsync(CartToppingDrink cartToppingDrink);
-        Task<int> CalculateTotal();
+        Task<int> CalculateTotal(int cartId);
     }
 }
