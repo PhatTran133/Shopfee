@@ -19,15 +19,16 @@ namespace BussinessObjects.Models
         }
 
         public virtual DbSet<Cart> Carts { get; set; } = null!;
-        public virtual DbSet<CartToppingDrink> CartToppingDrinks { get; set; } = null!;
+        public virtual DbSet<CartItem> CartItems { get; set; } = null!;
+        public virtual DbSet<CartItemTopping> CartItemToppings { get; set; } = null!;
         public virtual DbSet<Category> Categories { get; set; } = null!;
         public virtual DbSet<Drink> Drinks { get; set; } = null!;
-        public virtual DbSet<DrinkTopping> DrinkToppings { get; set; } = null!;
-        public virtual DbSet<OrderToppingDrink> OrderToppingDrinks { get; set; } = null!;
         public virtual DbSet<Otp> Otps { get; set; } = null!;
         public virtual DbSet<Payment> Payments { get; set; } = null!;
         public virtual DbSet<TblNotification> TblNotifications { get; set; } = null!;
         public virtual DbSet<TblOrder> TblOrders { get; set; } = null!;
+        public virtual DbSet<OrderItem> OrderItems { get; set; }
+        public virtual DbSet<OrderItemTopping> OrderItemToppings { get; set; } = null!;
         public virtual DbSet<TblUser> TblUsers { get; set; } = null!;
         public virtual DbSet<Topping> Toppings { get; set; } = null!;
 
@@ -50,14 +51,59 @@ namespace BussinessObjects.Models
             base.OnModelCreating(modelBuilder);
             //modelBuilder.ApplyConfiguration(new RoleConfiguration());
             ConfigureModel(modelBuilder);
-            modelBuilder.Entity<Cart>()
-                .HasMany(c => c.CartToppingDrinks)
-                .WithOne(ct => ct.Cart)
-                .HasForeignKey(ct => ct.CartId)
-                .OnDelete(DeleteBehavior.Cascade);
+            BuildCartModel(modelBuilder);
+
+            BuildOrderModel(modelBuilder);
 
             OnModelCreatingPartial(modelBuilder);
         }
+
+        private static void BuildOrderModel(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<OrderItem>()
+           .HasOne(oi => oi.Order)
+           .WithMany(o => o.OrderItems)
+           .HasForeignKey(oi => oi.OrderId);
+
+            modelBuilder.Entity<OrderItem>()
+                .HasOne(oi => oi.Drink)
+                .WithMany(d => d.OrderItems)
+                .HasForeignKey(oi => oi.DrinkId);
+
+            modelBuilder.Entity<OrderItemTopping>()
+                .HasOne(oit => oit.OrderItem)
+                .WithMany(oi => oi.OrderItemToppings)
+                .HasForeignKey(oit => oit.OrderItemId);
+
+            modelBuilder.Entity<OrderItemTopping>()
+                .HasOne(oit => oit.Topping)
+                .WithMany(t => t.OrderItemToppings)
+                .HasForeignKey(oit => oit.ToppingId);
+        }
+
+        private static void BuildCartModel(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<CartItem>()
+                            .HasOne(ci => ci.Cart)
+                            .WithMany(c => c.CartItems)
+                            .HasForeignKey(c => c.CartId);
+
+            modelBuilder.Entity<CartItem>()
+                .HasOne(ci => ci.Drink)
+                .WithMany(d => d.CartItems)
+                .HasForeignKey(c => c.DrinkId);
+
+            modelBuilder.Entity<CartItemTopping>()
+                .HasOne(cit => cit.CartItem)
+                .WithMany(ci => ci.CartItemToppings)
+                .HasForeignKey(c => c.CartItemId);
+
+            modelBuilder.Entity<CartItemTopping>()
+                .HasOne(cit => cit.Topping)
+                .WithMany(t => t.CartItemToppings)
+                .HasForeignKey(c => c.ToppingId);
+        }
+
         private void ConfigureModel(ModelBuilder modelBuilder)
         {
 

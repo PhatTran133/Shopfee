@@ -11,7 +11,7 @@ namespace BussinessObjects.DTO
         public int UserId { get; set; }
         public int DrinkId {  get; set; }
         public int Quantity { get; set; }
-        public int Total { get; set; }
+        public int TotalPrice { get; set; }
         public string? Variant { get; set; }
         public string? Size { get; set; }
         public string? Sugar { get; set; }

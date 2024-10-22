@@ -6,9 +6,8 @@ using System.Threading.Tasks;
 
 namespace BussinessObjects.DTO
 {
-    public class CreateOrderItemRequestDTO
+    public class CartItemToppingDTO
     {
-        public int UserId { get; set; }
-        public int CartId {  get; set; }
-    }
+        public ToppingDTO Topping { get; set; } = null!;
+    } 
 }
