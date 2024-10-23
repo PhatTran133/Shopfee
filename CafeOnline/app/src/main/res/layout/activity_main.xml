@@ -20,7 +20,7 @@
 <!--        android:layout_marginBottom="-1349dp"/>-->
 <!--        android:layout_height="match_parent">-->
 
-    <include layout="@layout/fragment_home"/>
+<!--    <include layout="@layout/fragment_home"/>-->
 
 
     <RelativeLayout

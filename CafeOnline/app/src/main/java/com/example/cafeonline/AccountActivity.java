@@ -10,7 +10,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class AccountActivity  extends AppCompatActivity {
     private ImageView imgBack;
-    private LinearLayout update_profile, log_out;
+    private LinearLayout update_profile, log_out, change_password;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,6 +20,11 @@ public class AccountActivity  extends AppCompatActivity {
         update_profile =  findViewById(R.id.update_profile);
         update_profile.setOnClickListener(v -> {
             Intent intent = new Intent(AccountActivity.this, UserProfileActivity.class);
+            startActivity(intent);
+        });
+        change_password = findViewById(R.id.layout_change_password);
+        change_password.setOnClickListener(v -> {
+            Intent intent = new Intent(AccountActivity.this, ChangePasswordActivity.class);
             startActivity(intent);
         });
         log_out =  findViewById(R.id.logout);
