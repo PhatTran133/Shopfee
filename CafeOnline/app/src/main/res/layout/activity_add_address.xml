@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    tools:ignore="Autofill, LabelFor">
+
+    <include layout="@layout/layout_toolbar"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="@dimen/define_dimen_18">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/add_address"
+            android:gravity="center"
+            android:textColor="@color/textColorHeading"
+            android:textSize="@dimen/text_size_large"
+            android:textStyle="bold"
+            />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/full_name"
+            android:layout_marginTop="@dimen/define_dimen_20"
+            android:textColor="@color/textColorHeading"
+            android:textSize="@dimen/text_size_small"
+            />
+        <EditText
+            android:id="@+id/add_full_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_white_corner_16_border_gray"
+            android:layout_marginTop="@dimen/define_dimen_5"
+            android:padding="@dimen/define_dimen_14"
+            android:imeOptions="actionNext"
+            android:inputType="text"
+            android:textColor="@color/textColorHeading"
+            android:textSize="@dimen/text_size_small"
+            tools:ignore="LabelFor" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/updt_phone"
+            android:layout_marginTop="@dimen/define_dimen_12"
+            android:textColor="@color/textColorHeading"
+            android:textSize="@dimen/text_size_small"
+            />
+        <EditText
+            android:id="@+id/add_phone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_white_corner_16_border_gray"
+            android:layout_marginTop="@dimen/define_dimen_5"
+            android:padding="@dimen/define_dimen_14"
+            android:imeOptions="actionNext"
+            android:inputType="phone"
+            android:textColor="@color/textColorHeading"
+            android:textSize="@dimen/text_size_small"
+            />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/updt_address"
+            android:layout_marginTop="@dimen/define_dimen_12"
+            android:textColor="@color/textColorHeading"
+            android:textSize="@dimen/text_size_small"
+            />
+        <EditText
+            android:id="@+id/add_address"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_white_corner_16_border_gray"
+            android:layout_marginTop="@dimen/define_dimen_5"
+            android:padding="@dimen/define_dimen_14"
+            android:imeOptions="actionDone"
+            android:inputType="text"
+            android:textColor="@color/textColorHeading"
+            android:textSize="@dimen/text_size_small"
+            />
+
+        <Button
+            android:id="@+id/btn_add"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/define_dimen_30"
+            android:background="@drawable/bg_button_disable_corner_16"
+            android:text="@string/add"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_size_small"
+            />
+    </LinearLayout>
+
+</RelativeLayout>
