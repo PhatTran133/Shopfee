@@ -54,13 +54,6 @@ namespace PRM392_CafeOnline_BE_API.Services
 
                 var existingDrink = await _drinkRepository.GetDrinkByIdAsync(requestDTO.DrinkId) ?? throw new Exception("Drink not found");
 
-                var existingCartItem = await _cartItemRepository.GetCartItemByDrinkIdAsync(cart.Id, requestDTO.DrinkId);
-
-                if (existingCartItem != null)
-                {
-                    await _cartItemRepository.DeleteCartItemAsync(existingCartItem);
-                }
-
                 var newCartItemDTO = _mapper.Map<CartItemDTO>(requestDTO);
                 newCartItem = _mapper.Map<CartItem>(newCartItemDTO);
                 newCartItem.CartId = cart.Id;
