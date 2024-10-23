@@ -50,6 +50,10 @@ namespace Repositories.AutoMapper
             CreateMap<CartItemToppingDTO, OrderItemToppingDTO>()
                 .ForMember(dest => dest.Topping, opt => opt.MapFrom(src => src.Topping))
                 .ReverseMap();
+
+            CreateMap<CartItem, OrderItem>()
+                .ForMember(dest => dest.Drink, opt => opt.Ignore())
+                .ForMember(dest => dest.OrderItemToppings, opt => opt.Ignore());
         }
 
         private void MapCart()
