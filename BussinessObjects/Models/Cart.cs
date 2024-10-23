@@ -9,7 +9,7 @@ namespace BussinessObjects.Models
         public int? UserId { get; set; }
         public DateTime? CreatedDate { get; set; }
         public DateTime? UpdatedDate { get; set; }
-        public decimal? TotalPrice { get; set; }
+        public decimal TotalPrice { get; set; }
         public virtual TblUser? User { get; set; }
         public ICollection<CartItem> CartItems { get; set; } = null!;
     }

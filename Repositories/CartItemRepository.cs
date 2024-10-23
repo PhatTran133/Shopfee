@@ -41,5 +41,13 @@ namespace Repositories
             _context.CartItems.Update(cartItem);
             await _context.SaveChangesAsync();
         }
+
+        public async Task<CartItem?> GetCartItemByDrinkIdAsync(int cartId, int drinkId)
+        {
+            return await _context.CartItems
+                .Include(cit => cit.CartItemToppings)
+                .Where(ci => ci.DrinkId == drinkId && ci.CartId == cartId)
+                .FirstOrDefaultAsync();
+        }
     }
 }

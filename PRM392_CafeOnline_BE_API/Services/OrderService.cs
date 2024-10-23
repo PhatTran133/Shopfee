@@ -38,32 +38,49 @@ namespace PRM392_CafeOnline_BE_API.Services
                     throw new Exception("Invalid cart");
                 }
 
-                var existingCartDTO = _mapper.Map<CartDTO>(existingCart);
-                var newOrder = _mapper.Map<OrderDTO>(existingCartDTO);
-                newOrder.StatusOfOder = true;
-                await _orderRepository.CreateOrder(_mapper.Map<TblOrder>(newOrder));
-                OrderItem orderItem;
-                OrderItemTopping orderItemTopping;
-                foreach(var item in newOrder.OrderItemDTOs)
+                var newOrder = new TblOrder
                 {
-                    orderItem = _mapper.Map<OrderItem>(item);
-                    orderItem.DrinkId = item.DrinkDTO.Id;
+                    CreatedDate = DateTime.Now,
+                    StatusOfOder = true,
+                    UserId = createOrderItemRequestDTO.UserId
+                };
+                await _orderRepository.CreateOrder(newOrder);
+                foreach(var item in existingCart.CartItems)
+                {
+                    //var orderItem = new OrderItem
+                    //{
+                    //    DrinkId = item.DrinkId,
+                    //    Iced = item.Iced,
+                    //    Note = item.Note,
+                    //    OrderId = newOrder.Id,
+                    //    Quantity = item.Quantity,
+                    //    Size = item.Size,
+                    //    Sugar = item.Sugar,
+                    //    TotalPrice = item.TotalPrice,
+                    //    Variant = item.Variant
+                    //};
+
+                    var orderItem = _mapper.Map<OrderItem>(item);
                     orderItem.OrderId = newOrder.Id;
                     await _orderItemRepository.AddOrderItemAsync(orderItem);
 
-                    foreach(var itemTopping in item.OrderItemToppingDTOs)
+                    if (item.CartItemToppings != null)
                     {
-                        orderItemTopping = new()
+                        foreach (var cartItemTopping in item.CartItemToppings)
                         {
-                            OrderItemId = item.Id,
-                            ToppingId = itemTopping.Topping.Id
-                        };
+                            var orderItemTopping = new OrderItemTopping
+                            {
+                                OrderItemId = orderItem.Id, 
+                                ToppingId = cartItemTopping.ToppingId
+                            };
 
-                        await _orderItemToppingRepository.AddOrderItemToppingAsync(orderItemTopping);
+                            await _orderItemToppingRepository.AddOrderItemToppingAsync(orderItemTopping);
+                        }
                     }
                 }
                 await _cartRepository.RemoveCartAsync(existingCart);
-                return newOrder;
+                var orderCreated = await _orderRepository.GetOrderByIdAsync(newOrder.Id);
+                return _mapper.Map<OrderDTO>(newOrder);
             }
             catch (Exception ex)
             {

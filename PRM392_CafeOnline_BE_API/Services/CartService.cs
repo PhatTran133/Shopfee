@@ -34,13 +34,14 @@ namespace PRM392_CafeOnline_BE_API.Services
             try
             {
                 var user = await _userRepository.GetTblUser(requestDTO.UserId);
-                if(user == null)
+                if (user == null)
                 {
                     throw new Exception("Invalid credentials");
                 }
-                Cart cart;
+                Cart? cart;
+                CartItem newCartItem = new();
                 cart = await _cartRepository.GetCartByUserIdAsync(requestDTO.UserId);
-                if(cart == null)
+                if (cart == null)
                 {
                     cart = new Cart
                     {
@@ -51,20 +52,27 @@ namespace PRM392_CafeOnline_BE_API.Services
                     await _cartRepository.CreateCartAsync(cart);
                 }
 
-
                 var existingDrink = await _drinkRepository.GetDrinkByIdAsync(requestDTO.DrinkId) ?? throw new Exception("Drink not found");
+
+                var existingCartItem = await _cartItemRepository.GetCartItemByDrinkIdAsync(cart.Id, requestDTO.DrinkId);
+
+                if (existingCartItem != null)
+                {
+                    await _cartItemRepository.DeleteCartItemAsync(existingCartItem);
+                }
+
                 var newCartItemDTO = _mapper.Map<CartItemDTO>(requestDTO);
-                var newCartItem = _mapper.Map<CartItem>(newCartItemDTO);
+                newCartItem = _mapper.Map<CartItem>(newCartItemDTO);
                 newCartItem.CartId = cart.Id;
                 newCartItem.DrinkId = existingDrink.Id;
                 await _cartItemRepository.AddCartItemAsync(newCartItem);
 
-                CartItemTopping cartItemTopping;
-
                 if (requestDTO.Toppings != null)
                 {
-                    foreach(var topping in requestDTO.Toppings)
+                    foreach (var topping in requestDTO.Toppings)
                     {
+
+                        CartItemTopping cartItemTopping;
                         cartItemTopping = new()
                         {
                             CartItemId = newCartItem.Id,
@@ -73,7 +81,6 @@ namespace PRM392_CafeOnline_BE_API.Services
                         await _cartItemToppingRepository.AddCartItemToppingAsync(cartItemTopping);
                     }
                 }
-
                 var cartItemAdded = await _cartItemRepository.GetCartItemAsync(newCartItem.Id);
                 return _mapper.Map<CartItemDTO>(cartItemAdded);
             }
@@ -81,7 +88,7 @@ namespace PRM392_CafeOnline_BE_API.Services
             {
                 throw;
             }
-        }       
+        }
 
         public async Task<CartDTO> GetCartByUserId(int userId)
         {

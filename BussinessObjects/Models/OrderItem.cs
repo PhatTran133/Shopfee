@@ -17,7 +17,7 @@ namespace BussinessObjects.Models
         public string? Iced { get; set; }
         public string? Note { get; set; }
         public int Quantity { get; set; }
-        public int TotalPrice { get; set; }
+        public decimal TotalPrice { get; set; }
 
         public virtual TblOrder Order { get; set; } = null!;
         public virtual Drink? Drink { get; set; }
