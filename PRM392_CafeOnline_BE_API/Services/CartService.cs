@@ -75,6 +75,10 @@ namespace PRM392_CafeOnline_BE_API.Services
                     }
                 }
                 var cartItemAdded = await _cartItemRepository.GetCartItemAsync(newCartItem.Id);
+                
+                var totalPrice = await _cartItemRepository.TotalPriceCartItems(cart.Id);
+                cart.TotalPrice = totalPrice;
+                await _cartRepository.UpdateCartAsync(cart);
                 return _mapper.Map<CartItemDTO>(cartItemAdded);
             }
             catch (Exception ex)
