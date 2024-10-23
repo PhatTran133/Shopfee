@@ -6,7 +6,8 @@
     <string name="nav_history">History</string>
     <string name="nav_account">Account</string>
 
-    //<string name="title_voucher" translatable="false">Khuyến mại</string>
+    //
+    <string name="title_voucher" translatable="false">Khuyến mại</string>
     <string name="title_payment_method">Payment Methods</string>
 
     // action
@@ -23,7 +24,8 @@
     <string name="hint_password_new">Enter your new password…</string>
     <string name="hint_password_confirm">Confirm your new password…</string>
     <string name="hint_optional">Optional</string>
-    //<string name="hint_rating_review" translatable="false">Hãy cho chúng tôi biết đánh giá của bạn</string>
+    //
+    <string name="hint_rating_review" translatable="false">Hãy cho chúng tôi biết đánh giá của bạn</string>
 
     <string name="email">Email</string>
     <string name="username">User name</string>
@@ -34,8 +36,10 @@
     <string name="login">Login</string>
     <string name="search">Search</string>
     <string name="forgot_password">Forgot password?</string>
-    //<string name="feedback" translatable="false">Phản hồi</string>
-    //<string name="contact" translatable="false">Liên hệ</string>
+    //
+    <string name="feedback" translatable="false">Phản hồi</string>
+    //
+    <string name="contact" translatable="false">Liên hệ</string>
     <string name="change_password">Change password</string>
     <string name="update_profile">Update profile</string>
     <string name="sign_out">Log out</string>

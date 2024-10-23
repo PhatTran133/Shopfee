@@ -16,6 +16,7 @@ import com.example.cafeonline.model.request.ForgotPasswordRequest;
 import com.example.cafeonline.model.request.VerifyCodeRequest;
 import com.example.cafeonline.model.response.ApiResponse;
 import com.example.cafeonline.model.response.UserResponse;
+import com.google.gson.Gson;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -128,8 +129,19 @@ private void verifyCode() {
                     Toast.makeText(ForgotPasswordActivity.this, "Invalid code: " + apiResponse.getValue().getMessage(), Toast.LENGTH_SHORT).show();
                 }   System.out.println("Invalid code");
             } else {
-                // Handle error case
-                Toast.makeText(ForgotPasswordActivity.this, "Invalid code: Invalid response", Toast.LENGTH_SHORT).show();
+                try {
+                    // Check if error body exists
+                    if (response.errorBody() != null) {
+                        // Deserialize error body to ApiResponse<String>
+                        Gson gson = new Gson();
+                        ApiResponse<String> errorResponse = gson.fromJson(response.errorBody().string(), ApiResponse.class);
+                        Toast.makeText(ForgotPasswordActivity.this, "Reset Password Failed: " + errorResponse.getValue().getMessage(), Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(ForgotPasswordActivity.this, "Error: Invalid response", Toast.LENGTH_SHORT).show();
+                    }
+                } catch (Exception e) {
+                    Toast.makeText(ForgotPasswordActivity.this, "Error parsing response: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
             }
         }
 
