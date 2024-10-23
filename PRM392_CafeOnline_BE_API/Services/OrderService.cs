@@ -47,19 +47,6 @@ namespace PRM392_CafeOnline_BE_API.Services
                 await _orderRepository.CreateOrder(newOrder);
                 foreach(var item in existingCart.CartItems)
                 {
-                    //var orderItem = new OrderItem
-                    //{
-                    //    DrinkId = item.DrinkId,
-                    //    Iced = item.Iced,
-                    //    Note = item.Note,
-                    //    OrderId = newOrder.Id,
-                    //    Quantity = item.Quantity,
-                    //    Size = item.Size,
-                    //    Sugar = item.Sugar,
-                    //    TotalPrice = item.TotalPrice,
-                    //    Variant = item.Variant
-                    //};
-
                     var orderItem = _mapper.Map<OrderItem>(item);
                     orderItem.OrderId = newOrder.Id;
                     await _orderItemRepository.AddOrderItemAsync(orderItem);
@@ -79,6 +66,8 @@ namespace PRM392_CafeOnline_BE_API.Services
                     }
                 }
                 await _cartRepository.RemoveCartAsync(existingCart);
+                newOrder.Total = existingCart.TotalPrice;
+                await _orderRepository.UpdateOrder(newOrder);
                 var orderCreated = await _orderRepository.GetOrderByIdAsync(newOrder.Id);
                 return _mapper.Map<OrderDTO>(newOrder);
             }
