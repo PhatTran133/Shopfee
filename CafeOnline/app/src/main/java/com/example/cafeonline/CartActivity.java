@@ -72,17 +72,20 @@ public class CartActivity extends AppCompatActivity {
                         ApiResponse<CartResponse> apiResponse = response.body();
                         if ("200".equals(apiResponse.getValue().getStatus())) {
                             CartResponse cart = apiResponse.getValue().getData();
-                            DecimalFormat decimalFormat = new DecimalFormat("#,###");
-                            String formattedPrice = decimalFormat.format(cart.getTotalPrice());
-                            tvTotalPrice.setText(formattedPrice);
-                            List<CartItemResponse> cartItems = cart.getCartItems();
-                            if (cartItems != null && !cartItems.isEmpty()) {
-                             CartAdapter  cartAdapter = new CartAdapter(cartItems,null);
-                             recyclerView.setAdapter(cartAdapter);
-                            } else {
+                            if(cart != null) {
+                                DecimalFormat decimalFormat = new DecimalFormat("#,###");
+                                String formattedPrice = decimalFormat.format(cart.getTotalPrice());
+                                tvTotalPrice.setText(formattedPrice);
+                                List<CartItemResponse> cartItems = cart.getCartItems();
+                                if (cartItems != null && !cartItems.isEmpty()) {
+                                    CartAdapter cartAdapter = new CartAdapter(cartItems, null, CartActivity.this);
+                                    recyclerView.setAdapter(cartAdapter);
+                                } else {
+                                    Toast.makeText(CartActivity.this, "No items to view", Toast.LENGTH_SHORT).show();
+                                }
+                            }else {
                                 Toast.makeText(CartActivity.this, "Your cart is empty", Toast.LENGTH_SHORT).show();
                             }
-
                         }
                     } else {
                         try {
@@ -108,6 +111,11 @@ public class CartActivity extends AppCompatActivity {
                     Toast.makeText(CartActivity.this, "Network error", Toast.LENGTH_SHORT).show();
                 }
             });
+    }
+    public void updateTotalPrice(double newTotalPrice) {
+        DecimalFormat decimalFormat = new DecimalFormat("#,###");
+        String formattedPrice = decimalFormat.format(newTotalPrice);
+        tvTotalPrice.setText(formattedPrice + " VND");
     }
     private int getUserIdFromPreferences() {
         SharedPreferences sharedPreferences = getSharedPreferences("KooheePrefs", MODE_PRIVATE);

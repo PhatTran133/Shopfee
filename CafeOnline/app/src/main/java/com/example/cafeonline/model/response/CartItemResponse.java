@@ -4,16 +4,16 @@ import java.util.List;
 
 public class CartItemResponse {
     public int Id;
-    public double quantity;
+    public int quantity;
     public String variant;
     public String size;
     public String sugar;
     public String iced;
     public List<ToppingResponse> cartItemToppingDTOs;
-    public double price;
+    public double totalPrice;
     public DrinkResponse drinkDTO;
 
-    public CartItemResponse(int id, double quantity, String variant, String size, String sugar, String iced, List<ToppingResponse> cartItemToppingDTOs, double price, DrinkResponse drinkDTO) {
+    public CartItemResponse(int id, int quantity, String variant, String size, String sugar, String iced, List<ToppingResponse> cartItemToppingDTOs, double totalPrice, DrinkResponse drinkDTO) {
         Id = id;
         this.quantity = quantity;
         this.variant = variant;
@@ -21,7 +21,7 @@ public class CartItemResponse {
         this.sugar = sugar;
         this.iced = iced;
         this.cartItemToppingDTOs = cartItemToppingDTOs;
-        this.price = price;
+        this.totalPrice = totalPrice;
         this.drinkDTO = drinkDTO;
     }
 
@@ -33,11 +33,11 @@ public class CartItemResponse {
         Id = id;
     }
 
-    public double getQuantity() {
+    public int getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(double quantity) {
+    public void setQuantity(int quantity) {
         this.quantity = quantity;
     }
 
@@ -73,20 +73,20 @@ public class CartItemResponse {
         this.iced = iced;
     }
 
-    public List<ToppingResponse> getTopping() {
+    public List<ToppingResponse> getCartItemToppingDTOs() {
         return cartItemToppingDTOs;
     }
 
-    public void setTopping(List<ToppingResponse> cartItemToppingDTOs) {
+    public void setCartItemToppingDTOs(List<ToppingResponse> cartItemToppingDTOs) {
         this.cartItemToppingDTOs = cartItemToppingDTOs;
     }
 
-    public double getPrice() {
-        return price;
+    public double getTotalPrice() {
+        return totalPrice;
     }
 
-    public void setPrice(double price) {
-        this.price = price;
+    public void setTotalPrice(double totalPrice) {
+        this.totalPrice = totalPrice;
     }
 
     public DrinkResponse getDrinkDTO() {
