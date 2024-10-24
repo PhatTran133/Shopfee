@@ -38,8 +38,23 @@ namespace Repositories
 
         public async Task UpdateCartItemAsync(CartItem cartItem)
         {
-            _context.CartItems.Update(cartItem);
+            _context.CartItems.Update(cartItem);               
             await _context.SaveChangesAsync();
+        }
+
+        public async Task<CartItem?> GetCartItemByDrinkIdAsync(int cartId, int drinkId)
+        {
+            return await _context.CartItems
+                .Include(cit => cit.CartItemToppings)
+                .Where(ci => ci.DrinkId == drinkId && ci.CartId == cartId)
+                .FirstOrDefaultAsync();
+        }
+
+        public async Task<decimal> TotalPriceCartItems(int cartId)
+        {
+            return await _context.CartItems
+                .Where(x => x.CartId == cartId)
+                .SumAsync(x => x.TotalPrice);
         }
     }
 }

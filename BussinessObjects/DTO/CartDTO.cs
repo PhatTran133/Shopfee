@@ -13,6 +13,6 @@ namespace BussinessObjects.DTO
         public DateTime? CreatedDate { get; set; }
         public DateTime? UpdatedDate { get; set; }
         public decimal? TotalPrice { get; set; }
-        public List<CartItemDTO>? CartItems { get; set; }
+        public List<CartItemDTO> CartItems { get; set; } = null!;
     }
 }
