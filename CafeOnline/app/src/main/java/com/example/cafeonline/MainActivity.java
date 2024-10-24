@@ -7,37 +7,14 @@ import android.os.Build;
 import android.os.Bundle;
 
 import com.example.cafeonline.ui.HomeFragment;
-import com.bumptech.glide.Glide;
-import com.denzcoskun.imageslider.ImageSlider;
-import com.denzcoskun.imageslider.constants.ScaleTypes;
-import com.denzcoskun.imageslider.models.SlideModel;
 import com.example.cafeonline.service.NotificationService;
-import com.example.cafeonline.adapter.DrinkAdapter;
-import com.example.cafeonline.api.DrinkApiService;
-import com.example.cafeonline.model.response.DrinkResponse;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import androidx.appcompat.app.AppCompatActivity;
-import android.widget.Toast;
 
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-
-import com.example.cafeonline.api.ApiService;
-import com.example.cafeonline.model.response.ApiResponse;
-import com.google.gson.Gson;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-
 import android.widget.Button;
 
-import androidx.recyclerview.widget.RecyclerView;
 
 public class MainActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
@@ -63,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
             if (item.getItemId() == R.id.nav_home) {
                 Intent intent = new Intent(MainActivity.this, MainActivity.class);
                 startActivity(intent);
+                finish();
                 return true;
             } else if (item.getItemId() == R.id.nav_cart) {
 

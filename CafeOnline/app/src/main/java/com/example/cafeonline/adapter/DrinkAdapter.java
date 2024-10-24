@@ -84,6 +84,7 @@ public class DrinkAdapter extends RecyclerView.Adapter<DrinkAdapter.DrinkViewHol
                     intent.putExtra("drinkId", drink.getId());
                     itemView.getContext().startActivity(intent);
 
+
                 }
             });
         }

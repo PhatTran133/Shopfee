@@ -305,9 +305,7 @@ public class DrinkDetailActivity extends AppCompatActivity {
                             // NẾU THÀNH CÔNG CHUYỂN SANG TRANG CART
                             Intent intent = new Intent(DrinkDetailActivity.this, CartActivity.class);
                             startActivity(intent);
-                            // ĐANG TEST THỬ CHUYỂN SANG TRANG HOME
-//                            Intent intent = new Intent(DrinkDetailActivity.this, MainActivity.class);
-//                            startActivity(intent);
+                            finish();
                         } else {
                             Toast.makeText(DrinkDetailActivity.this, "Add to cart Failed: " + apiResponse.getValue().getMessage(), Toast.LENGTH_SHORT).show();
                         }

@@ -8,6 +8,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -40,8 +42,10 @@ import retrofit2.Response;
 public class CartActivity extends AppCompatActivity {
     private Button orderButton;
     private RecyclerView recyclerView;
-    private TextView  tvTotalPrice;
+    private TextView tvTotalPrice;
     private ImageView imgBack;
+    private LinearLayout addOtherDrinks;
+    private RelativeLayout address, payment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +53,22 @@ public class CartActivity extends AppCompatActivity {
         setContentView(R.layout.activity_cart);
         imgBack = findViewById(R.id.img_toolbar_back);
         imgBack.setOnClickListener(v -> onBackPressed());
+        addOtherDrinks = findViewById(R.id.layout_add_other_drink);
+        addOtherDrinks.setOnClickListener(v -> {
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
+            finish();
+        });
+        payment = findViewById(R.id.layout_payment_method);
+        payment.setOnClickListener(v -> {
+            Intent intent = new Intent(this, PaymentMethodActivity.class);
+            startActivity(intent);
+        });
+        address = findViewById(R.id.layout_address);
+        address.setOnClickListener(v -> {
+            Intent intent = new Intent(this, AddressActivity.class);
+            startActivity(intent);
+        });
         orderButton = findViewById(R.id.btn_checkout);
         recyclerView = findViewById(R.id.rcv_cart);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -72,7 +92,7 @@ public class CartActivity extends AppCompatActivity {
                         ApiResponse<CartResponse> apiResponse = response.body();
                         if ("200".equals(apiResponse.getValue().getStatus())) {
                             CartResponse cart = apiResponse.getValue().getData();
-                            if(cart != null) {
+                            if (cart != null) {
                                 DecimalFormat decimalFormat = new DecimalFormat("#,###");
                                 String formattedPrice = decimalFormat.format(cart.getTotalPrice());
                                 tvTotalPrice.setText(formattedPrice);
@@ -83,7 +103,7 @@ public class CartActivity extends AppCompatActivity {
                                 } else {
                                     Toast.makeText(CartActivity.this, "No items to view", Toast.LENGTH_SHORT).show();
                                 }
-                            }else {
+                            } else {
                                 Toast.makeText(CartActivity.this, "Your cart is empty", Toast.LENGTH_SHORT).show();
                             }
                         }
@@ -106,11 +126,13 @@ public class CartActivity extends AppCompatActivity {
                     }
                 }
 
-                @Override
-                public void onFailure(Call<ApiResponse<CartResponse>> call, Throwable t) {
-                    Toast.makeText(CartActivity.this, "Network error", Toast.LENGTH_SHORT).show();
-                }
-            });
+
+
+            @Override
+            public void onFailure(Call<ApiResponse<CartResponse>> call, Throwable t) {
+                Toast.makeText(CartActivity.this, "Network error", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
     public void updateTotalPrice(double newTotalPrice) {
         DecimalFormat decimalFormat = new DecimalFormat("#,###");
@@ -122,6 +144,6 @@ public class CartActivity extends AppCompatActivity {
         return sharedPreferences.getInt("userId", 0); // Returns null if no userId is found
     }
 
-        }
+}
 
 

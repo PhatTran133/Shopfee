@@ -29,7 +29,6 @@ public class ChangePasswordNotLoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_change_password_not_login);
 
         // Initialize views
@@ -84,6 +83,7 @@ public class ChangePasswordNotLoginActivity extends AppCompatActivity {
                         System.out.println("Change password successfully");
                         Intent intent = new Intent(ChangePasswordNotLoginActivity.this, LoginActivity.class);
                         startActivity(intent);
+                        finish();
                     } else {
                         // Login failed with specific message
                         Toast.makeText(ChangePasswordNotLoginActivity.this, "Change password failed: " + apiResponse.getValue().getMessage(), Toast.LENGTH_SHORT).show();

@@ -33,6 +33,7 @@ public class AccountActivity  extends AppCompatActivity {
             clearUserIdFromPreferences();
             Intent intent = new Intent(AccountActivity.this, MainActivity.class);
             startActivity(intent);
+            finish();
         });
         imgBack = findViewById(R.id.img_toolbar_back);
         imgBack.setOnClickListener(v -> onBackPressed());
