@@ -66,7 +66,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
             // Xử lý phần hiển thị options
            tvName.setText(cart.getDrinkDTO().getName());
            DecimalFormat decimalFormat = new DecimalFormat("#,###");
-            String formattedPrice = decimalFormat.format(cart.getPrice());
+            String formattedPrice = decimalFormat.format(cart.getDrinkDTO().getPrice());
             tvPrice.setText(formattedPrice);
             String formattedQuantity = decimalFormat.format((cart.getQuantity()));
             tvQuantity.setText((formattedQuantity));

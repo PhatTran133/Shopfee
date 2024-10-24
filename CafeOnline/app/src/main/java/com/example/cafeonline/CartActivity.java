@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,6 +30,7 @@ import com.example.cafeonline.model.response.CartResponse;
 import com.example.cafeonline.service.NotificationService;
 import com.google.gson.Gson;
 
+import java.text.DecimalFormat;
 import java.util.List;
 
 import retrofit2.Call;
@@ -38,7 +40,7 @@ import retrofit2.Response;
 public class CartActivity extends AppCompatActivity {
     private Button orderButton;
     private RecyclerView recyclerView;
-    private TextView tvName, tvOption, tvPrice, tvQuantity;
+    private TextView  tvTotalPrice;
     private ImageView imgBack;
 
     @Override
@@ -50,9 +52,7 @@ public class CartActivity extends AppCompatActivity {
         orderButton = findViewById(R.id.btn_checkout);
         recyclerView = findViewById(R.id.rcv_cart);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        tvName = findViewById(R.id.tv_drink);
-        tvOption = findViewById(R.id.tv_option);
-        tvPrice = findViewById(R.id.tv_price);
+        tvTotalPrice = findViewById(R.id.tv_amount);
         orderButton.setOnClickListener(v -> {
             // Gọi Service để hiển thị notification
             Intent serviceIntent = new Intent(this, NotificationService.class);
@@ -72,21 +72,15 @@ public class CartActivity extends AppCompatActivity {
                         ApiResponse<CartResponse> apiResponse = response.body();
                         if ("200".equals(apiResponse.getValue().getStatus())) {
                             CartResponse cart = apiResponse.getValue().getData();
-
-                            if (cart != null) {
-                                List<CartItemResponse> cartItems = cart.getCartItems();
-
-                                if (cartItems != null && !cartItems.isEmpty()) {
-                                    // Cập nhật dữ liệu cho Adapter
-                                 CartAdapter  cartAdapter = new CartAdapter(cartItems,null);
-                                 recyclerView.setAdapter(cartAdapter);
-                                } else {
-                                    // Hiển thị thông báo giỏ hàng rỗng
-                                    Toast.makeText(CartActivity.this, "Giỏ hàng của bạn đang trống", Toast.LENGTH_SHORT).show();
-                                }
+                            DecimalFormat decimalFormat = new DecimalFormat("#,###");
+                            String formattedPrice = decimalFormat.format(cart.getTotalPrice());
+                            tvTotalPrice.setText(formattedPrice);
+                            List<CartItemResponse> cartItems = cart.getCartItems();
+                            if (cartItems != null && !cartItems.isEmpty()) {
+                             CartAdapter  cartAdapter = new CartAdapter(cartItems,null);
+                             recyclerView.setAdapter(cartAdapter);
                             } else {
-                                // Xử lý trường hợp CartResponse là null
-                                Toast.makeText(CartActivity.this, "Có lỗi xảy ra khi lấy dữ liệu giỏ hàng", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(CartActivity.this, "Your cart is empty", Toast.LENGTH_SHORT).show();
                             }
 
                         }
@@ -114,7 +108,6 @@ public class CartActivity extends AppCompatActivity {
                     Toast.makeText(CartActivity.this, "Network error", Toast.LENGTH_SHORT).show();
                 }
             });
-
     }
     private int getUserIdFromPreferences() {
         SharedPreferences sharedPreferences = getSharedPreferences("KooheePrefs", MODE_PRIVATE);
