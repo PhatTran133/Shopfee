@@ -22,19 +22,27 @@ namespace Repositories
             await _context.SaveChangesAsync();
         }
 
+        public async Task<TblOrder?> GetOrderByIdAsync(int id)
+        {
+            return await _context.TblOrders
+                .Include(o => o.OrderItems)
+                    .ThenInclude(oi => oi.Drink)
+                .Include(o => o.OrderItems) 
+                    .ThenInclude(oi => oi.OrderItemToppings) 
+                    .ThenInclude(oit => oit.Topping)
+                .FirstOrDefaultAsync(x => x.Id == id);
+        }
+
         public async Task<IEnumerable<TblOrder>> GetOrdersFilterByStatus(bool status, bool paymentCreated, int userId)
         {
             return await _context.TblOrders
-                .Include(u => u.User)
-                .Include(otd => otd.OrderToppingDrinks)
-                    .ThenInclude(td => td.ToppingDrink)
-                    .ThenInclude(d => d.Drink)
-                .Include(otd => otd.OrderToppingDrinks)
-                    .ThenInclude(td => td.ToppingDrink)
-                    .ThenInclude(t => t.Topping)
-                .Where(u => u.UserId == userId)
-                .Where(x => x.StatusOfOder == status)
-                .Where(p => paymentCreated ? p.Payments.Any() : !p.Payments.Any()) // Check if payments exist or not based on paymentCreated
+                .Include(o => o.OrderItems)
+                    .ThenInclude(oi => oi.Drink)
+                .Include(o => o.OrderItems) // Start from OrderItems
+                    .ThenInclude(oi => oi.OrderItemToppings) // Navigate to OrderItemToppings
+                    .ThenInclude(oit => oit.Topping) // Navigate to Topping from OrderItemToppings
+                .Where(o => o.UserId == userId && o.StatusOfOder == status)
+                .Where(o => paymentCreated ? o.Payments.Any() : !o.Payments.Any())
                 .ToListAsync();
         }
 

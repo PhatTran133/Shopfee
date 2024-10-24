@@ -68,16 +68,17 @@ builder.Services.AddScoped<IOtpService, OtpService>();
 builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<IForgotPasswordService, ForgotPasswordService>();
 
-builder.Services.AddScoped<ICartToppingDrinkRepository, CartToppingDrinkRepository>();
+builder.Services.AddScoped<ICartItemRepository, CartItemRepository>();
+builder.Services.AddScoped<ICartItemToppingRepository, CartItemToppingRepository>();
 builder.Services.AddScoped<ICartRepository, CartRepository>();
 builder.Services.AddScoped<ICartService, CartService>();
 
-builder.Services.AddScoped<IDrinkToppingRepository, DrinkToppingRepository>();
 
 builder.Services.AddScoped<IToppingRepository, ToppingRepository>();
 
 builder.Services.AddScoped<IOrderRepository, TblOrderRepository>();
-builder.Services.AddScoped<IOrderToppingDrinkRepository, OrderToppingDrinkRepository>();
+builder.Services.AddScoped<IOrderItemRepository, OrderItemRepository>();
+builder.Services.AddScoped<IOrderItemToppingRepository, OrderItemToppingRepository>();
 builder.Services.AddScoped<IOrderService, OrderService>();
 
 builder.Services.AddScoped<IUserRepository, TblUserRepository>();
@@ -108,7 +109,7 @@ else
     app.UseSwagger();
     app.UseSwaggerUI(c =>
     {
-        c.SwaggerEndpoint("/swagger/v1/swagger.json", "GlobalMind API V1");
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "KooHee API V1");
         c.RoutePrefix = string.Empty;
     });
 }

@@ -3,6 +3,7 @@ using System;
 using BussinessObjects.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,10 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace BussinessObjects.Migrations
 {
     [DbContext(typeof(CoffeeShopContext))]
-    partial class CoffeeShopContextModelSnapshot : ModelSnapshot
+    [Migration("20241022090101_migration_5")]
+    partial class migration_5
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,36 +23,6 @@ namespace BussinessObjects.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
-
-            modelBuilder.Entity("BussinessObjects.Models.AdditionalInformation", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Address")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Phone")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("AdditionalInformations");
-                });
 
             modelBuilder.Entity("BussinessObjects.Models.Cart", b =>
                 {
@@ -63,7 +35,7 @@ namespace BussinessObjects.Migrations
                     b.Property<DateTime?>("CreatedDate")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<decimal>("TotalPrice")
+                    b.Property<decimal?>("TotalPrice")
                         .HasColumnType("numeric");
 
                     b.Property<DateTime?>("UpdatedDate")
@@ -242,8 +214,8 @@ namespace BussinessObjects.Migrations
                     b.Property<string>("Sugar")
                         .HasColumnType("text");
 
-                    b.Property<decimal>("TotalPrice")
-                        .HasColumnType("numeric");
+                    b.Property<int>("TotalPrice")
+                        .HasColumnType("integer");
 
                     b.Property<string>("Variant")
                         .HasColumnType("text");
@@ -462,17 +434,6 @@ namespace BussinessObjects.Migrations
                     b.ToTable("Toppings");
                 });
 
-            modelBuilder.Entity("BussinessObjects.Models.AdditionalInformation", b =>
-                {
-                    b.HasOne("BussinessObjects.Models.TblUser", "User")
-                        .WithMany("AdditionalInformations")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("BussinessObjects.Models.Cart", b =>
                 {
                     b.HasOne("BussinessObjects.Models.TblUser", "User")
@@ -630,8 +591,6 @@ namespace BussinessObjects.Migrations
 
             modelBuilder.Entity("BussinessObjects.Models.TblUser", b =>
                 {
-                    b.Navigation("AdditionalInformations");
-
                     b.Navigation("Carts");
 
                     b.Navigation("TblNotifications");

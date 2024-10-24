@@ -10,114 +10,82 @@ namespace PRM392_CafeOnline_BE_API.Services
     public class OrderService : IOrderService
     {
         private readonly IOrderRepository _orderRepository;
-        private readonly IOrderToppingDrinkRepository _orderToppingDrinkRepository;
+        private readonly IOrderItemRepository _orderItemRepository;
+        private readonly IOrderItemToppingRepository _orderItemToppingRepository;
         private readonly ICartRepository _cartRepository;
-        private readonly ICartToppingDrinkRepository _cartToppingDrinkRepository;
-        private readonly IDrinkToppingRepository _drinkToppingRepository;
+
         private readonly IMapper _mapper;
-        public OrderService(IOrderRepository orderRepository, IOrderToppingDrinkRepository orderToppingDrinkRepository,
-            ICartRepository cartRepository, ICartToppingDrinkRepository cartToppingDrinkRepository,
-            IDrinkToppingRepository drinkToppingRepository, IMapper mapper)
+        public OrderService(IOrderRepository orderRepository,
+            ICartRepository cartRepository, IMapper mapper,
+            IOrderItemToppingRepository orderItemToppingRepository, IOrderItemRepository orderItemRepository)
         {
             _orderRepository = orderRepository;
-            _orderToppingDrinkRepository = orderToppingDrinkRepository;
             _cartRepository = cartRepository;
-            _cartToppingDrinkRepository = cartToppingDrinkRepository;
-            _drinkToppingRepository = drinkToppingRepository;
             _mapper = mapper;
-
+            _orderItemRepository = orderItemRepository;
+            _orderItemToppingRepository = orderItemToppingRepository;
         }
         public async Task<OrderDTO> CreateOrder(CreateOrderItemRequestDTO createOrderItemRequestDTO)
         {
             try
             {
-                TblOrder orderEntity;
+                var existingCart = await _cartRepository.GetCartByUserIdAsync(createOrderItemRequestDTO.UserId);
 
-                if (createOrderItemRequestDTO.CartId != null && createOrderItemRequestDTO.CartId != 0)
+                var existingCartById = await _cartRepository.GetCartByIdAsync(createOrderItemRequestDTO.CartId);
+
+                if(existingCart == null || existingCart != existingCartById)
                 {
-                    var cart = await _cartRepository.GetCartByIdAsync((int)createOrderItemRequestDTO.CartId);
-                    if (cart == null)
-                    {
-                        throw new Exception("Invalid cart not found");
-                    }
-
-                    // Create the order from the cart
-                    orderEntity = new TblOrder
-                    {
-                        CreatedDate = DateTime.Now,
-                        UpdatedDate = DateTime.Now,
-                        Total = cart.TotalPrice,
-                        UserId = createOrderItemRequestDTO.UserId,
-                        StatusOfOder = true
-                    };
-
-                    await _orderRepository.CreateOrder(orderEntity);
-
-                    // Map cart's CartToppingDrinks to OrderToppingDrink
-                    var orderItems = _mapper.Map<List<OrderToppingDrink>>(cart.CartToppingDrinks);
-
-                    foreach (var orderItem in orderItems)
-                    {
-                        orderItem.OrderId = orderEntity.Id;
-                        
-                        orderEntity.OrderToppingDrinks.Add(orderItem);
-                    }
-
-                    // Save the order topping drinks
-                    await _orderToppingDrinkRepository.CreateOrderToppingDrinks(orderItems);
-
-                    foreach (var orderItem in orderEntity.OrderToppingDrinks)
-                    {
-                        var toppingDrink = await _drinkToppingRepository.FindByIdAsync((int)orderItem.ToppingDrinkId);
-
-                        orderItem.ToppingDrink = toppingDrink;
-                    }
-
-                    await _cartRepository.RemoveCartAsync(cart);
-                }
-                else
-                {
-                    // Handle case where cart is not provided
-                    orderEntity = new TblOrder
-                    {
-                        CreatedDate = DateTime.Now,
-                        UpdatedDate = DateTime.Now,
-                        StatusOfOder = true,
-                        UserId = createOrderItemRequestDTO.UserId
-                    };
-
-                    await _orderRepository.CreateOrder(orderEntity);
-
-                    // Check if the ToppingDrink exists
-                    var toppingDrinkExist = await _drinkToppingRepository.FindByIdAsync(createOrderItemRequestDTO.ToppingDrinkId);
-                    if (toppingDrinkExist == null)
-                    {
-                        throw new Exception("Drink and Topping not found");
-                    }
-
-                    // Create the order topping drink
-                    var orderToppingDrink = _mapper.Map<OrderToppingDrink>(createOrderItemRequestDTO);
-
-                    orderToppingDrink.OrderId = orderEntity.Id;
-                    orderEntity.OrderToppingDrinks.Add(orderToppingDrink);
-  
-                    var price = orderToppingDrink.Quantity * (toppingDrinkExist.Drink.Price + toppingDrinkExist.Topping.Price);
-                    orderEntity.Total = price;
-
-                    await _orderToppingDrinkRepository.CreateOrderToppingDrink(orderToppingDrink);
-                    
-                    await _orderRepository.UpdateOrder(orderEntity);
-
-                    orderToppingDrink.ToppingDrink = toppingDrinkExist;
+                    throw new Exception("Invalid cart");
                 }
 
-                // Map and return the created order as OrderDTO, including OrderToppingDrinkDTOs
-                var orderDto = _mapper.Map<OrderDTO>(orderEntity);
-                return orderDto;
+                var newOrder = new TblOrder
+                {
+                    CreatedDate = DateTime.Now,
+                    StatusOfOder = true,
+                    UserId = createOrderItemRequestDTO.UserId
+                };
+                await _orderRepository.CreateOrder(newOrder);
+                foreach(var item in existingCart.CartItems)
+                {
+                    var orderItem = _mapper.Map<OrderItem>(item);
+                    orderItem.OrderId = newOrder.Id;
+                    await _orderItemRepository.AddOrderItemAsync(orderItem);
+
+                    if (item.CartItemToppings != null)
+                    {
+                        foreach (var cartItemTopping in item.CartItemToppings)
+                        {
+                            var orderItemTopping = new OrderItemTopping
+                            {
+                                OrderItemId = orderItem.Id, 
+                                ToppingId = cartItemTopping.ToppingId
+                            };
+
+                            await _orderItemToppingRepository.AddOrderItemToppingAsync(orderItemTopping);
+                        }
+                    }
+                }
+                await _cartRepository.RemoveCartAsync(existingCart);
+                newOrder.Total = existingCart.TotalPrice;
+                await _orderRepository.UpdateOrder(newOrder);
+                var orderCreated = await _orderRepository.GetOrderByIdAsync(newOrder.Id);
+                return _mapper.Map<OrderDTO>(newOrder);
             }
             catch (Exception ex)
             {
                 throw new Exception(ex.Message);
+            }
+        }
+
+        public async Task<OrderDTO> GetOrderByIdAsync(int id)
+        {
+            try
+            {
+                var order = await _orderRepository.GetOrderByIdAsync(id);
+                return _mapper.Map<OrderDTO>(order);
+            }catch(Exception ex)
+            {
+                throw;
             }
         }
 

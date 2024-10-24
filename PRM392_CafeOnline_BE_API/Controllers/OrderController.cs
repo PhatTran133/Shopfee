@@ -22,7 +22,7 @@ namespace PRM392_CafeOnline_BE_API.Controllers
             try
             {
                 var response = await _orderService.CreateOrder(createOrderItemRequestDTO);
-                return Ok(new JsonResponse<OrderDTO>(response, 200, "Created successfully"));
+                return Ok(new JsonResponse<string>("Created successfully", 200, "Created successfully"));
             } catch (Exception ex)
             {
                 if (ex.Message != null)
@@ -40,6 +40,23 @@ namespace PRM392_CafeOnline_BE_API.Controllers
                 var orders = await _orderService.GetOrdersByStatus(orderStatus, userId);
                 return Ok(new JsonResponse<IEnumerable<OrderDTO>>(orders, 200, "Get orders successfully"));
             }catch(Exception ex)
+            {
+                if (ex.Message != null)
+                {
+                    return BadRequest(new JsonResponse<string>("Error", 400, ex.Message));
+                }
+                return StatusCode(500, new JsonResponse<string>("Internal Error", 500, ex.Message));
+            }
+        }
+        [HttpGet()]
+        public async Task<IActionResult> GetOrderById([FromQuery]int orderId)
+        {
+            try
+            {
+                var order = await _orderService.GetOrderByIdAsync(orderId);
+                return Ok(new JsonResponse<OrderDTO>(order, 200, "Get Order Successfully"));
+            }
+            catch (Exception ex)
             {
                 if (ex.Message != null)
                 {

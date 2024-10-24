@@ -51,13 +51,13 @@ namespace PRM392_CafeOnline_BE_API.Controllers
                 return StatusCode(500, ex.Message);
             }
         }
-        [HttpPut("{cartToppingDrinkId}")]
-        public async Task<IActionResult> UpdateCartItem(int cartToppingDrinkId, [FromBody] UpdateCartItemRequestDTO updateCartItemRequestDTO)
+        [HttpPut("{cartItemId}")]
+        public async Task<IActionResult> UpdateCartItem(int cartItemId, [FromBody] UpdateCartItemRequestDTO updateCartItemRequestDTO)
         {
             try
             {
-                var cartItem = await _cartService.UpdateCartItem(cartToppingDrinkId, updateCartItemRequestDTO);
-                return Ok(new JsonResponse<CartToppingDrinkDTO>(cartItem, 200, "Update successfully"));
+                var cartItem = await _cartService.UpdateCartItem(cartItemId, updateCartItemRequestDTO);
+                return Ok(new JsonResponse<CartItemDTO>(cartItem, 200, "Update successfully"));
             }
             catch (Exception ex)
             {
