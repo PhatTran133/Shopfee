@@ -115,6 +115,7 @@
     <string name="label_total" translatable="false">Total</string>
     <string name="label_add_order" translatable="false">Add to your order</string>
     <string name="label_add_cart" translatable="false">Add to your cart</string>
+    <string name="label_add_other_drinks" translatable="false">Add other drinks</string>
 
     <string name="label_rating_review_order" translatable="false">Đánh giá quá trình giao hàng cho đơn hàng này</string>
     <string name="label_rating_review_drink" translatable="false">Bạn cảm thấy đồ uống này như thế nào?</string>

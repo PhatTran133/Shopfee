@@ -48,6 +48,7 @@ public class RegisterActivity extends AppCompatActivity {
         btnSendOTP.setOnClickListener(v -> getOTP() );
         txtLogin.setOnClickListener(v -> {
             Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
+            finish();
             startActivity(intent);
         });
         imgBack.setOnClickListener(v -> onBackPressed());

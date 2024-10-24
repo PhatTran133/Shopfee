@@ -36,7 +36,7 @@
                     android:nestedScrollingEnabled="false"/>
 
                 <LinearLayout
-                    android:id="@+id/layout_add_order"
+                    android:id="@+id/layout_add_other_drink"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center_vertical"
@@ -54,7 +54,7 @@
                         android:textColor="@color/colorPrimaryDark"
                         android:textSize="@dimen/text_size_small"
                         android:layout_marginStart="@dimen/define_dimen_10"
-                        android:text="@string/label_add_order"/>
+                        android:text="@string/label_add_other_drinks"/>
                 </LinearLayout>
             </LinearLayout>
 
