@@ -30,6 +30,7 @@ namespace BussinessObjects.Models
         public virtual DbSet<TblOrder> TblOrders { get; set; } = null!;
         public virtual DbSet<TblUser> TblUsers { get; set; } = null!;
         public virtual DbSet<Topping> Toppings { get; set; } = null!;
+        public virtual DbSet<AdditionalInformation> AdditionalInformations { get; set; } = null!;
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
        => optionsBuilder.UseNpgsql(GetConnectionString());
@@ -55,6 +56,13 @@ namespace BussinessObjects.Models
                 .WithOne(ct => ct.Cart)
                 .HasForeignKey(ct => ct.CartId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+
+            modelBuilder.Entity<AdditionalInformation>()
+        .HasOne(ai => ai.User)
+        .WithMany(u => u.AdditionalInformations)
+        .HasForeignKey(ai => ai.UserId)
+        .OnDelete(DeleteBehavior.Cascade);
 
             OnModelCreatingPartial(modelBuilder);
         }
