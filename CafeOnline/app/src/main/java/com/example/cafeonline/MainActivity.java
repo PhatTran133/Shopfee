@@ -64,7 +64,21 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent = new Intent(MainActivity.this, MainActivity.class);
                 startActivity(intent);
                 return true;
-            } else if (item.getItemId() == R.id.nav_history) {
+            } else if (item.getItemId() == R.id.nav_cart) {
+
+                //Thêm if else để check đăng nhập chưa
+                //Nếu chưa thì sang screen login
+                if (userId == 0)
+                {
+                    Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                    startActivity(intent);
+                    return true;
+                }
+                //Rồi thì sang screen giỏ hàng
+                Intent intent = new Intent(MainActivity.this, CartActivity.class);
+                startActivity(intent);
+                return true;
+            }else if (item.getItemId() == R.id.nav_history) {
 
                 //Thêm if else để check đăng nhập chưa
                 //Nếu chưa thì sang screen login
@@ -75,7 +89,7 @@ public class MainActivity extends AppCompatActivity {
                     return true;
                 }
                 //Rồi thì sang screen đơn hàng
-                Intent intent = new Intent(MainActivity.this, CartActivity.class);
+                Intent intent = new Intent(MainActivity.this, LoginActivity.class);
                 startActivity(intent);
                 return true;
             } else if (item.getItemId() == R.id.nav_account) {

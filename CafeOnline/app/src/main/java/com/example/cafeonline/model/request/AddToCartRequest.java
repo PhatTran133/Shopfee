@@ -6,7 +6,7 @@ public class AddToCartRequest {
     private int userId;
     private int drinkId;
     private int quantity;
-    private int total;
+    private int totalPrice;
     private String variant;
     private String size;
     private String sugar;
@@ -30,11 +30,11 @@ public class AddToCartRequest {
         }
     }
 
-    public AddToCartRequest(int userId, int drinkId, int quantity, int total, String variant, String size, String sugar, String iced, String note, List<Topping> toppings) {
+    public AddToCartRequest(int userId, int drinkId, int quantity, int totalPrice, String variant, String size, String sugar, String iced, String note, List<Topping> toppings) {
         this.userId = userId;
         this.drinkId = drinkId;
         this.quantity = quantity;
-        this.total = total;
+        this.totalPrice = totalPrice;
         this.variant = variant;
         this.size = size;
         this.sugar = sugar;
@@ -67,12 +67,12 @@ public class AddToCartRequest {
         this.quantity = quantity;
     }
 
-    public double getTotal() {
-        return total;
+    public double getTotalPrice() {
+        return totalPrice;
     }
 
-    public void setTotal(int total) {
-        this.total = total;
+    public void setTotalPrice(int totalPrice) {
+        this.totalPrice = totalPrice;
     }
 
     public String getVariant() {

@@ -39,10 +39,14 @@ public class CartActivity extends AppCompatActivity {
     private Button orderButton;
     private RecyclerView recyclerView;
     private TextView tvName, tvOption, tvPrice, tvQuantity;
+    private ImageView imgBack;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cart);
+        imgBack = findViewById(R.id.img_toolbar_back);
+        imgBack.setOnClickListener(v -> onBackPressed());
         orderButton = findViewById(R.id.btn_checkout);
         recyclerView = findViewById(R.id.rcv_cart);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
