@@ -93,6 +93,8 @@ builder.Services.AddScoped<IToppingRepository, ToppingRepository>();
 builder.Services.AddTransient<IPaymentService, PaymentService>();
 builder.Services.AddTransient<IVnPayService, VNPayService>();
 
+//builder.Services.AddScoped<IAdditionalInformationRepository, AdditionalInformationRepository>();
+builder.Services.AddScoped<IAdditionalInformationService, AdditionalInformationService>();
 
 var app = builder.Build();
 
