@@ -12,8 +12,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.cafeonline.CartActivity;
 import com.example.cafeonline.R;
+import com.example.cafeonline.model.response.CartItemToppingResponse;
 import com.example.cafeonline.model.response.CartResponse;
 import com.example.cafeonline.model.response.CartItemResponse;
+import com.example.cafeonline.model.response.ToppingResponse;
 
 import java.text.DecimalFormat;
 import java.util.List;
@@ -43,18 +45,33 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
               holder.bind(cart);
         holder.tvAdd.setOnClickListener(v -> {
             int newQuantity = cart.getQuantity() + 1;
+            double newPrice = cart.getTotalPrice() * newQuantity;
+
             holder.tvQuantity.setText(String.valueOf(newQuantity));
             cart.setQuantity(newQuantity);
+            DecimalFormat decimalFormat = new DecimalFormat("#,###");
+            String formattedPrice = decimalFormat.format(newPrice);
+            holder.tvPrice.setText(String.valueOf(formattedPrice + "VND"));
+            cart.setTotalPrice((int)newPrice);
+
             updateTotalPrice();  // Call method to update total price
         });
 
         holder.tvSub.setOnClickListener(v -> {
-            if (cart.getQuantity() > 0) {
-                int newQuantity = cart.getQuantity() - 1;
-                holder.tvQuantity.setText(String.valueOf(newQuantity));
-                cart.setQuantity(newQuantity);
-                updateTotalPrice();  // Call method to update total price
+            int newQuantity = cart.getQuantity() - 1;
+            if (newQuantity < 0) {
+                newQuantity = 0; //
             }
+            double newPrice = cart.getTotalPrice() / cart.getQuantity() * newQuantity;
+
+            holder.tvQuantity.setText(String.valueOf(newQuantity));
+            cart.setQuantity(newQuantity);
+            DecimalFormat decimalFormat = new DecimalFormat("#,###");
+            String formattedPrice = decimalFormat.format(newPrice);
+            holder.tvPrice.setText(String.valueOf(formattedPrice + "VND"));
+            cart.setTotalPrice((int)newPrice);
+
+            updateTotalPrice();
         });
     }
 
@@ -102,7 +119,61 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
             Glide.with(itemView.getContext())
                     .load(cart.getDrinkDTO().getImage())
                     .into(imageView);
-//            tvQuantity.setText(cart.getQuantity();
+
+            StringBuilder optionsBuilder = new StringBuilder();
+
+            // Thêm số lượng
+//            optionsBuilder.append("Số lượng: ").append(cart.getQuantity()).append(", ");
+
+            // Thêm biến thể (nếu có)
+            if (cart.getVariant() != null && !cart.getVariant().isEmpty()) {
+                optionsBuilder.append("Variant: ").append(cart.getVariant()).append(", ");
+            }
+
+            // Thêm kích cỡ (nếu có)
+            if (cart.getSize() != null && !cart.getSize().isEmpty()) {
+                optionsBuilder.append("Size: ").append(cart.getSize()).append(", ");
+            }
+
+            // Thêm độ ngọt (nếu có)
+            if (cart.getSugar() != null && !cart.getSugar().isEmpty()) {
+                optionsBuilder.append("Sugar: ").append(cart.getSugar()).append(", ");
+            }
+
+            // Thêm có đá (nếu có)
+            if (cart.getIced() != null && !cart.getIced().isEmpty()) {
+                optionsBuilder.append("Iced: ").append(cart.getIced()).append(", ");
+            }
+
+
+
+            if (cart.cartItemToppingDTOs != null && !cart.cartItemToppingDTOs.isEmpty()) {
+                StringBuilder toppingsBuilder = new StringBuilder();
+                toppingsBuilder.append("Toppings: ");
+
+                for (CartItemToppingResponse cartItemTopping : cart.cartItemToppingDTOs) {
+                    if (cartItemTopping != null && cartItemTopping.topping != null) {
+                        toppingsBuilder.append(cartItemTopping.topping.name).append(", ");
+                    }
+                }
+
+                // Xóa dấu phẩy thừa ở cuối
+                if (toppingsBuilder.length() > 2) { // Đảm bảo ít nhất có 1 topping
+                    toppingsBuilder.deleteCharAt(toppingsBuilder.length() - 2);
+                }
+
+                optionsBuilder.append(toppingsBuilder.toString());
+            }
+            // Xóa dấu phẩy thừa ở cuối
+            optionsBuilder.reverse();
+            int index = optionsBuilder.indexOf(",");
+            if (index != -1) {
+                optionsBuilder.deleteCharAt(index);
+            }
+            optionsBuilder.reverse();
+
+            // Gán chuỗi tùy chọn đã xây dựng vào tvOption
+            tvOption.setText(optionsBuilder.toString());
 
         }
     }

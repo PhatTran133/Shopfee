@@ -9,11 +9,11 @@ public class CartItemResponse {
     public String size;
     public String sugar;
     public String iced;
-    public List<ToppingResponse> cartItemToppingDTOs;
+    public List<CartItemToppingResponse> cartItemToppingDTOs;
     public double totalPrice;
     public DrinkResponse drinkDTO;
 
-    public CartItemResponse(int id, int quantity, String variant, String size, String sugar, String iced, List<ToppingResponse> cartItemToppingDTOs, double totalPrice, DrinkResponse drinkDTO) {
+    public CartItemResponse(int id, int quantity, String variant, String size, String sugar, String iced, List<CartItemToppingResponse> cartItemToppingDTOs, double totalPrice, DrinkResponse drinkDTO) {
         Id = id;
         this.quantity = quantity;
         this.variant = variant;
@@ -73,11 +73,11 @@ public class CartItemResponse {
         this.iced = iced;
     }
 
-    public List<ToppingResponse> getCartItemToppingDTOs() {
+    public List<CartItemToppingResponse> getCartItemToppingDTOs() {
         return cartItemToppingDTOs;
     }
 
-    public void setCartItemToppingDTOs(List<ToppingResponse> cartItemToppingDTOs) {
+    public void setCartItemToppingDTOs(List<CartItemToppingResponse> cartItemToppingDTOs) {
         this.cartItemToppingDTOs = cartItemToppingDTOs;
     }
 
