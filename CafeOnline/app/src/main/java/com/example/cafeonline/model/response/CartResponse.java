@@ -1,50 +1,49 @@
 package com.example.cafeonline.model.response;
 
-import java.util.Date;
 import java.util.List;
 
 public class CartResponse {
-    public int Id;
-    public int UserId;
-    public double TotalPrice;
-    public List<CartToppingResponse> Options;
+    public int id;
+    public int userId;
+    public double totalPrice;
+    public List<CartItemResponse> cartItems;
 
-    public CartResponse(int id, int userId, double totalPrice, List<CartToppingResponse> options) {
-        Id = id;
-        UserId = userId;
-        TotalPrice = totalPrice;
-        Options = options;
-    }
-
-    public List<CartToppingResponse> getOptions() {
-        return Options;
-    }
-
-    public void setOptions(List<CartToppingResponse> options) {
-        Options = options;
-    }
-
-    public double getTotalPrice() {
-        return TotalPrice;
-    }
-
-    public void setTotalPrice(double totalPrice) {
-        TotalPrice = totalPrice;
-    }
-
-    public int getUserId() {
-        return UserId;
-    }
-
-    public void setUserId(int userId) {
-        UserId = userId;
+    public CartResponse(int id, int userId, double totalPrice, List<CartItemResponse> cartItems) {
+        this.id = id;
+        this.userId = userId;
+        this.totalPrice = totalPrice;
+        this.cartItems = cartItems;
     }
 
     public int getId() {
-        return Id;
+        return id;
     }
 
     public void setId(int id) {
-        Id = id;
+        this.id = id;
+    }
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
+    }
+
+    public double getTotalPrice() {
+        return totalPrice;
+    }
+
+    public void setTotalPrice(double totalPrice) {
+        this.totalPrice = totalPrice;
+    }
+
+    public List<CartItemResponse> getCartItems() {
+        return cartItems;
+    }
+
+    public void setCartItemToppingDTOs(List<CartItemResponse> cartItems) {
+        this.cartItems = cartItems;
     }
 }

@@ -303,9 +303,11 @@ public class DrinkDetailActivity extends AppCompatActivity {
                         if ("200".equals(apiResponse.getValue().getStatus())) {
                             Toast.makeText(DrinkDetailActivity.this, apiResponse.getValue().getMessage(), Toast.LENGTH_SHORT).show();
                             // NẾU THÀNH CÔNG CHUYỂN SANG TRANG CART
-                            // ĐANG TEST THỬ CHUYỂN SANG TRANG HOME
-                            Intent intent = new Intent(DrinkDetailActivity.this, MainActivity.class);
+                            Intent intent = new Intent(DrinkDetailActivity.this, CartActivity.class);
                             startActivity(intent);
+                            // ĐANG TEST THỬ CHUYỂN SANG TRANG HOME
+//                            Intent intent = new Intent(DrinkDetailActivity.this, MainActivity.class);
+//                            startActivity(intent);
                         } else {
                             Toast.makeText(DrinkDetailActivity.this, "Add to cart Failed: " + apiResponse.getValue().getMessage(), Toast.LENGTH_SHORT).show();
                         }

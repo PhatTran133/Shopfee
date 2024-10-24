@@ -1,6 +1,5 @@
 package com.example.cafeonline.adapter;
 
-import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,10 +10,9 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.example.cafeonline.DrinkDetailActivity;
 import com.example.cafeonline.R;
 import com.example.cafeonline.model.response.CartResponse;
-import com.example.cafeonline.model.response.DrinkResponse;
+import com.example.cafeonline.model.response.CartItemResponse;
 
 import java.text.DecimalFormat;
 import java.util.List;
@@ -22,10 +20,10 @@ import java.util.List;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder> {
-    private List<CartResponse> cartList;
+    private List<CartItemResponse> cartList;
     private DrinkAdapter.OnDrinkSelectedListener listener; //
 
-    public CartAdapter(List<CartResponse> cartList, DrinkAdapter.OnDrinkSelectedListener listener) {
+    public CartAdapter(List<CartItemResponse> cartList, DrinkAdapter.OnDrinkSelectedListener listener) {
         this.cartList = cartList;
         this.listener = listener;
     }
@@ -39,8 +37,8 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull CartViewHolder holder, int position) {
-//              CartResponse cart = cartList.get(position);
-//              holder.bind(cart);
+              CartItemResponse cart = cartList.get(position);
+              holder.bind(cart);
     }
 
     @Override
@@ -49,40 +47,35 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
     }
 
     public class CartViewHolder extends RecyclerView.ViewHolder {
-        private TextView tvName, tvPrice, tvCategoryName;
+        private TextView tvName, tvPrice, tvQuantity, tvOption;
         private CircleImageView imageView;
         private LinearLayout linearLayoutItemDrink;
 
         public CartViewHolder(@NonNull View itemView) {
             super(itemView);
-            tvName = itemView.findViewById(R.id.tv_name);
-            tvPrice = itemView.findViewById(R.id.tv_price_sale);
-            tvCategoryName = itemView.findViewById(R.id.tv_category_name);
+            tvName = itemView.findViewById(R.id.tv_drink);
+            tvPrice = itemView.findViewById(R.id.tv_price);
+            tvQuantity = itemView.findViewById(R.id.tv_count);
+            tvOption = itemView.findViewById(R.id.tv_option);
             imageView = itemView.findViewById(R.id.img_drink);
             linearLayoutItemDrink = itemView.findViewById(R.id.layout_item_drink);
 
         }
 
-//        public void bind(CartResponse cart) {
-//            tvName.setText(drink.getName());
-//            DecimalFormat decimalFormat = new DecimalFormat("#,###");
-//            String formattedPrice = decimalFormat.format(drink.getPrice());
-//            tvPrice.setText(formattedPrice);
-//            Glide.with(itemView.getContext())
-//                    .load(drink.getImage())
-//                    .into(imageView);
-//
-//            linearLayoutItemDrink.setOnClickListener(new View.OnClickListener() {
-//                public void onClick(View v) {
-//                    CartResponse cart = cartList.get(getAdapterPosition()); // Lấy vị trí item được click
-//
-//                    Intent intent = new Intent(itemView.getContext(), DrinkDetailActivity.class);
-//                    intent.putExtra("drinkId", cart.getId());
-//                    itemView.getContext().startActivity(intent);
-//
-//                }
-//            });
-//        }
+        public void bind(CartItemResponse cart) {
+            // Xử lý phần hiển thị options
+           tvName.setText(cart.getDrinkDTO().getName());
+           DecimalFormat decimalFormat = new DecimalFormat("#,###");
+            String formattedPrice = decimalFormat.format(cart.getPrice());
+            tvPrice.setText(formattedPrice);
+            String formattedQuantity = decimalFormat.format((cart.getQuantity()));
+            tvQuantity.setText((formattedQuantity));
+            Glide.with(itemView.getContext())
+                    .load(cart.getDrinkDTO().getImage())
+                    .into(imageView);
+//            tvQuantity.setText(cart.getQuantity();
+
+        }
     }
 }
 
