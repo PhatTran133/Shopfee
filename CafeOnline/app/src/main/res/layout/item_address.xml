@@ -5,111 +5,117 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:gravity="center_vertical"
-    android:orientation="vertical"
+    android:orientation="horizontal"
     android:background="@color/white"
     tools:ignore="UseCompoundDrawables, ContentDescription">
 
-    <RelativeLayout
-        android:layout_width="match_parent"
+    <!-- Left Icons Layout: Unchecked Icon on the Left -->
+    <LinearLayout
+        android:id="@+id/layout_icons_left"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="vertical"
+        android:padding="@dimen/define_dimen_10">
+
+        <!-- Unchecked Radio Button Icon -->
+        <ImageView
+            android:id="@+id/img_status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/baseline_radio_button_unchecked_24" />
+    </LinearLayout>
+
+    <!-- Text Layout in the Middle -->
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical"
         android:padding="@dimen/define_dimen_10">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/define_dimen_10"
-            android:layout_centerVertical="true"
-            android:layout_toStartOf="@+id/img_status"
-            android:orientation="vertical">
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
 
-            <LinearLayout
+            <TextView
+                android:layout_width="@dimen/define_dimen_80"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/define_dimen_10"
+                android:text="@string/full_name"
+                android:textColor="@color/textColorSecondary"
+                android:textSize="@dimen/text_size_small"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tv_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="@dimen/define_dimen_80"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="@dimen/define_dimen_10"
-                    android:text="@string/full_name"
-                    android:textColor="@color/textColorSecondary"
-                    android:textSize="@dimen/text_size_small"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/tv_name"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/app_name"
-                    android:textColor="@color/textColorPrimary"
-                    android:textSize="@dimen/text_size_small" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:layout_marginTop="@dimen/define_dimen_5"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="@dimen/define_dimen_80"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="@dimen/define_dimen_10"
-                    android:text="@string/phone_number"
-                    android:textColor="@color/textColorSecondary"
-                    android:textSize="@dimen/text_size_small"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/tv_phone"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/app_name"
-                    android:textColor="@color/textColorPrimary"
-                    android:textSize="@dimen/text_size_small" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:layout_marginTop="@dimen/define_dimen_5"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="@dimen/define_dimen_80"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="@dimen/define_dimen_10"
-                    android:text="@string/address"
-                    android:textColor="@color/textColorSecondary"
-                    android:textSize="@dimen/text_size_small"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/tv_address"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/app_name"
-                    android:textColor="@color/textColorPrimary"
-                    android:textSize="@dimen/text_size_small" />
-            </LinearLayout>
+                android:text="@string/app_name"
+                android:textColor="@color/textColorPrimary"
+                android:textSize="@dimen/text_size_small" />
         </LinearLayout>
 
-        <ImageView
-            android:id="@+id/img_status"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"
-            android:src="@drawable/baseline_radio_button_unchecked_24" />
-    </RelativeLayout>
+            android:gravity="center_vertical"
+            android:layout_marginTop="@dimen/define_dimen_5"
+            android:orientation="horizontal">
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginStart="@dimen/define_dimen_10"
+            <TextView
+                android:layout_width="@dimen/define_dimen_80"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/define_dimen_10"
+                android:text="@string/phone_number"
+                android:textColor="@color/textColorSecondary"
+                android:textSize="@dimen/text_size_small"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tv_phone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/app_name"
+                android:textColor="@color/textColorPrimary"
+                android:textSize="@dimen/text_size_small" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:layout_marginTop="@dimen/define_dimen_5"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="@dimen/define_dimen_80"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/define_dimen_10"
+                android:text="@string/address"
+                android:textColor="@color/textColorSecondary"
+                android:textSize="@dimen/text_size_small"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tv_address"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/app_name"
+                android:textColor="@color/textColorPrimary"
+                android:textSize="@dimen/text_size_small" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- Right Icon: Delete Icon on the Right -->
+    <ImageView
+        android:id="@+id/img_delete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/define_dimen_10"
-        android:background="@color/bgMainColor" />
+        android:layout_gravity="center_vertical"
+        android:src="@drawable/baseline_delete_24" />
+
 </LinearLayout>
