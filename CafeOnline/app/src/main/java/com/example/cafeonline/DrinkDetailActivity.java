@@ -147,6 +147,7 @@ public class DrinkDetailActivity extends AppCompatActivity {
                         DecimalFormat decimalFormat = new DecimalFormat("#,###");
                         String formattedPrice = decimalFormat.format(drink.getPrice());
                         tvPrice.setText(formattedPrice + " VND");
+                        tvTotal.setText(formattedPrice + " VND");
                     } else {
                         Toast.makeText(DrinkDetailActivity.this, apiResponse.getValue().getMessage(), Toast.LENGTH_SHORT).show();
                     }
