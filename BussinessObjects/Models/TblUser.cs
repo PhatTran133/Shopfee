@@ -25,5 +25,6 @@ namespace BussinessObjects.Models
         public virtual ICollection<Cart> Carts { get; set; }
         public virtual ICollection<TblNotification> TblNotifications { get; set; }
         public virtual ICollection<TblOrder> TblOrders { get; set; }
+        public virtual ICollection<AdditionalInformation> AdditionalInformations { get; set; }
     }
 }

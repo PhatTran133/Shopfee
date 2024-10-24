@@ -3,6 +3,7 @@ using System;
 using BussinessObjects.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,10 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace BussinessObjects.Migrations
 {
     [DbContext(typeof(CoffeeShopContext))]
-    partial class CoffeeShopContextModelSnapshot : ModelSnapshot
+    [Migration("20241024163451_UpdateAdditionalInformationRelation")]
+    partial class UpdateAdditionalInformationRelation
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -63,7 +65,10 @@ namespace BussinessObjects.Migrations
                     b.Property<DateTime?>("CreatedDate")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<decimal>("TotalPrice")
+                    b.Property<DateTime?>("DeletedDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<decimal?>("TotalPrice")
                         .HasColumnType("numeric");
 
                     b.Property<DateTime?>("UpdatedDate")
@@ -79,7 +84,7 @@ namespace BussinessObjects.Migrations
                     b.ToTable("Carts");
                 });
 
-            modelBuilder.Entity("BussinessObjects.Models.CartItem", b =>
+            modelBuilder.Entity("BussinessObjects.Models.CartToppingDrink", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -87,10 +92,7 @@ namespace BussinessObjects.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("CartId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("DrinkId")
+                    b.Property<int?>("CartId")
                         .HasColumnType("integer");
 
                     b.Property<string>("Iced")
@@ -99,7 +101,7 @@ namespace BussinessObjects.Migrations
                     b.Property<string>("Note")
                         .HasColumnType("text");
 
-                    b.Property<int>("Quantity")
+                    b.Property<int?>("Quantity")
                         .HasColumnType("integer");
 
                     b.Property<string>("Size")
@@ -108,8 +110,11 @@ namespace BussinessObjects.Migrations
                     b.Property<string>("Sugar")
                         .HasColumnType("text");
 
-                    b.Property<decimal>("TotalPrice")
-                        .HasColumnType("numeric");
+                    b.Property<int?>("ToppingDrinkId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("Total")
+                        .HasColumnType("integer");
 
                     b.Property<string>("Variant")
                         .HasColumnType("text");
@@ -118,35 +123,9 @@ namespace BussinessObjects.Migrations
 
                     b.HasIndex("CartId");
 
-                    b.HasIndex("DrinkId");
+                    b.HasIndex("ToppingDrinkId");
 
-                    b.ToTable("CartItems");
-                });
-
-            modelBuilder.Entity("BussinessObjects.Models.CartItemTopping", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("CartItemId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("Price")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("ToppingId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CartItemId");
-
-                    b.HasIndex("ToppingId");
-
-                    b.ToTable("CartItemToppings");
+                    b.ToTable("CartToppingDrinks");
                 });
 
             modelBuilder.Entity("BussinessObjects.Models.Category", b =>
@@ -213,7 +192,7 @@ namespace BussinessObjects.Migrations
                     b.ToTable("Drinks");
                 });
 
-            modelBuilder.Entity("BussinessObjects.Models.OrderItem", b =>
+            modelBuilder.Entity("BussinessObjects.Models.DrinkTopping", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -221,8 +200,28 @@ namespace BussinessObjects.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("DrinkId")
+                    b.Property<int?>("DrinkId")
                         .HasColumnType("integer");
+
+                    b.Property<int?>("ToppingId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DrinkId");
+
+                    b.HasIndex("ToppingId");
+
+                    b.ToTable("DrinkToppings");
+                });
+
+            modelBuilder.Entity("BussinessObjects.Models.OrderToppingDrink", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Iced")
                         .HasColumnType("text");
@@ -230,10 +229,10 @@ namespace BussinessObjects.Migrations
                     b.Property<string>("Note")
                         .HasColumnType("text");
 
-                    b.Property<int>("OrderId")
+                    b.Property<int?>("OrderId")
                         .HasColumnType("integer");
 
-                    b.Property<int>("Quantity")
+                    b.Property<int?>("Quantity")
                         .HasColumnType("integer");
 
                     b.Property<string>("Size")
@@ -242,42 +241,19 @@ namespace BussinessObjects.Migrations
                     b.Property<string>("Sugar")
                         .HasColumnType("text");
 
-                    b.Property<decimal>("TotalPrice")
-                        .HasColumnType("numeric");
+                    b.Property<int?>("ToppingDrinkId")
+                        .HasColumnType("integer");
 
                     b.Property<string>("Variant")
                         .HasColumnType("text");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("DrinkId");
-
                     b.HasIndex("OrderId");
 
-                    b.ToTable("OrderItems");
-                });
+                    b.HasIndex("ToppingDrinkId");
 
-            modelBuilder.Entity("BussinessObjects.Models.OrderItemTopping", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("OrderItemId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("ToppingId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("OrderItemId");
-
-                    b.HasIndex("ToppingId");
-
-                    b.ToTable("OrderItemToppings");
+                    b.ToTable("OrderToppingDrinks");
                 });
 
             modelBuilder.Entity("BussinessObjects.Models.Otp", b =>
@@ -482,42 +458,20 @@ namespace BussinessObjects.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("BussinessObjects.Models.CartItem", b =>
+            modelBuilder.Entity("BussinessObjects.Models.CartToppingDrink", b =>
                 {
                     b.HasOne("BussinessObjects.Models.Cart", "Cart")
-                        .WithMany("CartItems")
+                        .WithMany("CartToppingDrinks")
                         .HasForeignKey("CartId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("BussinessObjects.Models.Drink", "Drink")
-                        .WithMany("CartItems")
-                        .HasForeignKey("DrinkId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.HasOne("BussinessObjects.Models.DrinkTopping", "ToppingDrink")
+                        .WithMany("CartToppingDrinks")
+                        .HasForeignKey("ToppingDrinkId");
 
                     b.Navigation("Cart");
 
-                    b.Navigation("Drink");
-                });
-
-            modelBuilder.Entity("BussinessObjects.Models.CartItemTopping", b =>
-                {
-                    b.HasOne("BussinessObjects.Models.CartItem", "CartItem")
-                        .WithMany("CartItemToppings")
-                        .HasForeignKey("CartItemId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("BussinessObjects.Models.Topping", "Topping")
-                        .WithMany("CartItemToppings")
-                        .HasForeignKey("ToppingId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("CartItem");
-
-                    b.Navigation("Topping");
+                    b.Navigation("ToppingDrink");
                 });
 
             modelBuilder.Entity("BussinessObjects.Models.Drink", b =>
@@ -529,42 +483,34 @@ namespace BussinessObjects.Migrations
                     b.Navigation("Category");
                 });
 
-            modelBuilder.Entity("BussinessObjects.Models.OrderItem", b =>
+            modelBuilder.Entity("BussinessObjects.Models.DrinkTopping", b =>
                 {
                     b.HasOne("BussinessObjects.Models.Drink", "Drink")
-                        .WithMany("OrderItems")
-                        .HasForeignKey("DrinkId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .WithMany("DrinkToppings")
+                        .HasForeignKey("DrinkId");
 
-                    b.HasOne("BussinessObjects.Models.TblOrder", "Order")
-                        .WithMany("OrderItems")
-                        .HasForeignKey("OrderId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.HasOne("BussinessObjects.Models.Topping", "Topping")
+                        .WithMany("DrinkToppings")
+                        .HasForeignKey("ToppingId");
 
                     b.Navigation("Drink");
 
-                    b.Navigation("Order");
+                    b.Navigation("Topping");
                 });
 
-            modelBuilder.Entity("BussinessObjects.Models.OrderItemTopping", b =>
+            modelBuilder.Entity("BussinessObjects.Models.OrderToppingDrink", b =>
                 {
-                    b.HasOne("BussinessObjects.Models.OrderItem", "OrderItem")
-                        .WithMany("OrderItemToppings")
-                        .HasForeignKey("OrderItemId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.HasOne("BussinessObjects.Models.TblOrder", "Order")
+                        .WithMany("OrderToppingDrinks")
+                        .HasForeignKey("OrderId");
 
-                    b.HasOne("BussinessObjects.Models.Topping", "Topping")
-                        .WithMany("OrderItemToppings")
-                        .HasForeignKey("ToppingId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.HasOne("BussinessObjects.Models.DrinkTopping", "ToppingDrink")
+                        .WithMany("OrderToppingDrinks")
+                        .HasForeignKey("ToppingDrinkId");
 
-                    b.Navigation("OrderItem");
+                    b.Navigation("Order");
 
-                    b.Navigation("Topping");
+                    b.Navigation("ToppingDrink");
                 });
 
             modelBuilder.Entity("BussinessObjects.Models.Payment", b =>
@@ -596,12 +542,7 @@ namespace BussinessObjects.Migrations
 
             modelBuilder.Entity("BussinessObjects.Models.Cart", b =>
                 {
-                    b.Navigation("CartItems");
-                });
-
-            modelBuilder.Entity("BussinessObjects.Models.CartItem", b =>
-                {
-                    b.Navigation("CartItemToppings");
+                    b.Navigation("CartToppingDrinks");
                 });
 
             modelBuilder.Entity("BussinessObjects.Models.Category", b =>
@@ -611,19 +552,19 @@ namespace BussinessObjects.Migrations
 
             modelBuilder.Entity("BussinessObjects.Models.Drink", b =>
                 {
-                    b.Navigation("CartItems");
-
-                    b.Navigation("OrderItems");
+                    b.Navigation("DrinkToppings");
                 });
 
-            modelBuilder.Entity("BussinessObjects.Models.OrderItem", b =>
+            modelBuilder.Entity("BussinessObjects.Models.DrinkTopping", b =>
                 {
-                    b.Navigation("OrderItemToppings");
+                    b.Navigation("CartToppingDrinks");
+
+                    b.Navigation("OrderToppingDrinks");
                 });
 
             modelBuilder.Entity("BussinessObjects.Models.TblOrder", b =>
                 {
-                    b.Navigation("OrderItems");
+                    b.Navigation("OrderToppingDrinks");
 
                     b.Navigation("Payments");
                 });
@@ -641,9 +582,7 @@ namespace BussinessObjects.Migrations
 
             modelBuilder.Entity("BussinessObjects.Models.Topping", b =>
                 {
-                    b.Navigation("CartItemToppings");
-
-                    b.Navigation("OrderItemToppings");
+                    b.Navigation("DrinkToppings");
                 });
 #pragma warning restore 612, 618
         }
