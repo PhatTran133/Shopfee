@@ -84,8 +84,9 @@ public class LoginActivity extends AppCompatActivity {
                     ApiResponse<UserResponse> apiResponse = response.body();
 
                     if ("200".equals(apiResponse.getValue().getStatus())) {
-                        int userId = apiResponse.getValue().getData().getId(); // Assuming getUserId() returns the ID
-                        saveUserIdToPreferences(userId);
+                        int userId = apiResponse.getValue().getData().getId();
+                        String email = apiResponse.getValue().getData().getEmail();// Assuming getUserId() returns the ID
+                        saveUserIdToPreferences(userId, email);
                         Toast.makeText(LoginActivity.this, "Login Successfully", Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                         startActivity(intent);
@@ -119,10 +120,12 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    private void saveUserIdToPreferences(int userId) {
+    private void saveUserIdToPreferences(int userId, String email) {
         SharedPreferences sharedPreferences = getSharedPreferences("KooheePrefs", MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putInt("userId", userId);
+        editor.putString("email", email);
         editor.apply();
     }
+
 }
