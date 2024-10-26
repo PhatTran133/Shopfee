@@ -30,6 +30,7 @@ namespace Repositories
                 .Include(o => o.OrderItems) 
                     .ThenInclude(oi => oi.OrderItemToppings) 
                     .ThenInclude(oit => oit.Topping)
+                .Include(p => p.Payments)
                 .FirstOrDefaultAsync(x => x.Id == id);
         }
 
@@ -41,6 +42,7 @@ namespace Repositories
                 .Include(o => o.OrderItems) // Start from OrderItems
                     .ThenInclude(oi => oi.OrderItemToppings) // Navigate to OrderItemToppings
                     .ThenInclude(oit => oit.Topping) // Navigate to Topping from OrderItemToppings
+                .Include(p => p.Payments)
                 .Where(o => o.UserId == userId && o.StatusOfOder == status)
                 .Where(o => paymentCreated ? o.Payments.Any() : !o.Payments.Any())
                 .ToListAsync();
