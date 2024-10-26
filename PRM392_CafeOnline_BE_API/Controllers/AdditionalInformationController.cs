@@ -18,16 +18,18 @@ namespace PRM392_CafeOnline_BE_API.Controllers
             _service = service;
         }
 
-        // API thêm địa chỉ cho user
+
         [HttpPost("add-address")]
-        public async Task<IActionResult> AddAddress(int userId, [FromBody] AddAddressDto addAddressDto)
+        public async Task<IActionResult> AddAddress(int userId, [FromBody]  AddRequestDto addAddressDto)
         {
             if (ModelState.IsValid)
             {
                 try
                 {
-                    await _service.AddAddressAsync(userId, addAddressDto.Name, addAddressDto.Phone, addAddressDto.Address);
-                    var response = new JsonResponse<string>(null, 200, "Address added successfully");
+                    var addressId = await _service.AddAddressAsync(userId, addAddressDto.Name, addAddressDto.Phone, addAddressDto.Address);
+
+
+                    var response = new JsonResponse<object>(new { UserId = userId, AddressId = addressId }, 200, "Address added successfully");
                     return Ok(response);
                 }
                 catch (Exception ex)
@@ -41,13 +43,14 @@ namespace PRM392_CafeOnline_BE_API.Controllers
             return BadRequest(invalidResponse);
         }
 
-        [HttpDelete("delete-address/{addressId}")]
+        [HttpDelete("delete-address")]
         public async Task<IActionResult> DeleteAddress(int userId, int addressId)
         {
             try
             {
-                await _service.DeleteAddressAsync(userId, addressId);
-                var response = new JsonResponse<string>(null, 200, "Address deleted successfully");
+                var result = await _service.DeleteAddressAsync(userId, addressId);
+
+                var response = new JsonResponse<AddAddressDto>(result, 200, "Address deleted successfully");
                 return Ok(response);
             }
             catch (Exception ex)
@@ -64,6 +67,8 @@ namespace PRM392_CafeOnline_BE_API.Controllers
             try
             {
                 var addresses = await _service.GetAllAddressesByUserIdAsync(userId);
+
+
                 var response = new JsonResponse<List<AddAddressDto>>(addresses, 200, "Addresses retrieved successfully");
                 return Ok(response);
             }

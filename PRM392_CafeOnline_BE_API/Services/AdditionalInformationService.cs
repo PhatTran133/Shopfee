@@ -15,7 +15,7 @@ namespace PRM392_CafeOnline_BE_API.Services
             _context = context;
         }
 
-        public async Task AddAddressAsync(int userId, string name, string phone, string address)
+        public async Task<int> AddAddressAsync(int userId, string name, string phone, string address)
         {
             var user = await _context.TblUsers.FindAsync(userId);
             if (user != null)
@@ -30,10 +30,14 @@ namespace PRM392_CafeOnline_BE_API.Services
 
                 _context.AdditionalInformations.Add(newAddress);
                 await _context.SaveChangesAsync();
+
+                return newAddress.Id;
             }
+
+            throw new Exception("User not found.");
         }
 
-        public async Task DeleteAddressAsync(int userId, int addressId)
+        public async Task<AddAddressDto> DeleteAddressAsync(int userId, int addressId)
         {
             var address = await _context.AdditionalInformations
                 .FirstOrDefaultAsync(a => a.Id == addressId && a.UserId == userId);
@@ -42,6 +46,11 @@ namespace PRM392_CafeOnline_BE_API.Services
             {
                 _context.AdditionalInformations.Remove(address);
                 await _context.SaveChangesAsync();
+                return new AddAddressDto
+                {
+                    UserId = userId,
+                    AddressId = addressId
+                };
             }
             else
             {
@@ -53,12 +62,13 @@ namespace PRM392_CafeOnline_BE_API.Services
         public async Task<List<AddAddressDto>> GetAllAddressesByUserIdAsync(int userId)
         {
             var addresses = await _context.AdditionalInformations
-         .Where(a => a.UserId == userId)
-         .ToListAsync();
-
+                .Where(a => a.UserId == userId)
+                .ToListAsync();
 
             return addresses.Select(a => new AddAddressDto
             {
+                UserId = a.UserId,
+                AddressId = a.Id,   // Map đúng trường AddressId từ thực thể
                 Name = a.Name,
                 Phone = a.Phone,
                 Address = a.Address
