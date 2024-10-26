@@ -16,5 +16,6 @@ namespace BussinessObjects.DTO
         public DateTime? UpdatedDate { get; set; }
         public DateTime? DeletedDate { get; set; }
         public List<OrderItemDTO> OrderItemDTOs { get; set; } = null!;
+        public List<PaymentDTO> PaymentDTOs { get; set; } = null!;
     }
 }

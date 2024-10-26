@@ -10,5 +10,6 @@ namespace BussinessObjects.DTO
     {
         public int UserId { get; set; }
         public int CartId {  get; set; }
+        public PaymentRequestDTO PaymentRequest { get; set; } = null!;
     }
 }

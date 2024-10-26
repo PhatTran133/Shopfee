@@ -22,7 +22,7 @@ namespace PRM392_CafeOnline_BE_API.Controllers
             try
             {
                 var response = await _orderService.CreateOrder(createOrderItemRequestDTO);
-                return Ok(new JsonResponse<string>("Created successfully", 200, "Created successfully"));
+                return Ok(new JsonResponse<OrderDTO>(response, 200, "Created successfully"));
             } catch (Exception ex)
             {
                 if (ex.Message != null)
