@@ -77,16 +77,6 @@ public class HomeFragment extends Fragment {
         String name = search.getText().toString().trim();
         String category = search.getText().toString().trim();
         String size = search.getText().toString().trim();
-
-//        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-//        try {
-//            Date startDate = sdf.parse(search.getText().toString().trim());
-//            Date endDate = sdf.parse(search.getText().toString().trim());
-//        } catch (ParseException e) {
-//            throw new RuntimeException(e);
-//        }
-//        double maxPrice = double.(search.getText().toString().trim());
-//        double minPrice = Double.parseDouble(search.getText().toString().trim());
         DrinkApiService drinkService = ApiService.createService(DrinkApiService.class);
         retrofit2.Call<ApiResponse<List<DrinkResponse>>> callApiDrink = drinkService.getDrinkFilter(name, category, size);
         callApiDrink.enqueue(new Callback<ApiResponse<List<DrinkResponse>>>() {
@@ -125,6 +115,7 @@ public class HomeFragment extends Fragment {
             }
         });
     }
+
 }
 
 

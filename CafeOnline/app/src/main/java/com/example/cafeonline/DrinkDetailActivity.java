@@ -147,6 +147,7 @@ public class DrinkDetailActivity extends AppCompatActivity {
                         DecimalFormat decimalFormat = new DecimalFormat("#,###");
                         String formattedPrice = decimalFormat.format(drink.getPrice());
                         tvPrice.setText(formattedPrice + " VND");
+                        tvTotal.setText(formattedPrice + " VND");
                     } else {
                         Toast.makeText(DrinkDetailActivity.this, apiResponse.getValue().getMessage(), Toast.LENGTH_SHORT).show();
                     }
@@ -303,9 +304,9 @@ public class DrinkDetailActivity extends AppCompatActivity {
                         if ("200".equals(apiResponse.getValue().getStatus())) {
                             Toast.makeText(DrinkDetailActivity.this, apiResponse.getValue().getMessage(), Toast.LENGTH_SHORT).show();
                             // NẾU THÀNH CÔNG CHUYỂN SANG TRANG CART
-                            // ĐANG TEST THỬ CHUYỂN SANG TRANG HOME
-                            Intent intent = new Intent(DrinkDetailActivity.this, MainActivity.class);
+                            Intent intent = new Intent(DrinkDetailActivity.this, CartActivity.class);
                             startActivity(intent);
+                            finish();
                         } else {
                             Toast.makeText(DrinkDetailActivity.this, "Add to cart Failed: " + apiResponse.getValue().getMessage(), Toast.LENGTH_SHORT).show();
                         }
