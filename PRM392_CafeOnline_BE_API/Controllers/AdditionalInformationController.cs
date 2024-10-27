@@ -43,14 +43,14 @@ namespace PRM392_CafeOnline_BE_API.Controllers
             return BadRequest(invalidResponse);
         }
 
-        [HttpDelete("delete-address")]
+        [HttpDelete("delete-address/{userId}/{addressId}")]
         public async Task<IActionResult> DeleteAddress(int userId, int addressId)
         {
             try
             {
                 var result = await _service.DeleteAddressAsync(userId, addressId);
 
-                var response = new JsonResponse<AddAddressDto>(result, 200, "Address deleted successfully");
+                var response = new JsonResponse<string>(null, 200, "Address deleted successfully");
                 return Ok(response);
             }
             catch (Exception ex)
@@ -61,7 +61,7 @@ namespace PRM392_CafeOnline_BE_API.Controllers
         }
 
 
-        [HttpGet("get-all-addresses")]
+        [HttpGet("get-all-addresses/{userId}")]
         public async Task<IActionResult> GetAllAddresses(int userId)
         {
             try
