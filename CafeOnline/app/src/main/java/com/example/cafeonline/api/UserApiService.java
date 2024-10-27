@@ -1,11 +1,13 @@
 package com.example.cafeonline.api;
 
+import com.example.cafeonline.model.request.AddressRequest;
 import com.example.cafeonline.model.request.ForgotPasswordRequest;
 import com.example.cafeonline.model.request.LoginRequest;
 import com.example.cafeonline.model.request.RegisterRequest;
 import com.example.cafeonline.model.request.ResetPasswordRequest;
 import com.example.cafeonline.model.request.UserProfileRequest;
 import com.example.cafeonline.model.request.VerifyCodeRequest;
+import com.example.cafeonline.model.response.AddressResponse;
 import com.example.cafeonline.model.response.ApiResponse;
 import com.example.cafeonline.model.response.UserResponse;
 
@@ -36,5 +38,8 @@ public interface UserApiService {
     Call<ApiResponse<ResetPasswordRequest>> resetPassword(@Body ResetPasswordRequest resetPasswordRequest);
     @GET("/api/users/{userId}")
     Call<ApiResponse<UserResponse>> userProfile(@Path("userId") int userId);
+
+    @POST("/api/users/add-address/{userId}")
+    Call<ApiResponse<Object>> addAddress(@Path("userId")int userId, @Body AddressRequest addressRequest);
 
 }
