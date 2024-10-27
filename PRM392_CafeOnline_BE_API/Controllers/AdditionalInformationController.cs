@@ -19,7 +19,7 @@ namespace PRM392_CafeOnline_BE_API.Controllers
         }
 
 
-        [HttpPost("add-address")]
+        [HttpPost("add-address/{userId}")]
         public async Task<IActionResult> AddAddress(int userId, [FromBody]  AddRequestDto addAddressDto)
         {
             if (ModelState.IsValid)
