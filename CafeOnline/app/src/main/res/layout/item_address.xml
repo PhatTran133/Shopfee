@@ -19,7 +19,7 @@
         android:padding="@dimen/define_dimen_10">
 
         <!-- Unchecked Radio Button Icon -->
-        <ImageView
+        <RadioButton
             android:id="@+id/img_status"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
