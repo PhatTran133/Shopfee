@@ -13,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.cafeonline.api.ApiService;
 import com.example.cafeonline.api.UserApiService;
 import com.example.cafeonline.model.request.AddressRequest;
+import com.example.cafeonline.model.response.AddressResponse;
 import com.example.cafeonline.model.response.ApiResponse;
 import com.example.cafeonline.model.response.UserResponse;
 import com.google.gson.Gson;
@@ -59,15 +60,17 @@ public class AddAddressActivicty extends AppCompatActivity {
             UserApiService authService = ApiService.createService(UserApiService.class);
             AddressRequest addressRequest = new AddressRequest(name, phone, address);
             // Make API call
-            Call<ApiResponse<Object>> call = authService.addAddress(userId,addressRequest);
-            call.enqueue(new Callback<ApiResponse<Object>>(){
+            Call<ApiResponse<AddressResponse>> call = authService.addAddress(userId,addressRequest);
+            call.enqueue(new Callback<ApiResponse<AddressResponse>>(){
                 @Override
-                public void onResponse(Call<ApiResponse<Object>> call, Response<ApiResponse<Object>> response){
+                public void onResponse(Call<ApiResponse<AddressResponse>> call, Response<ApiResponse<AddressResponse>> response){
                     if(response.isSuccessful() && response.body() != null){
-                        ApiResponse<Object> apiResponse = response.body();
+                        ApiResponse<AddressResponse> apiResponse = response.body();
 
                         if("200".equals(apiResponse.getValue().getStatus())){
                             Toast.makeText(AddAddressActivicty.this,"Add Address Successfully" +  apiResponse.getValue().getMessage(), Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent(AddAddressActivicty.this, AddressActivity.class);
+                            startActivity(intent);
                         }
                         else{
                             Toast.makeText(AddAddressActivicty.this, "Add Address Failed" + apiResponse.getValue().getMessage(), Toast.LENGTH_SHORT).show();
@@ -90,7 +93,7 @@ public class AddAddressActivicty extends AppCompatActivity {
                     }
                 }
                 @Override
-                public void onFailure(Call<ApiResponse<Object>> call, Throwable t){
+                public void onFailure(Call<ApiResponse<AddressResponse>> call, Throwable t){
                     Toast.makeText(AddAddressActivicty.this, "Add Address Failed: " + t.getMessage(), Toast.LENGTH_SHORT).show();
                 }
 
@@ -103,5 +106,6 @@ public class AddAddressActivicty extends AppCompatActivity {
         SharedPreferences sharedPreferences = getSharedPreferences("KooheePrefs", MODE_PRIVATE);
         return sharedPreferences.getInt("userId", 0); // Returns null if no userId is found
     }
+
 }
 

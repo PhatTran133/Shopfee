@@ -11,8 +11,11 @@ import com.example.cafeonline.model.response.AddressResponse;
 import com.example.cafeonline.model.response.ApiResponse;
 import com.example.cafeonline.model.response.UserResponse;
 
+import java.util.List;
+
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
@@ -38,8 +41,10 @@ public interface UserApiService {
     Call<ApiResponse<ResetPasswordRequest>> resetPassword(@Body ResetPasswordRequest resetPasswordRequest);
     @GET("/api/users/{userId}")
     Call<ApiResponse<UserResponse>> userProfile(@Path("userId") int userId);
-
     @POST("/api/users/add-address/{userId}")
-    Call<ApiResponse<Object>> addAddress(@Path("userId")int userId, @Body AddressRequest addressRequest);
-
+    Call<ApiResponse<AddressResponse>> addAddress(@Path("userId")int userId, @Body AddressRequest addressRequest);
+    @GET("/api/users/get-all-addresses/{userId}")
+    Call<ApiResponse<List<AddressResponse>>> getAllAddresses(@Path("userId") int userId);
+    @DELETE("/api/users/delete-address/{userId}/{addressId}")
+    Call<ApiResponse<String>> deleteAddress(@Path("userId") int userId, @Path("addressId") int addressId);
 }

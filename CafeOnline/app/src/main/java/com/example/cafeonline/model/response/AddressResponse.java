@@ -1,24 +1,34 @@
 package com.example.cafeonline.model.response;
 
 public class AddressResponse {
-    private int Id;
+    private int addressId;
+    private int userId;
     private String name;
     private String phone;
     private String address;
 
-    public AddressResponse(int id, String name, String phone, String address) {
-        Id = id;
+    public AddressResponse(int addressId, int userId, String name, String phone, String address) {
+        this.addressId = addressId;
+        this.userId = userId;
         this.name = name;
         this.phone = phone;
         this.address = address;
     }
 
-    public int getId() {
-        return Id;
+    public int getAddressId() {
+        return addressId;
     }
 
-    public void setId(int id) {
-        Id = id;
+    public void setAddressId(int addressId) {
+        this.addressId = addressId;
+    }
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
     }
 
     public String getName() {
