@@ -13,17 +13,19 @@ namespace PRM392_CafeOnline_BE_API.Services
         private readonly IOrderItemRepository _orderItemRepository;
         private readonly IOrderItemToppingRepository _orderItemToppingRepository;
         private readonly ICartRepository _cartRepository;
+        private readonly IPaymentService _paymentService;
 
         private readonly IMapper _mapper;
         public OrderService(IOrderRepository orderRepository,
             ICartRepository cartRepository, IMapper mapper,
-            IOrderItemToppingRepository orderItemToppingRepository, IOrderItemRepository orderItemRepository)
+            IOrderItemToppingRepository orderItemToppingRepository, IOrderItemRepository orderItemRepository, IPaymentService paymentService)
         {
             _orderRepository = orderRepository;
             _cartRepository = cartRepository;
             _mapper = mapper;
             _orderItemRepository = orderItemRepository;
             _orderItemToppingRepository = orderItemToppingRepository;
+            _paymentService = paymentService;
         }
         public async Task<OrderDTO> CreateOrder(CreateOrderItemRequestDTO createOrderItemRequestDTO)
         {
@@ -33,7 +35,7 @@ namespace PRM392_CafeOnline_BE_API.Services
 
                 var existingCartById = await _cartRepository.GetCartByIdAsync(createOrderItemRequestDTO.CartId);
 
-                if(existingCart == null || existingCart != existingCartById)
+                if (existingCart == null || existingCart != existingCartById)
                 {
                     throw new Exception("Invalid cart");
                 }
@@ -45,7 +47,7 @@ namespace PRM392_CafeOnline_BE_API.Services
                     UserId = createOrderItemRequestDTO.UserId
                 };
                 await _orderRepository.CreateOrder(newOrder);
-                foreach(var item in existingCart.CartItems)
+                foreach (var item in existingCart.CartItems)
                 {
                     var orderItem = _mapper.Map<OrderItem>(item);
                     orderItem.OrderId = newOrder.Id;
@@ -57,7 +59,7 @@ namespace PRM392_CafeOnline_BE_API.Services
                         {
                             var orderItemTopping = new OrderItemTopping
                             {
-                                OrderItemId = orderItem.Id, 
+                                OrderItemId = orderItem.Id,
                                 ToppingId = cartItemTopping.ToppingId
                             };
 
@@ -68,8 +70,17 @@ namespace PRM392_CafeOnline_BE_API.Services
                 await _cartRepository.RemoveCartAsync(existingCart);
                 newOrder.Total = existingCart.TotalPrice;
                 await _orderRepository.UpdateOrder(newOrder);
+
+                var payment = new Payment()
+                {
+                    OrderId = newOrder.Id,
+                    CreatedDate = DateTime.Now,
+                    Detail = createOrderItemRequestDTO.PaymentRequest.Detail,
+                    Type = createOrderItemRequestDTO.PaymentRequest.Type
+                };
+                await _paymentService.SavePaymentAsync(payment);
                 var orderCreated = await _orderRepository.GetOrderByIdAsync(newOrder.Id);
-                return _mapper.Map<OrderDTO>(newOrder);
+                return _mapper.Map<OrderDTO>(orderCreated);
             }
             catch (Exception ex)
             {
@@ -83,7 +94,8 @@ namespace PRM392_CafeOnline_BE_API.Services
             {
                 var order = await _orderRepository.GetOrderByIdAsync(id);
                 return _mapper.Map<OrderDTO>(order);
-            }catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 throw;
             }
@@ -118,7 +130,8 @@ namespace PRM392_CafeOnline_BE_API.Services
 
                 var ordersDto = _mapper.Map<IEnumerable<OrderDTO>>(orders);
                 return ordersDto;
-            }catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 throw new Exception(ex.Message);
             }

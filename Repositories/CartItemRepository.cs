@@ -31,6 +31,7 @@ namespace Repositories
         public async Task<CartItem?> GetCartItemAsync(int id)
         {
             return await _context.CartItems
+                .Include(d => d.Drink)
                 .Include(t => t.CartItemToppings)
                 .ThenInclude(d => d.Topping)
                 .FirstOrDefaultAsync(x => x.Id == id);

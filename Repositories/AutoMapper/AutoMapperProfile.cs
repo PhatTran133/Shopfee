@@ -22,12 +22,14 @@ namespace Repositories.AutoMapper
             MapCart();
             MapOrder();
             MapOrderCart();
+            MapPayments();
         }
 
         private void MapOrder()
         {
             CreateMap<TblOrder, OrderDTO>()
                 .ForMember(dest => dest.OrderItemDTOs, opt => opt.MapFrom(src => src.OrderItems))
+                .ForMember(dest => dest.PaymentDTOs, opt => opt.MapFrom(src => src.Payments))
                 .ReverseMap();
             CreateMap<OrderItem, OrderItemDTO>()
                 .ForMember(dest => dest.DrinkDTO, opt => opt.MapFrom(src => src.Drink))
@@ -36,6 +38,11 @@ namespace Repositories.AutoMapper
             CreateMap<OrderItemTopping, OrderItemToppingDTO>()
                 .ForMember(dest => dest.Topping, opt => opt.MapFrom(src => src.Topping))
                 .ReverseMap();
+        }
+
+        private void MapPayments()
+        {
+            CreateMap<Payment, PaymentDTO>().ReverseMap();
         }
 
         private void MapOrderCart()
