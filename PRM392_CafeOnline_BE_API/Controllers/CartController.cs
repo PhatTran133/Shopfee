@@ -1,4 +1,5 @@
 ﻿using BussinessObjects.DTO;
+using BussinessObjects.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -23,7 +24,7 @@ namespace PRM392_CafeOnline_BE_API.Controllers
             {
                 var cartItem = await _cartService.AddToCart(toppingDrinkRequestDTO);
                 if(cartItem != null) 
-                     return Ok(new JsonResponse<CartItemDTO>(cartItem, 200, "Add to cart successfully"));
+                     return Ok(new JsonResponse<string>(null, 200, "Add to cart successfully"));
                 return BadRequest(new JsonResponse<string>(null, 400, "Failed to add to cart"));
             }
             catch(Exception ex)
@@ -74,8 +75,9 @@ namespace PRM392_CafeOnline_BE_API.Controllers
             try
             {
                 await _cartService.RemoveFromCart(cartToppingDrinkId);
-                return NoContent();
-            }catch(Exception ex)
+                return Ok(new JsonResponse<string>(null, 200, "Delete item successfully"));
+            }
+            catch(Exception ex)
             {
                 if (ex.Message != null)
                 {
