@@ -116,6 +116,10 @@ namespace PRM392_CafeOnline_BE_API.Services
                     throw new Exception("Item not found");
                 }
                 await _cartItemRepository.DeleteCartItemAsync(cartItem);
+                var cart = await _cartRepository.GetCartByIdAsync(cartItem.CartId);
+                var totalPrice = await _cartItemRepository.TotalPriceCartItems(cart.Id);
+                cart.TotalPrice = totalPrice;
+                await _cartRepository.UpdateCartAsync(cart);
             }
             catch (Exception ex)
             {
@@ -135,6 +139,10 @@ namespace PRM392_CafeOnline_BE_API.Services
                 var cartToppingDrinkUpdate = _mapper.Map(updateCartItemRequestDTO, existCartItem);
 
                 await _cartItemRepository.UpdateCartItemAsync(cartToppingDrinkUpdate);
+                var cart = await _cartRepository.GetCartByIdAsync(existCartItem.CartId);
+                var totalPrice = await _cartItemRepository.TotalPriceCartItems(cart.Id);
+                cart.TotalPrice = totalPrice;
+                await _cartRepository.UpdateCartAsync(cart);
 
                 return _mapper.Map<CartItemDTO>(cartToppingDrinkUpdate);
             }
