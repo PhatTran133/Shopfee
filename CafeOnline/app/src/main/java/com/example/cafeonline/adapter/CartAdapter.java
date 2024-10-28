@@ -3,6 +3,7 @@ package com.example.cafeonline.adapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -12,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.cafeonline.CartActivity;
 import com.example.cafeonline.R;
+import com.example.cafeonline.model.response.AddressResponse;
 import com.example.cafeonline.model.response.CartItemToppingResponse;
 import com.example.cafeonline.model.response.CartResponse;
 import com.example.cafeonline.model.response.CartItemResponse;
@@ -24,9 +26,13 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder> {
     private List<CartItemResponse> cartList;
-    private DrinkAdapter.OnDrinkSelectedListener listener; //
+    private CartAdapter.OnItemClickListener listener; //
     private CartActivity activity;
-    public CartAdapter(List<CartItemResponse> cartList, DrinkAdapter.OnDrinkSelectedListener listener,CartActivity activity) {
+    public interface OnItemClickListener {
+        void onItemClick(CartItemResponse cartItemResponse);
+        void onDeleteClick(CartItemResponse cartItemResponse);
+    }
+    public CartAdapter(List<CartItemResponse> cartList, CartAdapter.OnItemClickListener listener,CartActivity activity) {
         this.cartList = cartList;
         this.listener = listener;
         this.activity = activity;
@@ -42,7 +48,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
     @Override
     public void onBindViewHolder(@NonNull CartViewHolder holder, int position) {
               CartItemResponse cart = cartList.get(position);
-              holder.bind(cart);
+              holder.bind(cart,position);
         holder.tvAdd.setOnClickListener(v -> {
             int newQuantity = cart.getQuantity() + 1;
             double newPrice = cart.getTotalPrice() * newQuantity;
@@ -87,6 +93,19 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
         }
         activity.updateTotalPrice(overallTotalPrice);
     }
+    public void deleteCartItem(CartItemResponse cartItemResponse) {
+        int position = cartList.indexOf(cartItemResponse);
+        if (position != -1) {
+            cartList.remove(position);
+            notifyItemRemoved(position);
+            double overallTotalPrice = 0;
+            double totalPrice = 0;
+            for (CartItemResponse item : cartList) {
+                overallTotalPrice += (item.getTotalPrice() * item.getQuantity()) + (totalPrice * item.getQuantity());
+            }
+            activity.updateTotalPrice(overallTotalPrice);
+        }
+    }
     public class CartViewHolder extends RecyclerView.ViewHolder {
         private TextView tvName, tvPrice, tvQuantity,tvSub, tvAdd, tvOption,tvTotalPrice;
         private CircleImageView imageView;
@@ -94,6 +113,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
         private int count = 1;
         private double price = 0;
         private double totalPrice = 0;
+        private ImageView imgDelete;
         public CartViewHolder(@NonNull View itemView) {
             super(itemView);
             tvName = itemView.findViewById(R.id.tv_drink);
@@ -104,11 +124,12 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
             tvAdd = itemView.findViewById(R.id.tv_add);
             tvSub = itemView.findViewById(R.id.tv_sub);
             tvTotalPrice= itemView.findViewById(R.id.tv_amount);
+            imgDelete = itemView.findViewById(R.id.img_delete);
             linearLayoutItemDrink = itemView.findViewById(R.id.layout_item_drink);
 
         }
 
-        public void bind(CartItemResponse cart) {
+        public void bind(CartItemResponse cart,int position) {
             // Xử lý phần hiển thị options
            tvName.setText(cart.getDrinkDTO().getName());
            DecimalFormat decimalFormat = new DecimalFormat("#,###");
@@ -174,7 +195,12 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
 
             // Gán chuỗi tùy chọn đã xây dựng vào tvOption
             tvOption.setText(optionsBuilder.toString());
+            imgDelete.setOnClickListener(v -> {
+                if (position != RecyclerView.NO_POSITION) {
 
+                    listener.onDeleteClick(cartList.get(position));
+                }
+            });
         }
     }
 }

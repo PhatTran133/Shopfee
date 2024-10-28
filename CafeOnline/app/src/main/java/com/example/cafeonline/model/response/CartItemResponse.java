@@ -3,7 +3,7 @@ package com.example.cafeonline.model.response;
 import java.util.List;
 
 public class CartItemResponse {
-    public int Id;
+    public int id;
     public int quantity;
     public String variant;
     public String size;
@@ -14,7 +14,7 @@ public class CartItemResponse {
     public DrinkResponse drinkDTO;
 
     public CartItemResponse(int id, int quantity, String variant, String size, String sugar, String iced, List<CartItemToppingResponse> cartItemToppingDTOs, double totalPrice, DrinkResponse drinkDTO) {
-        Id = id;
+        this.id = id;
         this.quantity = quantity;
         this.variant = variant;
         this.size = size;
@@ -26,11 +26,11 @@ public class CartItemResponse {
     }
 
     public int getId() {
-        return Id;
+        return id;
     }
 
     public void setId(int id) {
-        Id = id;
+        this.id = id;
     }
 
     public int getQuantity() {

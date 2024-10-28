@@ -2,6 +2,7 @@ package com.example.cafeonline;
 
 import static java.security.AccessController.getContext;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -23,9 +24,12 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.cafeonline.adapter.AddressAdapter;
 import com.example.cafeonline.adapter.CartAdapter;
 import com.example.cafeonline.api.ApiService;
 import com.example.cafeonline.api.CartApiService;
+import com.example.cafeonline.api.UserApiService;
+import com.example.cafeonline.model.response.AddressResponse;
 import com.example.cafeonline.model.response.ApiResponse;
 import com.example.cafeonline.model.response.CartItemResponse;
 import com.example.cafeonline.model.response.CartResponse;
@@ -46,7 +50,7 @@ public class CartActivity extends AppCompatActivity {
     private ImageView imgBack;
     private LinearLayout addOtherDrinks;
     private RelativeLayout address, payment;
-
+    private CartAdapter adapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -98,8 +102,9 @@ public class CartActivity extends AppCompatActivity {
                                 tvTotalPrice.setText(formattedPrice);
                                 List<CartItemResponse> cartItems = cart.getCartItems();
                                 if (cartItems != null && !cartItems.isEmpty()) {
-                                    CartAdapter cartAdapter = new CartAdapter(cartItems, null, CartActivity.this);
-                                    recyclerView.setAdapter(cartAdapter);
+//                                    CartAdapter cartAdapter = new CartAdapter(cartItems, null, CartActivity.this);
+                                    setupAdapter(cartItems);
+//                                    recyclerView.setAdapter(adapter);
                                 } else {
                                     Toast.makeText(CartActivity.this, "No items to view", Toast.LENGTH_SHORT).show();
                                 }
@@ -130,6 +135,65 @@ public class CartActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<ApiResponse<CartResponse>> call, Throwable t) {
+                Toast.makeText(CartActivity.this, "Network error", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+    private void setupAdapter(List<CartItemResponse> cartItemResponses) {
+        adapter = new CartAdapter(cartItemResponses, new CartAdapter.OnItemClickListener(){
+
+            @Override
+            public void onItemClick(CartItemResponse cartItemResponse) {
+                Toast.makeText(CartActivity.this, "Load cart successfully", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onDeleteClick(CartItemResponse cartItemResponse) {
+                deleteCartItem(cartItemResponse);
+            }
+        },CartActivity.this );
+        recyclerView.setAdapter(adapter);
+    }
+    private void deleteCartItem(CartItemResponse cartItemResponse){
+        int id = cartItemResponse.getId();
+        CartApiService service = ApiService.createService(CartApiService.class);
+        Call<ApiResponse<String>> callApiDrink = service.deleteCartItems(id);
+        callApiDrink.enqueue(new Callback<ApiResponse<String>>() {
+            @SuppressLint("NotifyDataSetChanged")
+            @Override
+            public void onResponse(Call<ApiResponse<String>> call, Response<ApiResponse<String>> response) {
+                if (response.isSuccessful()) {
+                    ApiResponse<String> apiResponse = response.body();
+                    if ("200".equals(apiResponse.getValue().getStatus())) {
+                        adapter.deleteCartItem(cartItemResponse);
+                        adapter.notifyDataSetChanged();
+                        Toast.makeText(CartActivity.this, "Cart item deleted successfully", Toast.LENGTH_SHORT).show();
+
+
+                    } else {
+                        Toast.makeText(CartActivity.this, "Error fetching caritem", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    try {
+                        if (response.errorBody() != null) {
+                            Gson gson = new Gson();
+                            ApiResponse<String> errorResponse = gson.fromJson(response.errorBody().string(), ApiResponse.class);
+                            System.out.println(errorResponse.getValue().getMessage());
+                            Toast.makeText(CartActivity.this, "Error fetching addresses", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(CartActivity.this, "Error", Toast.LENGTH_SHORT).show();
+                        }
+                    } catch (Exception e) {
+                        Toast.makeText(CartActivity.this, "Error parsing response: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        System.out.println(e.getMessage());
+                    }
+                }
+            }
+
+
+
+            @Override
+            public void onFailure(Call<ApiResponse<String>> call, Throwable t) {
                 Toast.makeText(CartActivity.this, "Network error", Toast.LENGTH_SHORT).show();
             }
         });
