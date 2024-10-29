@@ -13,6 +13,8 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.view.View;
 import android.widget.Button;
 
 
@@ -107,4 +109,8 @@ public class MainActivity extends AppCompatActivity {
         return sharedPreferences.getInt("userId", 0);
     }
 
+    public void onClickChat(View view) {
+        Intent intent = new Intent(this, ChatBoxActivity.class);
+        startActivity(intent);
+    }
 }
