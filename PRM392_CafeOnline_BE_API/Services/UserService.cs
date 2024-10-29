@@ -1,4 +1,6 @@
 ﻿using BussinessObjects.DTO;
+using BussinessObjects.Models;
+using Microsoft.EntityFrameworkCore;
 using PRM392_CafeOnline_BE_API.Services.Interfaces;
 using Repositories.Interface;
 
@@ -8,11 +10,13 @@ namespace PRM392_CafeOnline_BE_API.Services
     {
         private readonly IUserRepository _userRepository;
         private readonly IOtpService _otpService;
+        private readonly CoffeeShopContext _context;
 
-        public UserService(IUserRepository userRepository, IOtpService otpService)
+        public UserService(IUserRepository userRepository, IOtpService otpService, CoffeeShopContext context)
         {
-            _userRepository = userRepository;
-            _otpService = otpService;
+            _userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
+            _otpService = otpService ?? throw new ArgumentNullException(nameof(otpService));
+            _context = context ?? throw new ArgumentNullException(nameof(context));
         }
         public async Task<bool> CreateUserForOtp(RegisterRequest requestDTO)
         {
@@ -34,6 +38,30 @@ namespace PRM392_CafeOnline_BE_API.Services
         {
             await _userRepository.VerifyUserAccountAsync(id);
         }
+
+        public async Task<bool> ChangePassword(ChangePasswordDto dto)
+        {
+            var user = await _context.Set<TblUser>().FindAsync(dto.UserId);
+            if (user == null)
+            {
+                throw new Exception("User not found.");
+            }
+
+            if (user.Password != dto.OldPassword)
+            {
+                throw new Exception("Old password is incorrect.");
+            }
+            if (dto.NewPassword != dto.ConfirmPassword)
+            {
+                throw new Exception("New password and confirmation password do not match.");
+            }
+
+            user.Password = dto.NewPassword;
+            user.UpdatedDate = DateTime.UtcNow;
+
+            await _context.SaveChangesAsync();
+            return true;
+        }
     }
-   
+
 }
