@@ -167,6 +167,7 @@ public class CartActivity extends AppCompatActivity {
                     if ("200".equals(apiResponse.getValue().getStatus())) {
                         adapter.deleteCartItem(cartItemResponse);
                         adapter.notifyDataSetChanged();
+
                         Toast.makeText(CartActivity.this, "Cart item deleted successfully", Toast.LENGTH_SHORT).show();
 
 

@@ -59,25 +59,23 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
             String formattedPrice = decimalFormat.format(newPrice);
             holder.tvPrice.setText(String.valueOf(formattedPrice + "VND"));
             cart.setTotalPrice((int)newPrice);
-
             updateTotalPrice();  // Call method to update total price
         });
 
         holder.tvSub.setOnClickListener(v -> {
             int newQuantity = cart.getQuantity() - 1;
-            if (newQuantity < 0) {
-                newQuantity = 0; //
+            if (newQuantity < 1) {
+            holder.tvSub.setEnabled(false);
+            return;
             }
-            double newPrice = cart.getTotalPrice() / cart.getQuantity() * newQuantity;
-
-            holder.tvQuantity.setText(String.valueOf(newQuantity));
-            cart.setQuantity(newQuantity);
-            DecimalFormat decimalFormat = new DecimalFormat("#,###");
-            String formattedPrice = decimalFormat.format(newPrice);
-            holder.tvPrice.setText(String.valueOf(formattedPrice + "VND"));
-            cart.setTotalPrice((int)newPrice);
-
-            updateTotalPrice();
+                double newPrice = cart.getTotalPrice() / cart.getQuantity() * newQuantity;
+                holder.tvQuantity.setText(String.valueOf(newQuantity));
+                cart.setQuantity(newQuantity);
+                DecimalFormat decimalFormat = new DecimalFormat("#,###");
+                String formattedPrice = decimalFormat.format(newPrice);
+                holder.tvPrice.setText(String.valueOf(formattedPrice + "VND"));
+                cart.setTotalPrice((int)newPrice);
+                updateTotalPrice();
         });
     }
 
