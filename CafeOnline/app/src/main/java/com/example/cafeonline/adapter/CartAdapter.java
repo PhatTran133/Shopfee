@@ -1,10 +1,12 @@
 package com.example.cafeonline.adapter;
 
+import android.content.SharedPreferences;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -26,6 +28,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
     private List<CartItemResponse> cartList;
     private DrinkAdapter.OnDrinkSelectedListener listener; //
     private CartActivity activity;
+    private int countItem;
     public CartAdapter(List<CartItemResponse> cartList, DrinkAdapter.OnDrinkSelectedListener listener,CartActivity activity) {
         this.cartList = cartList;
         this.listener = listener;
@@ -84,8 +87,10 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
         double totalPrice = 0;
         for (CartItemResponse item : cartList) {
             overallTotalPrice += (item.getTotalPrice() * item.getQuantity()) + (totalPrice * item.getQuantity());
+            countItem += item.getQuantity();
         }
         activity.updateTotalPrice(overallTotalPrice);
+        //Toast.makeText(this.activity, countItem,Toast.LENGTH_LONG);
     }
     public class CartViewHolder extends RecyclerView.ViewHolder {
         private TextView tvName, tvPrice, tvQuantity,tvSub, tvAdd, tvOption,tvTotalPrice;
