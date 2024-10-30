@@ -29,6 +29,7 @@ import com.example.cafeonline.adapter.CartAdapter;
 import com.example.cafeonline.api.ApiService;
 import com.example.cafeonline.api.CartApiService;
 import com.example.cafeonline.api.UserApiService;
+import com.example.cafeonline.model.request.CartItemRequestModel;
 import com.example.cafeonline.model.response.AddressResponse;
 import com.example.cafeonline.model.response.ApiResponse;
 import com.example.cafeonline.model.response.CartItemResponse;
@@ -83,54 +84,53 @@ public class CartActivity extends AppCompatActivity {
             serviceIntent.putExtra("title", "Order");
             serviceIntent.putExtra("text", "Your order is pending");
             startService(serviceIntent);
+
         });
 
 
-            int userId = getUserIdFromPreferences();
-            CartApiService cartService = ApiService.createService(CartApiService.class);
-            Call<ApiResponse<CartResponse>> callApiDrink = cartService.getCart(userId);
-            callApiDrink.enqueue(new Callback<ApiResponse<CartResponse>>() {
-                @Override
-                public void onResponse(Call<ApiResponse<CartResponse>> callApiDrink, Response<ApiResponse<CartResponse>> response) {
-                    if (response.isSuccessful()) {
-                        ApiResponse<CartResponse> apiResponse = response.body();
-                        if ("200".equals(apiResponse.getValue().getStatus())) {
-                            CartResponse cart = apiResponse.getValue().getData();
-                            if (cart != null) {
-                                DecimalFormat decimalFormat = new DecimalFormat("#,###");
-                                String formattedPrice = decimalFormat.format(cart.getTotalPrice());
-                                tvTotalPrice.setText(formattedPrice);
-                                List<CartItemResponse> cartItems = cart.getCartItems();
-                                if (cartItems != null && !cartItems.isEmpty()) {
-//                                    CartAdapter cartAdapter = new CartAdapter(cartItems, null, CartActivity.this);
-                                    setupAdapter(cartItems);
-//                                    recyclerView.setAdapter(adapter);
-                                } else {
-                                    Toast.makeText(CartActivity.this, "No items to view", Toast.LENGTH_SHORT).show();
-                                }
+
+        int userId = getUserIdFromPreferences();
+        CartApiService cartService = ApiService.createService(CartApiService.class);
+        Call<ApiResponse<CartResponse>> callApiDrink = cartService.getCart(userId);
+        callApiDrink.enqueue(new Callback<ApiResponse<CartResponse>>() {
+            @Override
+            public void onResponse(Call<ApiResponse<CartResponse>> callApiDrink, Response<ApiResponse<CartResponse>> response) {
+                if (response.isSuccessful()) {
+                    ApiResponse<CartResponse> apiResponse = response.body();
+                    if ("200".equals(apiResponse.getValue().getStatus())) {
+                        CartResponse cart = apiResponse.getValue().getData();
+                        if (cart != null) {
+                            DecimalFormat decimalFormat = new DecimalFormat("#,###");
+                            String formattedPrice = decimalFormat.format(cart.getTotalPrice());
+                            tvTotalPrice.setText(formattedPrice+ " VND");
+                            List<CartItemResponse> cartItems = cart.getCartItems();
+                            if (cartItems != null && !cartItems.isEmpty()) {
+                                setupAdapter(cartItems);
                             } else {
-                                Toast.makeText(CartActivity.this, "Your cart is empty", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(CartActivity.this, "No items to view", Toast.LENGTH_SHORT).show();
                             }
-                        }
-                    } else {
-                        try {
-                            // Check if error body exists
-                            if (response.errorBody() != null) {
-                                // Deserialize error body to ApiResponse<String>
-                                Gson gson = new Gson();
-                                ApiResponse<String> errorResponse = gson.fromJson(response.errorBody().string(), ApiResponse.class);
-                                System.out.println(errorResponse.getValue().getMessage());
-                                Toast.makeText(CartActivity.this, "Fetch Failed: " + errorResponse.getValue().getMessage(), Toast.LENGTH_SHORT).show();
-                            } else {
-                                Toast.makeText(CartActivity.this, "Error", Toast.LENGTH_SHORT).show();
-                            }
-                        } catch (Exception e) {
-                            Toast.makeText(CartActivity.this, "Error parsing response: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                            System.out.println(e.getMessage());
+                        } else {
+                            Toast.makeText(CartActivity.this, "Your cart is empty", Toast.LENGTH_SHORT).show();
                         }
                     }
+                } else {
+                    try {
+                        // Check if error body exists
+                        if (response.errorBody() != null) {
+                            // Deserialize error body to ApiResponse<String>
+                            Gson gson = new Gson();
+                            ApiResponse<String> errorResponse = gson.fromJson(response.errorBody().string(), ApiResponse.class);
+                            System.out.println(errorResponse.getValue().getMessage());
+                            Toast.makeText(CartActivity.this, "Fetch Failed: " + errorResponse.getValue().getMessage(), Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(CartActivity.this, "Error", Toast.LENGTH_SHORT).show();
+                        }
+                    } catch (Exception e) {
+                        Toast.makeText(CartActivity.this, "Error parsing response: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        System.out.println(e.getMessage());
+                    }
                 }
-
+            }
 
 
             @Override
@@ -139,8 +139,9 @@ public class CartActivity extends AppCompatActivity {
             }
         });
     }
+
     private void setupAdapter(List<CartItemResponse> cartItemResponses) {
-        adapter = new CartAdapter(cartItemResponses, new CartAdapter.OnItemClickListener(){
+        adapter = new CartAdapter(cartItemResponses, new CartAdapter.OnItemClickListener() {
 
             @Override
             public void onItemClick(CartItemResponse cartItemResponse) {
@@ -151,10 +152,60 @@ public class CartActivity extends AppCompatActivity {
             public void onDeleteClick(CartItemResponse cartItemResponse) {
                 deleteCartItem(cartItemResponse);
             }
-        },CartActivity.this );
+        }, CartActivity.this);
         recyclerView.setAdapter(adapter);
     }
-    private void deleteCartItem(CartItemResponse cartItemResponse){
+
+    public void updateCartItem(CartItemResponse cartItemResponse) {
+        CartItemRequestModel requestModel = new CartItemRequestModel();
+        requestModel.setNote(cartItemResponse.getNote());
+        requestModel.setVariant(cartItemResponse.getVariant());
+        requestModel.setSugar(cartItemResponse.getSugar());
+        requestModel.setSize(cartItemResponse.getSize());
+        requestModel.setIced(cartItemResponse.getIced());
+        requestModel.setQuantity(cartItemResponse.getQuantity());
+        requestModel.setTotalPrice(cartItemResponse.getTotalPrice());// Extract cart item ID
+        CartApiService cartService = ApiService.createService(CartApiService.class);
+
+        Call<ApiResponse<String>> call = cartService.updateCartItem(cartItemResponse.getId(), requestModel);
+        call.enqueue(new Callback<ApiResponse<String>>() {
+            @Override
+            public void onResponse(Call<ApiResponse<String>> call, Response<ApiResponse<String>> response) {
+                if (response.isSuccessful()) {
+                    // Xử lý thành công
+                    ApiResponse<String> apiResponse = response.body();
+                    if ("200".equals(apiResponse.getValue().getStatus())) {
+
+                        Toast.makeText(CartActivity.this, "Updated Successfully", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    try {
+                        // Check if error body exists
+                        if (response.errorBody() != null) {
+                            // Deserialize error body to ApiResponse<String>
+                            Gson gson = new Gson();
+                            ApiResponse<String> errorResponse = gson.fromJson(response.errorBody().string(), ApiResponse.class);
+                            System.out.println(errorResponse.getValue().getMessage());
+                            Toast.makeText(CartActivity.this, "Fetch Failed: " + errorResponse.getValue().getMessage(), Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(CartActivity.this, "Error", Toast.LENGTH_SHORT).show();
+                        }
+                    } catch (Exception e) {
+                        Toast.makeText(CartActivity.this, "Error parsing response: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        System.out.println(e.getMessage());
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ApiResponse<String>> call, Throwable t) {
+                Toast.makeText(CartActivity.this, "Network error", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+
+    private void deleteCartItem(CartItemResponse cartItemResponse) {
         int id = cartItemResponse.getId();
         CartApiService service = ApiService.createService(CartApiService.class);
         Call<ApiResponse<String>> callApiDrink = service.deleteCartItems(id);
@@ -192,23 +243,25 @@ public class CartActivity extends AppCompatActivity {
             }
 
 
-
             @Override
             public void onFailure(Call<ApiResponse<String>> call, Throwable t) {
                 Toast.makeText(CartActivity.this, "Network error", Toast.LENGTH_SHORT).show();
             }
         });
     }
-    public void updateTotalPrice(double newTotalPrice) {
+
+    public void updateTotalPrice(double totalPrice) {
         DecimalFormat decimalFormat = new DecimalFormat("#,###");
-        String formattedPrice = decimalFormat.format(newTotalPrice);
+        String formattedPrice = decimalFormat.format(totalPrice);
         tvTotalPrice.setText(formattedPrice + " VND");
     }
+
     private int getUserIdFromPreferences() {
         SharedPreferences sharedPreferences = getSharedPreferences("KooheePrefs", MODE_PRIVATE);
         return sharedPreferences.getInt("userId", 0); // Returns null if no userId is found
     }
-
 }
+
+
 
 

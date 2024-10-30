@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.cafeonline.CartActivity;
 import com.example.cafeonline.R;
+import com.example.cafeonline.model.request.CartItemRequestModel;
 import com.example.cafeonline.model.response.AddressResponse;
 import com.example.cafeonline.model.response.CartItemToppingResponse;
 import com.example.cafeonline.model.response.CartResponse;
@@ -28,6 +29,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
     private List<CartItemResponse> cartList;
     private CartAdapter.OnItemClickListener listener; //
     private CartActivity activity;
+
     public interface OnItemClickListener {
         void onItemClick(CartItemResponse cartItemResponse);
         void onDeleteClick(CartItemResponse cartItemResponse);
@@ -51,15 +53,17 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
               holder.bind(cart,position);
         holder.tvAdd.setOnClickListener(v -> {
             int newQuantity = cart.getQuantity() + 1;
-            double newPrice = cart.getTotalPrice() * newQuantity;
+            int newPrice = cart.getTotalPrice() * newQuantity;
 
             holder.tvQuantity.setText(String.valueOf(newQuantity));
             cart.setQuantity(newQuantity);
             DecimalFormat decimalFormat = new DecimalFormat("#,###");
             String formattedPrice = decimalFormat.format(newPrice);
             holder.tvPrice.setText(String.valueOf(formattedPrice + "VND"));
-            cart.setTotalPrice((int)newPrice);
-            updateTotalPrice();  // Call method to update total price
+            cart.setTotalPrice(newPrice);
+            activity.updateCartItem(cart);
+            updateTotalPrice();
+
         });
 
         holder.tvSub.setOnClickListener(v -> {
@@ -68,13 +72,14 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
             holder.tvSub.setEnabled(false);
             return;
             }
-                double newPrice = cart.getTotalPrice() / cart.getQuantity() * newQuantity;
+                int newPrice = cart.getTotalPrice() / cart.getQuantity() * newQuantity;
                 holder.tvQuantity.setText(String.valueOf(newQuantity));
                 cart.setQuantity(newQuantity);
                 DecimalFormat decimalFormat = new DecimalFormat("#,###");
                 String formattedPrice = decimalFormat.format(newPrice);
                 holder.tvPrice.setText(String.valueOf(formattedPrice + "VND"));
-                cart.setTotalPrice((int)newPrice);
+                cart.setTotalPrice(newPrice);
+                activity.updateCartItem(cart);
                 updateTotalPrice();
         });
     }
@@ -84,24 +89,20 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
         return cartList != null ? cartList.size() : 0;
     }
     private void updateTotalPrice() {
-        double overallTotalPrice = 0;
         double totalPrice = 0;
         for (CartItemResponse item : cartList) {
-            overallTotalPrice += (item.getTotalPrice() * item.getQuantity()) + (totalPrice * item.getQuantity());
+            totalPrice += item.getTotalPrice();
         }
-        activity.updateTotalPrice(overallTotalPrice);
+        activity.updateTotalPrice(totalPrice);
     }
+
+
     public void deleteCartItem(CartItemResponse cartItemResponse) {
         int position = cartList.indexOf(cartItemResponse);
         if (position != -1) {
             cartList.remove(position);
             notifyItemRemoved(position);
-            double overallTotalPrice = 0;
-            double totalPrice = 0;
-            for (CartItemResponse item : cartList) {
-                overallTotalPrice += (item.getTotalPrice() * item.getQuantity()) + (totalPrice * item.getQuantity());
-            }
-            activity.updateTotalPrice(overallTotalPrice);
+            updateTotalPrice();
         }
     }
     public class CartViewHolder extends RecyclerView.ViewHolder {
