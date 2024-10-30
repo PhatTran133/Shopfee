@@ -1,6 +1,7 @@
 package com.example.cafeonline.api;
 
 import com.example.cafeonline.model.request.AddressRequest;
+import com.example.cafeonline.model.request.ChangePasswordRequestModel;
 import com.example.cafeonline.model.request.ForgotPasswordRequest;
 import com.example.cafeonline.model.request.LoginRequest;
 import com.example.cafeonline.model.request.RegisterRequest;
@@ -47,4 +48,6 @@ public interface UserApiService {
     Call<ApiResponse<List<AddressResponse>>> getAllAddresses(@Path("userId") int userId);
     @DELETE("/api/users/delete-address/{userId}/{addressId}")
     Call<ApiResponse<String>> deleteAddress(@Path("userId") int userId, @Path("addressId") int addressId);
+    @POST("/api/users/change-password")
+    Call<ApiResponse<String>> changePassword(@Body ChangePasswordRequestModel changePasswordRequestModel);
 }
