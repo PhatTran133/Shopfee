@@ -1,66 +1,93 @@
 ﻿using BussinessObjects.DTO;
-using Microsoft.AspNetCore.Http;
+using BussinessObjects.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using PRM392_CafeOnline_BE_API.Services.Interfaces;
-
 
 namespace PRM392_CafeOnline_BE_API.Controllers
 {
-    [ApiController]
-    [Route("api/[controller]")]
-    public class PaymentController : ControllerBase
-    {
-        private readonly IPaymentService _paymentService;
-        private readonly IVnPayService _vnpayService; // Giả sử có một service để xử lý VNPay
+	[ApiController]
+	[Route("api/[controller]")]
+	public class PaymentController : ControllerBase
+	{
+		private readonly IPaymentService _paymentService;
+		private readonly IVnPayService _vnpayService; // Giả sử có một service để xử lý VNPay
+		private readonly IOrderService _orderService;
+		private readonly IUserService _userService;
+		private readonly INotificationService _notificationService;
 
-        public PaymentController(IPaymentService paymentService, IVnPayService vnpayService)
-        {
-            _paymentService = paymentService;
-            _vnpayService = vnpayService;
-        }
 
-        // POST: api/VNPay/CreatePaymentUrl
-        [HttpPost("CreatePaymentUrl")]
-        public IActionResult CreatePaymentUrl([FromBody] PaymentInformationModel model)
-        {
-            if (model == null || model.Amount <= 0)
-            {
-                return BadRequest(new { message = "Invalid payment information" });
-            }
+		public PaymentController(IPaymentService paymentService,
+				IVnPayService vnpayService,
+				IOrderService orderService,
+				IUserService userService,
+				INotificationService notifiService)
+		{
+			_paymentService = paymentService;
+			_vnpayService = vnpayService;
+			_orderService = orderService;
+			_userService = userService;
+			_notificationService = notifiService;
+		}
 
-            var paymentUrl = _vnpayService.CreatePaymentUrl(model, HttpContext);
+		// POST: api/VNPay/CreatePaymentUrl
+		[HttpPost("CreatePaymentUrl")]
+		public async Task<IActionResult> CreatePaymentUrlAsync([FromBody] PaymentInformationModel model)
+		{
+			if (model == null || model.Amount <= 0)
+			{
+				return BadRequest(new { message = "Invalid payment information" });
+			}
+			if (await _orderService.GetOrderByIdAsync(model.OrderId) == null)
+			{
+				return BadRequest("Order not found");
+			}
+			if (await _userService.GetDataById(model.UserId) == null)
+			{
+				return BadRequest("User not found");
+			}
 
-            if (!string.IsNullOrEmpty(paymentUrl))
-            {
-                return Ok(new { PaymentUrl = paymentUrl });
-            }
+			var paymentUrl = _vnpayService.CreatePaymentUrl(model, HttpContext);
 
-            return StatusCode(500, new { message = "Failed to create payment URL" });
-        }
+			if (!string.IsNullOrEmpty(paymentUrl))
+			{
+				return Ok(new { PaymentUrl = paymentUrl });
+			}
 
-        // GET: api/VNPay/PaymentCallback
-        [HttpGet("PaymentCallback")]
-        public IActionResult PaymentCallback()
-        {
-            var queryParams = Request.Query;
+			return StatusCode(500, new { message = "Failed to create payment URL" });
+		}
 
-            if (queryParams.Count == 0)
-            {
-                return BadRequest(new { message = "No query parameters found" });
-            }
+		// GET: api/VNPay/PaymentCallback
+		[HttpGet("PaymentCallback")]
+		public async Task<IActionResult> PaymentCallbackAsync()
+		{
+			var paymentResponse = _vnpayService.PaymentExecute(Request.Query);
 
-            var paymentResponse = _vnpayService.PaymentExecute(queryParams);
+			if (paymentResponse == null || paymentResponse.VnPayResponseCode != "00")
+			{
+				return BadRequest(new { message = "Payment failed", result = paymentResponse });
+			}
+			string[] infoSplit = paymentResponse.OrderDescription.Split('_');
+			Payment pay = new Payment()
+			{
+				OrderId = int.Parse(infoSplit[1]),
+				Type = infoSplit[3],
+				Detail = $"{infoSplit[2]}_{infoSplit[4]}_{infoSplit[5]}",
+				CreatedDate = DateTime.Now
+			};
+			await _paymentService.SavePaymentAsync(pay);
 
-            if (paymentResponse != null && paymentResponse.VnPayResponseCode == "200")
-            {
-                // Xử lý thành công thanh toán
-                return Ok(new { message = "Payment successful", paymentResponse });
-            }
+			TblNotification notifi = new TblNotification()
+			{
+				UserId = int.Parse(infoSplit[0]),
+				Content = $"{infoSplit[2]}_{infoSplit[4]}_{infoSplit[5]}",
+				CreatedDate = DateTime.Now
+			};
+			await _notificationService.CreateData(notifi);
 
-            // Xử lý thanh toán thất bại
-            return BadRequest(new { message = "Payment failed", paymentResponse });
-        }
-    }
-      
+
+			return Ok(new { message = "Payment successful", results = paymentResponse });
+
+		}
+	}
+
 }
