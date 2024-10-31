@@ -1,46 +1,30 @@
-package com.example.cafeonline.model.response;
+package com.example.cafeonline.model.request;
 
-import java.util.List;
+public class CartItemRequestModel {
 
-public class CartItemResponse {
-    public int id;
     private int quantity;
     private String variant;
     private String size;
     private String sugar;
     private String iced;
     private String note;
-    public List<CartItemToppingResponse> cartItemToppingDTOs;
-    public int totalPrice;
-    public DrinkResponse drinkDTO;
+    private int totalPrice;
 
-    public CartItemResponse(int id, int quantity, String variant, String size, String sugar, String iced, String note, List<CartItemToppingResponse> cartItemToppingDTOs, int totalPrice, DrinkResponse drinkDTO) {
-        this.id = id;
+    public CartItemRequestModel() {
+    }
+
+    public CartItemRequestModel(int quantity, String variant, String size, String sugar, String iced, String note, int totalPrice) {
         this.quantity = quantity;
         this.variant = variant;
         this.size = size;
         this.sugar = sugar;
         this.iced = iced;
         this.note = note;
-        this.cartItemToppingDTOs = cartItemToppingDTOs;
         this.totalPrice = totalPrice;
-        this.drinkDTO = drinkDTO;
     }
 
-    public String getNote() {
-        return note;
-    }
-
-    public void setNote(String note) {
-        this.note = note;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
+    public CartItemRequestModel(int quantity) {
+        this.quantity = quantity;
     }
 
     public int getQuantity() {
@@ -83,12 +67,12 @@ public class CartItemResponse {
         this.iced = iced;
     }
 
-    public List<CartItemToppingResponse> getCartItemToppingDTOs() {
-        return cartItemToppingDTOs;
+    public String getNote() {
+        return note;
     }
 
-    public void setCartItemToppingDTOs(List<CartItemToppingResponse> cartItemToppingDTOs) {
-        this.cartItemToppingDTOs = cartItemToppingDTOs;
+    public void setNote(String note) {
+        this.note = note;
     }
 
     public int getTotalPrice() {
@@ -97,13 +81,5 @@ public class CartItemResponse {
 
     public void setTotalPrice(int totalPrice) {
         this.totalPrice = totalPrice;
-    }
-
-    public DrinkResponse getDrinkDTO() {
-        return drinkDTO;
-    }
-
-    public void setDrinkDTO(DrinkResponse drinkDTO) {
-        this.drinkDTO = drinkDTO;
     }
 }

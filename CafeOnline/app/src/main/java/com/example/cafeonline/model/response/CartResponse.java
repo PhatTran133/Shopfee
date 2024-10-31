@@ -8,6 +8,7 @@ public class CartResponse {
     public double totalPrice;
     public List<CartItemResponse> cartItems;
 
+
     public CartResponse(int id, int userId, double totalPrice, List<CartItemResponse> cartItems) {
         this.id = id;
         this.userId = userId;
