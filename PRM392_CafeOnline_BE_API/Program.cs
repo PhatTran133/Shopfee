@@ -1,14 +1,10 @@
 ﻿using BussinessObjects.Models;
 using DataAccess;
-using PRM392_CafeOnline_BE_API.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi.Any;
-using Microsoft.OpenApi.Models;
 using PRM392_CafeOnline_BE_API.Configurations;
 using PRM392_CafeOnline_BE_API.Services;
-using PRM392_CafeOnline_BE_API.Services.Enums;
 using PRM392_CafeOnline_BE_API.Services.Interfaces;
 using Repositories;
 using Repositories.Interface;
@@ -22,7 +18,7 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddDbContext<CoffeeShopContext>();
 builder.Services.AddDbContext<InMemoryDbContext>(options =>
-    options.UseInMemoryDatabase("InMemoryDb"));
+	options.UseInMemoryDatabase("InMemoryDb"));
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -30,31 +26,31 @@ builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddHostedService<DeleteExpiredUsersService>();
 builder.Services.AddAuthentication(options =>
 {
-    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+	options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+	options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
 })
 .AddJwtBearer(options =>
 {
-    options.TokenValidationParameters = new TokenValidationParameters
-    {
-        ValidateIssuer = true,
-        ValidateAudience = true,
-        ValidateLifetime = true,
-        ValidateIssuerSigningKey = true,
-        ValidIssuer = "CoffeeOnline.com",
-        ValidAudience = "CoffeeOnline.com",
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("mayemixeneldnhowyytjohgadwosqogo")) // Đặt secret key mạnh
-    };
+	options.TokenValidationParameters = new TokenValidationParameters
+	{
+		ValidateIssuer = true,
+		ValidateAudience = true,
+		ValidateLifetime = true,
+		ValidateIssuerSigningKey = true,
+		ValidIssuer = "CoffeeOnline.com",
+		ValidAudience = "CoffeeOnline.com",
+		IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("mayemixeneldnhowyytjohgadwosqogo")) // Đặt secret key mạnh
+	};
 });
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowAllOrigins",
-    builder =>
-    {
-        builder.WithOrigins("*")
-               .AllowAnyHeader()
-               .AllowAnyMethod();
-    });
+	options.AddPolicy("AllowAllOrigins",
+	builder =>
+	{
+		builder.WithOrigins("*")
+			   .AllowAnyHeader()
+			   .AllowAnyMethod();
+	});
 });
 
 // Register Services
@@ -93,6 +89,9 @@ builder.Services.AddScoped<IToppingRepository, ToppingRepository>();
 builder.Services.AddTransient<IPaymentService, PaymentService>();
 builder.Services.AddTransient<IVnPayService, VNPayService>();
 
+builder.Services.AddTransient<INotificationRepository, TblNotificationRepository>();
+builder.Services.AddScoped<INotificationService, NotificationService>();
+
 //builder.Services.AddScoped<IAdditionalInformationRepository, AdditionalInformationRepository>();
 builder.Services.AddScoped<IAdditionalInformationService, AdditionalInformationService>();
 
@@ -102,18 +101,18 @@ AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.UseDeveloperExceptionPage();
-    app.UseSwagger();
-    app.UseSwaggerUI();
+	app.UseDeveloperExceptionPage();
+	app.UseSwagger();
+	app.UseSwaggerUI();
 }
 else
 {
-    app.UseSwagger();
-    app.UseSwaggerUI(c =>
-    {
-        c.SwaggerEndpoint("/swagger/v1/swagger.json", "KooHee API V1");
-        c.RoutePrefix = string.Empty;
-    });
+	app.UseSwagger();
+	app.UseSwaggerUI(c =>
+	{
+		c.SwaggerEndpoint("/swagger/v1/swagger.json", "KooHee API V1");
+		c.RoutePrefix = string.Empty;
+	});
 }
 
 app.UseHttpsRedirection();
