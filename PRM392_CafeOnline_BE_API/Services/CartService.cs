@@ -58,6 +58,7 @@ namespace PRM392_CafeOnline_BE_API.Services
                 newCartItem = _mapper.Map<CartItem>(newCartItemDTO);
                 newCartItem.CartId = cart.Id;
                 newCartItem.DrinkId = existingDrink.Id;
+                newCartItem.UnitPrice = requestDTO.TotalPrice;
                 await _cartItemRepository.AddCartItemAsync(newCartItem);
 
                 if (requestDTO.Toppings != null)
