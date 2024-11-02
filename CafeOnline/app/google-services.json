@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "835506864524",
+    "project_id": "koohee-261c4",
+    "storage_bucket": "koohee-261c4.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:835506864524:android:687d047fd0c569a062d6a9",
+        "android_client_info": {
+          "package_name": "com.example.cafeonline"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyADWAhxNFEfPudzByTfj2-Hs8Tk0pxOySc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

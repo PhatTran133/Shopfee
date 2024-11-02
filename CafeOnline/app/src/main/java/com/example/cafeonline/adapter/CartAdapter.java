@@ -1,11 +1,14 @@
 package com.example.cafeonline.adapter;
 
+import android.content.SharedPreferences;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -29,7 +32,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
     private List<CartItemResponse> cartList;
     private CartAdapter.OnItemClickListener listener; //
     private CartActivity activity;
-
+    private int countItem;
     public interface OnItemClickListener {
         void onItemClick(CartItemResponse cartItemResponse);
         void onDeleteClick(CartItemResponse cartItemResponse);
@@ -63,7 +66,6 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
             cart.setTotalPrice(newPrice);
             activity.updateCartItem(cart);
             updateTotalPrice();
-
         });
 
         holder.tvSub.setOnClickListener(v -> {
@@ -125,7 +127,6 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
             tvTotalPrice= itemView.findViewById(R.id.tv_amount);
             imgDelete = itemView.findViewById(R.id.img_delete);
             linearLayoutItemDrink = itemView.findViewById(R.id.layout_item_drink);
-
         }
 
         public void bind(CartItemResponse cart,int position) {
@@ -139,7 +140,8 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
             Glide.with(itemView.getContext())
                     .load(cart.getDrinkDTO().getImage())
                     .into(imageView);
-
+            countItem = getTotalQuantity();
+            Log.d("TotalQuantity", "Tổng số lượng: " + countItem);
             StringBuilder optionsBuilder = new StringBuilder();
 
             // Thêm số lượng
@@ -201,6 +203,13 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
                 }
             });
         }
+    }
+    public int getTotalQuantity() {
+        int totalQuantity = 0;
+        for (CartItemResponse item : cartList) {
+            totalQuantity += item.getQuantity();
+        }
+        return totalQuantity;
     }
 }
 

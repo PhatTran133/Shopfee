@@ -109,6 +109,16 @@
             android:focusable="false"
             android:nestedScrollingEnabled="false"
             />
+        <Button
+            android:id="@+id/btn_navigate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/define_dimen_10"
+            android:text="Chat"
+            android:textColor="@color/white"
+            android:backgroundTint="@color/colorPrimaryDark"
+            android:onClick="onClickChat"/>
     </LinearLayout>
+
 
 </androidx.core.widget.NestedScrollView>
