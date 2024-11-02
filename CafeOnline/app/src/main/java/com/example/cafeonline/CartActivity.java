@@ -90,8 +90,6 @@ tvAddress.setText(addressResponse.getAddress().toString());
 
         });
 
-
-
         int userId = getUserIdFromPreferences();
         CartApiService cartService = ApiService.createService(CartApiService.class);
         Call<ApiResponse<CartResponse>> callApiDrink = cartService.getCart(userId);
@@ -157,6 +155,11 @@ tvAddress.setText(addressResponse.getAddress().toString());
             }
         }, CartActivity.this);
         recyclerView.setAdapter(adapter);
+        // Gọi Service để hiển thị notification
+        Intent serviceIntent = new Intent(this, NotificationService.class);
+        serviceIntent.putExtra("title", "KooHee");
+        serviceIntent.putExtra("text", "The number of items in your cart: " + adapter.getTotalQuantity());
+        startService(serviceIntent);
     }
 
     public void updateCartItem(CartItemResponse cartItemResponse) {
