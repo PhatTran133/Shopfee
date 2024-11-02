@@ -92,15 +92,11 @@
             android:layout_height="2dp"
             android:background="@color/bgMainColor"/>
 
-        <com.example.cafeonline.widget.CustomTabLayout
-            android:id="@+id/tab_filter"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_filter_items"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:tabSelectedTextColor="@color/colorPrimaryDark"
-            app:tabTextColor="@color/colorAccent"
-            app:tabIndicatorHeight="@dimen/define_dimen_2"
-            app:tabIndicatorColor="@color/colorPrimaryDark"
-            app:tabMode="scrollable"
+            android:nestedScrollingEnabled="false"
             android:layout_marginTop="@dimen/define_dimen_10"/>
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rcv_drink_home"
