@@ -1,15 +1,11 @@
 package com.example.cafeonline;
 
-import static java.security.AccessController.getContext;
-
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -17,14 +13,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.cafeonline.adapter.AddressAdapter;
-import com.example.cafeonline.adapter.DrinkAdapter;
-import com.example.cafeonline.adapter.ToppingAdapter;
 import com.example.cafeonline.api.ApiService;
-import com.example.cafeonline.api.DrinkApiService;
 import com.example.cafeonline.api.UserApiService;
 import com.example.cafeonline.model.response.AddressResponse;
 import com.example.cafeonline.model.response.ApiResponse;
-import com.example.cafeonline.model.response.DrinkResponse;
 import com.google.gson.Gson;
 
 import java.util.List;
@@ -44,7 +36,11 @@ public class AddressActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_address);
         imgBack = findViewById(R.id.img_toolbar_back);
-        imgBack.setOnClickListener(v -> onBackPressed());
+        imgBack.setOnClickListener(v -> {
+            Intent intent = new Intent(this, CartActivity.class);
+            startActivity(intent);
+            finish();
+        });
         btnAddAddress = findViewById(R.id.btn_add_address);
         btnAddAddress.setOnClickListener(v -> {
             Intent intent = new Intent(this, AddAddressActivicty.class);
@@ -107,11 +103,13 @@ public class AddressActivity extends AppCompatActivity {
     }
 
     private void setupAdapter(List<AddressResponse> addressResponseList) {
-        adapter = new AddressAdapter(addressResponseList, new AddressAdapter.OnItemClickListener() {
+        // Pass 'this' as context to the adapter
+        int chosenAddressId = getChosenAddressIdFromPreferences();
+        adapter = new AddressAdapter(chosenAddressId, addressResponseList, new AddressAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(AddressResponse address) {
-                Toast.makeText(AddressActivity.this,"Selected Address: " + address.getName() + ", " + address.getPhone() + ", " + address.getAddress(),Toast.LENGTH_SHORT).show();
-                saveAddressPreferences(address.getAddressId(), address.getName(), address.getPhone(), address.getAddress() );
+                Toast.makeText(AddressActivity.this, "Selected Address: " + address.getName() + ", " + address.getPhone() + ", " + address.getAddress(), Toast.LENGTH_SHORT).show();
+                saveAddressPreferences(address.getAddressId(), address.getName(), address.getPhone(), address.getAddress());
             }
 
             @Override
@@ -121,6 +119,7 @@ public class AddressActivity extends AppCompatActivity {
         });
         recyclerView.setAdapter(adapter);
     }
+
 
     private void deleteAddress(AddressResponse address){
         int addressId = address.getAddressId();
@@ -176,6 +175,9 @@ public class AddressActivity extends AppCompatActivity {
         editor.apply();
     }
 
-
+    private int getChosenAddressIdFromPreferences() {
+        SharedPreferences sharedPreferences = getSharedPreferences("KooheePrefs", MODE_PRIVATE);
+        return sharedPreferences.getInt("addressId",-1);
+    }
 }
 

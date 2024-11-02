@@ -1,63 +1,65 @@
 package com.example.cafeonline.adapter;
 
-import android.content.Intent;
+import android.content.SharedPreferences;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
-import com.example.cafeonline.AddressActivity;
-import com.example.cafeonline.CartActivity;
-import com.example.cafeonline.DrinkDetailActivity;
+
 import com.example.cafeonline.R;
 import com.example.cafeonline.model.response.AddressResponse;
-import com.example.cafeonline.model.response.DrinkResponse;
-import com.example.cafeonline.model.response.ToppingResponse;
 
-import java.text.DecimalFormat;
 import java.util.List;
 
-import de.hdodenhof.circleimageview.CircleImageView;
-
-public class AddressAdapter extends RecyclerView.Adapter<AddressAdapter.AddressViewHolder>{
+public class AddressAdapter extends RecyclerView.Adapter<AddressAdapter.AddressViewHolder> {
     private List<AddressResponse> addressList;
     private OnItemClickListener listener;
+    private int chosenAddressId;
     private int selectedPosition = -1;
+
     public interface OnItemClickListener {
         void onItemClick(AddressResponse address);
         void onDeleteClick(AddressResponse address);
     }
-    public AddressAdapter(List<AddressResponse> addressList, OnItemClickListener listener) {
+
+    public AddressAdapter(int chosenAddressId, List<AddressResponse> addressList, OnItemClickListener listener) {
+        this.chosenAddressId = chosenAddressId;
         this.addressList = addressList;
         this.listener = listener;
+
+        // Set initial selected position based on chosenAddressId
+        for (int i = 0; i < addressList.size(); i++) {
+            if (addressList.get(i).getAddressId() == chosenAddressId) {
+                selectedPosition = i;
+                break;
+            }
+        }
     }
 
     @NonNull
     @Override
     public AddressViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_address, parent, false);
-        return new AddressAdapter.AddressViewHolder(view);
+        return new AddressViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull AddressViewHolder holder, int position) {
-           AddressResponse response = addressList.get(position);
-           holder.bind(response,position);
+        AddressResponse response = addressList.get(position);
+        holder.bind(response, position);
     }
 
     @Override
     public int getItemCount() {
         return addressList != null ? addressList.size() : 0;
     }
+
     public void deleteAddress(AddressResponse address) {
         int position = addressList.indexOf(address);
         if (position != -1) {
@@ -65,6 +67,7 @@ public class AddressAdapter extends RecyclerView.Adapter<AddressAdapter.AddressV
             notifyItemRemoved(position);
         }
     }
+
     public class AddressViewHolder extends RecyclerView.ViewHolder {
         private TextView tvName, tvPhone, tvAdress;
         private RadioButton radioButton;
@@ -83,7 +86,9 @@ public class AddressAdapter extends RecyclerView.Adapter<AddressAdapter.AddressV
             tvName.setText(address.getName());
             tvPhone.setText(address.getPhone());
             tvAdress.setText(address.getAddress());
-            radioButton.setChecked(position == selectedPosition); // Set checked based on selectedPosition
+
+            // Set the radio button checked state based on selectedPosition
+            radioButton.setChecked(position == selectedPosition);
 
             radioButton.setOnClickListener(v -> {
                 selectedPosition = position; // Update selected position on click
@@ -92,17 +97,14 @@ public class AddressAdapter extends RecyclerView.Adapter<AddressAdapter.AddressV
                     listener.onItemClick(addressList.get(position));
                 }
             });
+
             imgDelete.setOnClickListener(v -> {
                 if (position != RecyclerView.NO_POSITION) {
-
                     listener.onDeleteClick(addressList.get(position));
                 }
             });
-
-
         }
-
-
     }
-
 }
+
+

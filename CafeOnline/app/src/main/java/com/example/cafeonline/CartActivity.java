@@ -29,6 +29,7 @@ import com.example.cafeonline.adapter.CartAdapter;
 import com.example.cafeonline.api.ApiService;
 import com.example.cafeonline.api.CartApiService;
 import com.example.cafeonline.api.UserApiService;
+import com.example.cafeonline.model.PaymentMethod;
 import com.example.cafeonline.model.request.CartItemRequestModel;
 import com.example.cafeonline.model.response.AddressResponse;
 import com.example.cafeonline.model.response.ApiResponse;
@@ -47,11 +48,12 @@ import retrofit2.Response;
 public class CartActivity extends AppCompatActivity {
     private Button orderButton;
     private RecyclerView recyclerView;
-    private TextView tvTotalPrice, tvAddress;
+    private TextView tvTotalPrice, tvAddress, tvPaymentMethod;
     private ImageView imgBack;
     private LinearLayout addOtherDrinks;
     private RelativeLayout address, payment;
     private CartAdapter adapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,15 +70,33 @@ public class CartActivity extends AppCompatActivity {
         payment.setOnClickListener(v -> {
             Intent intent = new Intent(this, PaymentMethodActivity.class);
             startActivity(intent);
+            finish();
         });
+
+        PaymentMethod paymentMethod = getPaymentMethodFromPreferences();
+        if (paymentMethod.getName() != null) {
+            StringBuilder optionsBuilder = new StringBuilder();
+            optionsBuilder.append(paymentMethod.getName().toString()).append(": ").append(paymentMethod.getDescription().toString());
+            tvPaymentMethod = findViewById(R.id.tv_payment_method);
+            tvPaymentMethod.setText(optionsBuilder);
+        }
+
         address = findViewById(R.id.layout_address);
         address.setOnClickListener(v -> {
             Intent intent = new Intent(this, AddressActivity.class);
             startActivity(intent);
+            finish();
         });
+
         AddressResponse addressResponse = getAddressFromPreferences();
-        tvAddress = findViewById(R.id.tv_address);
-tvAddress.setText(addressResponse.getAddress().toString());
+        if (addressResponse.getAddress() != null) {
+            StringBuilder optionsBuilder = new StringBuilder();
+            optionsBuilder.append(addressResponse.getName().toString()).append(", ").append(addressResponse.getAddress().toString()).append(", ").append(addressResponse.getPhone().toString());
+            tvAddress = findViewById(R.id.tv_address);
+            tvAddress.setText(optionsBuilder);
+        }
+
+
         orderButton = findViewById(R.id.btn_checkout);
         recyclerView = findViewById(R.id.rcv_cart);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -103,7 +123,7 @@ tvAddress.setText(addressResponse.getAddress().toString());
                         if (cart != null) {
                             DecimalFormat decimalFormat = new DecimalFormat("#,###");
                             String formattedPrice = decimalFormat.format(cart.getTotalPrice());
-                            tvTotalPrice.setText(formattedPrice+ " VND");
+                            tvTotalPrice.setText(formattedPrice + " VND");
                             List<CartItemResponse> cartItems = cart.getCartItems();
                             if (cartItems != null && !cartItems.isEmpty()) {
                                 setupAdapter(cartItems);
@@ -269,12 +289,20 @@ tvAddress.setText(addressResponse.getAddress().toString());
 
     private AddressResponse getAddressFromPreferences() {
         SharedPreferences sharedPreferences = getSharedPreferences("KooheePrefs", MODE_PRIVATE);
-        int addressId = sharedPreferences.getInt("addressId",-1);
-        String fullname = sharedPreferences.getString("fullName",null);
-        String phone = sharedPreferences.getString("phone",null);
-        String address = sharedPreferences.getString("address",null);
+        int addressId = sharedPreferences.getInt("addressId", -1);
+        String fullname = sharedPreferences.getString("fullName", null);
+        String phone = sharedPreferences.getString("phone", null);
+        String address = sharedPreferences.getString("address", null);
         AddressResponse addressResponse = new AddressResponse(addressId, 0, fullname, phone, address);
         return addressResponse;
+    }
+
+    private PaymentMethod getPaymentMethodFromPreferences() {
+        SharedPreferences sharedPreferences = getSharedPreferences("KooheePrefs", MODE_PRIVATE);
+        String selectedName = sharedPreferences.getString("selectedPaymentName", "");
+        String selectedDescription = sharedPreferences.getString("selectedPaymentDescription", "");
+        PaymentMethod paymentMethod = new PaymentMethod( selectedName, selectedDescription);
+        return paymentMethod;
     }
 }
 
