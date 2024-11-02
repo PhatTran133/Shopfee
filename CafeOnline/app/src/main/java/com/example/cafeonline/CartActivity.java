@@ -47,7 +47,7 @@ import retrofit2.Response;
 public class CartActivity extends AppCompatActivity {
     private Button orderButton;
     private RecyclerView recyclerView;
-    private TextView tvTotalPrice;
+    private TextView tvTotalPrice, tvAddress;
     private ImageView imgBack;
     private LinearLayout addOtherDrinks;
     private RelativeLayout address, payment;
@@ -74,6 +74,9 @@ public class CartActivity extends AppCompatActivity {
             Intent intent = new Intent(this, AddressActivity.class);
             startActivity(intent);
         });
+        AddressResponse addressResponse = getAddressFromPreferences();
+        tvAddress = findViewById(R.id.tv_address);
+tvAddress.setText(addressResponse.getAddress().toString());
         orderButton = findViewById(R.id.btn_checkout);
         recyclerView = findViewById(R.id.rcv_cart);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -259,6 +262,16 @@ public class CartActivity extends AppCompatActivity {
     private int getUserIdFromPreferences() {
         SharedPreferences sharedPreferences = getSharedPreferences("KooheePrefs", MODE_PRIVATE);
         return sharedPreferences.getInt("userId", 0); // Returns null if no userId is found
+    }
+
+    private AddressResponse getAddressFromPreferences() {
+        SharedPreferences sharedPreferences = getSharedPreferences("KooheePrefs", MODE_PRIVATE);
+        int addressId = sharedPreferences.getInt("addressId",-1);
+        String fullname = sharedPreferences.getString("fullName",null);
+        String phone = sharedPreferences.getString("phone",null);
+        String address = sharedPreferences.getString("address",null);
+        AddressResponse addressResponse = new AddressResponse(addressId, 0, fullname, phone, address);
+        return addressResponse;
     }
 }
 

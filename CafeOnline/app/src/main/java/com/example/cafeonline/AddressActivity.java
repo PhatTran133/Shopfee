@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -33,6 +34,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class AddressActivity extends AppCompatActivity {
+
     private ImageView imgBack;
     private Button btnAddAddress;
     private RecyclerView recyclerView;
@@ -47,9 +49,11 @@ public class AddressActivity extends AppCompatActivity {
         btnAddAddress.setOnClickListener(v -> {
             Intent intent = new Intent(this, AddAddressActivicty.class);
             startActivity(intent);
+            finish();
         });
         recyclerView = findViewById(R.id.rcv_address);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
         loadAddresses();
 
     }
@@ -107,6 +111,7 @@ public class AddressActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AddressResponse address) {
                 Toast.makeText(AddressActivity.this,"Selected Address: " + address.getName() + ", " + address.getPhone() + ", " + address.getAddress(),Toast.LENGTH_SHORT).show();
+                saveAddressPreferences(address.getAddressId(), address.getName(), address.getPhone(), address.getAddress() );
             }
 
             @Override
@@ -132,8 +137,6 @@ public class AddressActivity extends AppCompatActivity {
                         adapter.deleteAddress(address);
                         adapter.notifyDataSetChanged();
                         Toast.makeText(AddressActivity.this, "Address deleted successfully", Toast.LENGTH_SHORT).show();
-
-
                     } else {
                         Toast.makeText(AddressActivity.this, "Error fetching addresses", Toast.LENGTH_SHORT).show();
                     }
@@ -162,6 +165,17 @@ public class AddressActivity extends AppCompatActivity {
             }
         });
     }
+
+    private void saveAddressPreferences(int addressId, String fullName, String phone, String address) {
+        SharedPreferences sharedPreferences = getSharedPreferences("KooheePrefs", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putInt("addressId", addressId);
+        editor.putString("fullName", fullName);
+        editor.putString("phone", phone);
+        editor.putString("address", address);
+        editor.apply();
+    }
+
 
 }
 
