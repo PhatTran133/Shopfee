@@ -14,6 +14,7 @@ namespace BussinessObjects.DTO
         public string? Sugar { get; set; }
         public string? Iced { get; set; }
         public string? Note { get; set; }
+        public int UnitPrice { get; set; }
         public int TotalPrice {  get; set; }
     }
 }
