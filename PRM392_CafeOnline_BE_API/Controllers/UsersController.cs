@@ -106,6 +106,29 @@ namespace PRM392_CafeOnline_BE_API.Controllers
             return Ok(new JsonResponse<UserDTO>(userResponse, 200, "Get User Sucessfully"));
         }
 
+        [HttpPost("change-password")]
+        public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordDto dto)
+        {
+            try
+            {
+                bool isChanged = await _userService.ChangePassword(dto);
+
+                if (isChanged)
+                {
+                    var response = new JsonResponse<string>("Password changed successfully.", 200, "Success");
+                    return Ok(response);
+                }
+
+                var failureResponse = new JsonResponse<string>(null, 400, "Failed to change password.");
+                return BadRequest(failureResponse);
+            }
+            catch (Exception ex)
+            {
+                var errorResponse = new JsonResponse<string>(null, 400, ex.Message);
+                return BadRequest(errorResponse);
+            }
+        }
+
 
 
     }

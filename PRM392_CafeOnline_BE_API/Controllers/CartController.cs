@@ -58,7 +58,7 @@ namespace PRM392_CafeOnline_BE_API.Controllers
             try
             {
                 var cartItem = await _cartService.UpdateCartItem(cartItemId, updateCartItemRequestDTO);
-                return Ok(new JsonResponse<CartItemDTO>(cartItem, 200, "Update successfully"));
+                return Ok(new JsonResponse<string>(null, 200, "Update successfully"));
             }
             catch (Exception ex)
             {
