@@ -299,8 +299,8 @@ public class CartActivity extends AppCompatActivity {
 
     private PaymentMethod getPaymentMethodFromPreferences() {
         SharedPreferences sharedPreferences = getSharedPreferences("KooheePrefs", MODE_PRIVATE);
-        String selectedName = sharedPreferences.getString("selectedPaymentName", "");
-        String selectedDescription = sharedPreferences.getString("selectedPaymentDescription", "");
+        String selectedName = sharedPreferences.getString("selectedPaymentName", null);
+        String selectedDescription = sharedPreferences.getString("selectedPaymentDescription", null);
         PaymentMethod paymentMethod = new PaymentMethod( selectedName, selectedDescription);
         return paymentMethod;
     }
