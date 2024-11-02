@@ -95,6 +95,10 @@ namespace DataAccess
                     query = query.Where(d => d.Size == size);
                 }
 
+                // Sắp xếp theo giá giảm dần và tên A - Z
+                query = query.OrderByDescending(d => d.Price)
+                             .ThenBy(d => d.Name);
+
                 // Thực hiện truy vấn bất đồng bộ và trả về kết quả
                 return await query.ToListAsync();
             }
