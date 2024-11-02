@@ -12,7 +12,8 @@
 <!--        android:layout_height="wrap_content"-->
 <!--        android:gravity="center_vertical"-->
 <!--        android:orientation="horizontal"-->
-<!--        android:paddingBottom="10dp">-->
+<!--        android:paddingBottom="10dp"-->
+<!--        android:layout_marginTop="40dp">-->
 
 <!--        &lt;!&ndash; User profile image &ndash;&gt;-->
 <!--        <ImageView-->
@@ -42,7 +43,8 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         android:padding="8dp"
-        android:scrollbars="vertical" />
+        android:scrollbars="vertical"
+        android:layout_marginTop="100dp" />
 
     <!-- Input area -->
     <LinearLayout
@@ -71,6 +73,7 @@
             android:layout_height="wrap_content"
             android:src="@drawable/ic_send"
             android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="Send" />
+            android:contentDescription="Send"
+            android:onClick="onSendClick"/>
     </LinearLayout>
 </LinearLayout>

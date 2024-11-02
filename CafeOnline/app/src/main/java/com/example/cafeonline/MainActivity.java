@@ -99,8 +99,8 @@ public class MainActivity extends AppCompatActivity {
 
         // Gọi Service để hiển thị notification
         Intent serviceIntent = new Intent(this, NotificationService.class);
-        serviceIntent.putExtra("title", "Welcome to Koohee");
-        serviceIntent.putExtra("text", "Welcome: " + userId);
+        serviceIntent.putExtra("title", "KooHee");
+        serviceIntent.putExtra("text", "Welcome " + userId + " to KooHee!" );
         startService(serviceIntent);
     }
 

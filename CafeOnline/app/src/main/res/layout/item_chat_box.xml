@@ -6,6 +6,15 @@
     android:padding="8dp">
 
     <TextView
+        android:id="@+id/textViewUserName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="User Name"
+        android:textColor="#333333"
+        android:textSize="16sp"
+        android:textStyle="bold" />
+
+    <TextView
         android:id="@+id/textViewMessage"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

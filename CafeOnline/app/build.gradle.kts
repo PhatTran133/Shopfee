@@ -46,7 +46,6 @@ dependencies {
     androidTestImplementation(libs.espresso.core)
     implementation(libs.firebase)
     implementation(libs.firestore)
-    //implementation("com.google.firebase:firebase-firestore")
     implementation(libs.retrofit)
     implementation(libs.retrofit.gson)
     implementation(libs.imageSlideshow)

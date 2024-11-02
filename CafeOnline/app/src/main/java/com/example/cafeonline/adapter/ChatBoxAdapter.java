@@ -31,8 +31,8 @@ public class ChatBoxAdapter extends RecyclerView.Adapter<ChatBoxAdapter.ChatView
     @Override
     public void onBindViewHolder(@NonNull ChatViewHolder holder, int position) {
         ChatMessage message = messageList.get(position);
-//        holder.textViewMessage.setText(message.getMessage());
-//        // Chuyển đổi Timestamp thành String để hiển thị
+        holder.textViewMessage.setText(message.getContent());
+        // Chuyển đổi Timestamp thành String để hiển thị
 //        if (message.getTime() != null) {
 //            holder.textViewTime.setText(message.getTime().toString()); // Chỉnh sửa định dạng theo nhu cầu
 //        }
@@ -44,8 +44,8 @@ public class ChatBoxAdapter extends RecyclerView.Adapter<ChatBoxAdapter.ChatView
     }
 
     public static class ChatViewHolder extends RecyclerView.ViewHolder {
-        TextView textViewMessage;
-        TextView textViewTime;
+        public TextView textViewMessage;
+        public TextView textViewTime;
 
         public ChatViewHolder(@NonNull View itemView) {
             super(itemView);
