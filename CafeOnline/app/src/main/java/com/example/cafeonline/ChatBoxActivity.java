@@ -97,19 +97,48 @@ public class ChatBoxActivity extends AppCompatActivity {
                 });
     }
 
-    public void onSendClick(View view){
+    public void onSendClick(View view) {
         String messageText = editText.getText().toString();
         userId = getUserIdFromPreferences();
         if (!messageText.isEmpty()) {
-            ChatMessage newMessage = new ChatMessage(messageId, messageText, Timestamp.now(), 1, userId); // Tạo ChatMessage mới
-            messageList.add(newMessage); // Thêm vào danh sách
-            chatAdapter.notifyItemInserted(messageList.size() - 1); // Cập nhật RecyclerView
+            // Tạo một ChatMessage mới với messageId ban đầu là null
+            ChatMessage newMessage = new ChatMessage(null, messageText, Timestamp.now(), 1, userId); // Tạo ChatMessage mới
 
             // Lưu tin nhắn vào Firestore
             db.collection("message") // Thay đổi tên collection nếu cần
                     .add(newMessage)
                     .addOnSuccessListener(documentReference -> {
-                        // Thêm thành công
+                        // Lấy documentId và cập nhật vào newMessage
+                        messageId = documentReference.getId(); // Lấy documentId
+                        newMessage.setMessageId(messageId); // Cập nhật vào đối tượng ChatMessage
+
+                        // Cập nhật lại messageId trên Firestore
+                        db.collection("message")
+                                .whereEqualTo("userId", userId)
+                                .get()
+                                .addOnCompleteListener(task -> {
+                                    if (task.isSuccessful()) {
+                                        for (QueryDocumentSnapshot document : task.getResult()) {
+                                            String documentId = document.getId();
+                                            // Kiểm tra xem messageId đã được thiết lập hay chưa
+                                            if (document.getString("messageId") == null) {
+                                                // Cập nhật messageId trên Firestore
+                                                document.getReference().update("messageId", messageId)
+                                                        .addOnSuccessListener(aVoid -> {
+                                                            Log.d("Firestore Update", "MessageId updated for document: " + messageId);
+                                                        })
+                                                        .addOnFailureListener(e -> {
+                                                            Log.w("Firestore Update Error", "Error updating messageId", e);
+                                                        });
+                                            }
+                                        }
+                                    } else {
+                                        Log.w("Firestore Error", "Error getting documents.", task.getException());
+                                    }
+                                });
+                        // Cập nhật messageList và RecyclerView
+                        //messageList.add(newMessage); // Thêm vào danh sách
+                        //chatAdapter.notifyItemInserted(messageList.size() - 1); // Cập nhật RecyclerView
                         editText.setText(""); // Xóa nội dung trong EditText sau khi gửi
                         recyclerViewMessages.scrollToPosition(messageList.size() - 1); // Cuộn tới item cuối
                     })
@@ -143,12 +172,14 @@ public class ChatBoxActivity extends AppCompatActivity {
 
                             switch (dc.getType()) {
                                 case ADDED:
-                                    messageList.add(message);
-                                    chatAdapter.notifyItemInserted(messageList.size() - 1);
+                                    if (!messageList.contains(message)) {
+                                        messageList.add(message);
+                                        chatAdapter.notifyItemInserted(messageList.size() - 1);
+                                        Log.d("Message Change Added", "New message: " + dc.getDocument().getData());
+                                    }
                                     Log.d("Message Change Added", "New message: " + dc.getDocument().getData());
                                     break;
                                 case MODIFIED:
-                                    // Tìm vị trí của tin nhắn bị chỉnh sửa
                                     for (int i = 0; i < messageList.size(); i++) {
                                         if (messageList.get(i).getMessageId().equals(message.getMessageId())) {
                                             messageList.set(i, message); // Cập nhật nội dung mới
@@ -156,7 +187,7 @@ public class ChatBoxActivity extends AppCompatActivity {
                                             break;
                                         }
                                     }
-                                    Log.d("Message Change Modified", "Modified message: " + message);
+                                    Log.d("Message Change Modified", "Modified message: " + dc.getDocument().getData());
                                     break;
                                 case REMOVED:
                                     // Xử lý tin nhắn bị xóa

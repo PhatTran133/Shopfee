@@ -3,11 +3,11 @@ package com.example.cafeonline.model;
 import java.sql.Timestamp;
 
 public class ChatMessage {
-    private String messageId; // ID của tin nhắn
     private String content;
     private com.google.firebase.Timestamp time;
     private int roomId;
     private int userId;
+    private String messageId;
 
 
     public ChatMessage() {
@@ -15,14 +15,13 @@ public class ChatMessage {
     }
 
     public ChatMessage(String messageId, String content, com.google.firebase.Timestamp time, int roomId, int userId) {
-        this.messageId = messageId;
         this.content = content;
         this.time = time;
         this.roomId = roomId;
         this.userId = userId;
+        this.messageId = messageId;
     }
 
-    // Getter và Setter cho messageId
     public String getMessageId() {
         return messageId;
     }
