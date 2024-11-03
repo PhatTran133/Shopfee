@@ -5,7 +5,7 @@ import java.sql.Timestamp;
 public class ChatMessage {
     private String content;
     private com.google.firebase.Timestamp time;
-    private int roomId;
+    private String roomId;
     private int userId;
     private String messageId;
 
@@ -14,7 +14,7 @@ public class ChatMessage {
         // Cần một constructor mặc định cho Firebase
     }
 
-    public ChatMessage(String messageId, String content, com.google.firebase.Timestamp time, int roomId, int userId) {
+    public ChatMessage(String messageId, String content, com.google.firebase.Timestamp time, String roomId, int userId) {
         this.content = content;
         this.time = time;
         this.roomId = roomId;
@@ -54,11 +54,11 @@ public class ChatMessage {
         this.userId = userId;
     }
 
-    public int getRoomId() {
+    public String getRoomId() {
         return roomId;
     }
 
-    public void setRoomId(int roomId) {
+    public void setRoomId(String roomId) {
         this.roomId = roomId;
     }
 }

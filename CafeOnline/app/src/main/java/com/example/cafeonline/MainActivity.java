@@ -120,32 +120,42 @@ public class MainActivity extends AppCompatActivity {
 
     public void onClickChat(View view) {
         userId = getUserIdFromPreferences();
-//        db.collection("room")
-//                .whereEqualTo("userId", userId)
-//                .get()
-//                .addOnCompleteListener(task -> {
-//                    if (task.isSuccessful() && task.getResult() != null && !task.getResult().isEmpty()) {
-//                        // Đã có room với userId này, không thêm room mới
-//                        Log.w("ChatRoom", "Room already exists for this userId.");
-//                    } else {
-//                        // Không tìm thấy room với userId này, thêm room mới
-//                        db.collection("room")
-//                                .add(new ChatRoom(userId))
-//                                .addOnSuccessListener(documentReference -> {
-//                                    Log.w("ChatRoom", "Add Room Successfully");
-//                                })
-//                                .addOnFailureListener(e -> {
-//                                    // Xử lý lỗi nếu không thêm được room
-//                                    Toast.makeText(this, "Error adding room: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-//                                });
-//                    }
-//                })
-//                .addOnFailureListener(e -> {
-//                    // Xử lý lỗi nếu không truy vấn được
-//                    Toast.makeText(this, "Error checking room: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-//                });
+        db.collection("room")
+                .whereEqualTo("userId", userId)
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful() && task.getResult() != null && !task.getResult().isEmpty()) {
+                        // Đã có room với userId này, không thêm room mới
+                        saveRoomIdToPreferences(task.getResult().getDocuments().get(0).getId());
+                        Log.w("TEST1", task.getResult().getDocuments().get(0).getId());
+                        Log.w("ChatRoom", "Room already exists for this userId.");
+                    } else {
+                        // Không tìm thấy room với userId này, thêm room mới
+                        db.collection("room")
+                                .add(new ChatRoom(userId))
+                                .addOnSuccessListener(documentReference -> {
+                                    saveRoomIdToPreferences(documentReference.getId());
+                                    Log.w("TEST1", documentReference.getId());
+                                    Log.w("ChatRoom", "Add Room Successfully");
+                                })
+                                .addOnFailureListener(e -> {
+                                    // Xử lý lỗi nếu không thêm được room
+                                    Toast.makeText(this, "Error adding room: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                });
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    // Xử lý lỗi nếu không truy vấn được
+                    Toast.makeText(this, "Error checking room: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                });
 
         Intent intent = new Intent(this, ChatBoxActivity.class);
         startActivity(intent);
+    }
+    private void saveRoomIdToPreferences(String roomId) {
+        SharedPreferences sharedPreferences = getSharedPreferences("KooheePrefs", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("roomId", roomId);
+        editor.apply();
     }
 }

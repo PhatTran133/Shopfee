@@ -43,6 +43,7 @@ public class ChatBoxActivity extends AppCompatActivity {
     private EditText editText;
     private int userId;
     private String messageId;
+    private String roomId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +71,7 @@ public class ChatBoxActivity extends AppCompatActivity {
 
     private void loadChatMessages() {
         userId = getUserIdFromPreferences();
+        roomId = getRoomIdFromPreferences();
         db.collection("message") // Tên collection trong Firestore
                 .orderBy("time", Query.Direction.ASCENDING) // Sắp xếp theo thời gian
                 .get()
@@ -86,7 +88,7 @@ public class ChatBoxActivity extends AppCompatActivity {
                             // Kiểm tra userId
                             if (documentUserId != null && documentUserId.intValue() == userId) {
                                 if (content != null && timestamp != null) {
-                                    messageList.add(new ChatMessage(messageId, content, timestamp, 1, userId));
+                                    messageList.add(new ChatMessage(messageId, content, timestamp, roomId, userId));
                                 }
                             }
                         }
@@ -102,7 +104,7 @@ public class ChatBoxActivity extends AppCompatActivity {
         userId = getUserIdFromPreferences();
         if (!messageText.isEmpty()) {
             // Tạo một ChatMessage mới với messageId ban đầu là null
-            ChatMessage newMessage = new ChatMessage(null, messageText, Timestamp.now(), 1, userId); // Tạo ChatMessage mới
+            ChatMessage newMessage = new ChatMessage(null, messageText, Timestamp.now(), roomId, userId); // Tạo ChatMessage mới
 
             // Lưu tin nhắn vào Firestore
             db.collection("message") // Thay đổi tên collection nếu cần
@@ -152,6 +154,11 @@ public class ChatBoxActivity extends AppCompatActivity {
     private int getUserIdFromPreferences() {
         SharedPreferences sharedPreferences = getSharedPreferences("KooheePrefs", MODE_PRIVATE);
         return sharedPreferences.getInt("userId", 0); // Returns null if no userId is found
+    }
+
+    private String getRoomIdFromPreferences() {
+        SharedPreferences sharedPreferences = getSharedPreferences("KooheePrefs", MODE_PRIVATE);
+        return sharedPreferences.getString("roomId", "0"); // Returns null if no userId is found
     }
 
     private void onChangeListener(){
