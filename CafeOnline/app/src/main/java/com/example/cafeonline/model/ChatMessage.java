@@ -9,7 +9,6 @@ public class ChatMessage {
     private int userId;
     private String messageId;
 
-
     public ChatMessage() {
         // Cần một constructor mặc định cho Firebase
     }

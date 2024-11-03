@@ -9,7 +9,8 @@
         android:id="@+id/spinnerRooms"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="8dp" />
+        android:padding="8dp"
+        android:layout_marginTop="100dp"/>
 
 <!--    &lt;!&ndash; User information section &ndash;&gt;-->
 <!--    <LinearLayout-->
