@@ -60,29 +60,28 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
 
             holder.tvQuantity.setText(String.valueOf(newQuantity));
             cart.setQuantity(newQuantity);
+            cart.setUnitPrice(newPrice);
             DecimalFormat decimalFormat = new DecimalFormat("#,###");
-            String formattedPrice = decimalFormat.format(newPrice);
+            String formattedPrice = decimalFormat.format(cart.getUnitPrice());
             holder.tvPrice.setText(String.valueOf(formattedPrice + "VND"));
-            cart.setTotalPrice(newPrice);
             activity.updateCartItem(cart);
             updateTotalPrice();
         });
 
         holder.tvSub.setOnClickListener(v -> {
             int newQuantity = cart.getQuantity() - 1;
-            if (newQuantity < 1) {
-            holder.tvSub.setEnabled(false);
-            return;
-            }
-                int newPrice = cart.getTotalPrice() / cart.getQuantity() * newQuantity;
+            if (newQuantity >= 1) {
+                int newPrice = cart.getTotalPrice()  * newQuantity;
                 holder.tvQuantity.setText(String.valueOf(newQuantity));
                 cart.setQuantity(newQuantity);
+                cart.setUnitPrice(newPrice);
                 DecimalFormat decimalFormat = new DecimalFormat("#,###");
-                String formattedPrice = decimalFormat.format(newPrice);
+                String formattedPrice = decimalFormat.format(cart.getUnitPrice());
                 holder.tvPrice.setText(String.valueOf(formattedPrice + "VND"));
-                cart.setTotalPrice(newPrice);
                 activity.updateCartItem(cart);
                 updateTotalPrice();
+            }
+
         });
     }
 
@@ -93,7 +92,8 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
     private void updateTotalPrice() {
         double totalPrice = 0;
         for (CartItemResponse item : cartList) {
-            totalPrice += item.getTotalPrice();
+
+            totalPrice += item.getUnitPrice();
         }
         activity.updateTotalPrice(totalPrice);
     }
@@ -133,7 +133,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
             // Xử lý phần hiển thị options
            tvName.setText(cart.getDrinkDTO().getName());
            DecimalFormat decimalFormat = new DecimalFormat("#,###");
-            String formattedPrice = decimalFormat.format(cart.getTotalPrice());
+            String formattedPrice = decimalFormat.format(cart.getUnitPrice());
             tvPrice.setText(formattedPrice + "VND");
             String formattedQuantity = decimalFormat.format((cart.getQuantity()));
             tvQuantity.setText((formattedQuantity));
@@ -169,32 +169,25 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
 
 
 
-            if (cart.cartItemToppingDTOs != null && !cart.cartItemToppingDTOs.isEmpty()) {
+            if (cart.getCartItemToppingDTOs() != null && !cart.getCartItemToppingDTOs().isEmpty()) {
                 StringBuilder toppingsBuilder = new StringBuilder();
                 toppingsBuilder.append("Toppings: ");
 
-                for (CartItemToppingResponse cartItemTopping : cart.cartItemToppingDTOs) {
-                    if (cartItemTopping != null && cartItemTopping.topping != null) {
-                        toppingsBuilder.append(cartItemTopping.topping.name).append(", ");
+                for (CartItemToppingResponse cartItemTopping : cart.getCartItemToppingDTOs()) {
+                    if (cartItemTopping != null && cartItemTopping.getTopping() != null) {
+                        toppingsBuilder.append(cartItemTopping.getTopping().getName()).append(", ");
+//
                     }
                 }
-
-                // Xóa dấu phẩy thừa ở cuối
-                if (toppingsBuilder.length() > 2) { // Đảm bảo ít nhất có 1 topping
-                    toppingsBuilder.deleteCharAt(toppingsBuilder.length() - 2);
-                }
-
+                toppingsBuilder.reverse();
+                        int index = toppingsBuilder.indexOf(",");
+                        if (index != -1) {
+                            toppingsBuilder.deleteCharAt(index);
+                        }
+                        toppingsBuilder.reverse();
                 optionsBuilder.append(toppingsBuilder.toString());
             }
-            // Xóa dấu phẩy thừa ở cuối
-            optionsBuilder.reverse();
-            int index = optionsBuilder.indexOf(",");
-            if (index != -1) {
-                optionsBuilder.deleteCharAt(index);
-            }
-            optionsBuilder.reverse();
 
-            // Gán chuỗi tùy chọn đã xây dựng vào tvOption
             tvOption.setText(optionsBuilder.toString());
             imgDelete.setOnClickListener(v -> {
                 if (position != RecyclerView.NO_POSITION) {

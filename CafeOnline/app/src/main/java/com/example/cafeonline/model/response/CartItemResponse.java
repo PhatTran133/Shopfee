@@ -10,11 +10,12 @@ public class CartItemResponse {
     private String sugar;
     private String iced;
     private String note;
-    public List<CartItemToppingResponse> cartItemToppingDTOs;
-    public int totalPrice;
-    public DrinkResponse drinkDTO;
+    private List<CartItemToppingResponse> cartItemToppingDTOs;
+    private int unitPrice;
+    private int totalPrice;
+    private DrinkResponse drinkDTO;
 
-    public CartItemResponse(int id, int quantity, String variant, String size, String sugar, String iced, String note, List<CartItemToppingResponse> cartItemToppingDTOs, int totalPrice, DrinkResponse drinkDTO) {
+    public CartItemResponse(int id, int quantity, String variant, String size, String sugar, String iced, String note, List<CartItemToppingResponse> cartItemToppingDTOs, int unitPrice, int totalPrice, DrinkResponse drinkDTO) {
         this.id = id;
         this.quantity = quantity;
         this.variant = variant;
@@ -23,8 +24,17 @@ public class CartItemResponse {
         this.iced = iced;
         this.note = note;
         this.cartItemToppingDTOs = cartItemToppingDTOs;
+        this.unitPrice = unitPrice;
         this.totalPrice = totalPrice;
         this.drinkDTO = drinkDTO;
+    }
+
+    public int getUnitPrice() {
+        return unitPrice;
+    }
+
+    public void setUnitPrice(int unitPrice) {
+        this.unitPrice = unitPrice;
     }
 
     public String getNote() {

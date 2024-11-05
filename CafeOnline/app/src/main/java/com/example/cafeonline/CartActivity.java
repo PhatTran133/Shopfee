@@ -190,6 +190,7 @@ public class CartActivity extends AppCompatActivity {
         requestModel.setSize(cartItemResponse.getSize());
         requestModel.setIced(cartItemResponse.getIced());
         requestModel.setQuantity(cartItemResponse.getQuantity());
+        requestModel.setUnitPrice(cartItemResponse.getUnitPrice());
         requestModel.setTotalPrice(cartItemResponse.getTotalPrice());// Extract cart item ID
         CartApiService cartService = ApiService.createService(CartApiService.class);
 

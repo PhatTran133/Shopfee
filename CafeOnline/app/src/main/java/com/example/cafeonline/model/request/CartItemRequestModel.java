@@ -8,19 +8,29 @@ public class CartItemRequestModel {
     private String sugar;
     private String iced;
     private String note;
+    private int unitPrice;
     private int totalPrice;
 
     public CartItemRequestModel() {
     }
 
-    public CartItemRequestModel(int quantity, String variant, String size, String sugar, String iced, String note, int totalPrice) {
+    public CartItemRequestModel(int quantity, String variant, String size, String sugar, String iced, String note, int unitPrice, int totalPrice) {
         this.quantity = quantity;
         this.variant = variant;
         this.size = size;
         this.sugar = sugar;
         this.iced = iced;
         this.note = note;
+        this.unitPrice = unitPrice;
         this.totalPrice = totalPrice;
+    }
+
+    public int getUnitPrice() {
+        return unitPrice;
+    }
+
+    public void setUnitPrice(int unitPrice) {
+        this.unitPrice = unitPrice;
     }
 
     public CartItemRequestModel(int quantity) {
