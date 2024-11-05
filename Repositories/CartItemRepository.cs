@@ -55,7 +55,7 @@ namespace Repositories
         {
             return await _context.CartItems
                 .Where(x => x.CartId == cartId)
-                .SumAsync(x => x.TotalPrice);
+                .SumAsync(x => x.UnitPrice);
         }
     }
 }
