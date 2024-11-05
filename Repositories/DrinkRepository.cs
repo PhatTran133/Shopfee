@@ -20,7 +20,7 @@ namespace Repositories
             _context = context;
         }
         public Task<List<Drink>> SearchDrinksByIdAsync(int id) => DrinkDAO.Instance.SearchDrinksByIdAsync(id);
-        public Task<List<Drink>> FilterDrinksAsync(string? name, string? categoryName, decimal? minPrice, decimal? maxPrice, DateTime? startDate, DateTime? endDate, string? size) => DrinkDAO.Instance.FilterDrinksAsync(name, categoryName, minPrice, maxPrice, startDate, endDate, size);
+        public Task<List<Drink>> FilterDrinksAsync(string? name, string? categoryName, decimal? minPrice, decimal? maxPrice, DateTime? startDate, DateTime? endDate, string? size, bool? descprice, bool? ascName) => DrinkDAO.Instance.FilterDrinksAsync(name, categoryName, minPrice, maxPrice, startDate, endDate, size, descprice, ascName);
         public async Task<List<DrinkDTO>> GetDrinksByCategoryAsync(string categoryName)
         {
             var normalizedCategoryName = categoryName.Trim().ToLower();

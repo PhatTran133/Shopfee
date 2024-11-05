@@ -45,7 +45,7 @@ namespace DataAccess
             return await _context.Drinks.FirstOrDefaultAsync(x => x.Id == id);
         }
 
-        public async Task<List<Drink>> FilterDrinksAsync(string? name, string? categoryName, decimal? minPrice, decimal? maxPrice, DateTime? startDate, DateTime? endDate, string? size)
+        public async Task<List<Drink>> FilterDrinksAsync(string? name, string? categoryName, decimal? minPrice, decimal? maxPrice, DateTime? startDate, DateTime? endDate, string? size, bool? descprice, bool? ascName)
         {
             try
             {
@@ -95,9 +95,17 @@ namespace DataAccess
                     query = query.Where(d => d.Size == size);
                 }
 
-                // Sắp xếp theo giá giảm dần và tên A - Z
-                query = query.OrderByDescending(d => d.Price)
-                             .ThenBy(d => d.Name);
+                if (descprice == true)
+                {
+                    // Sắp xếp theo giá giảm dần và tên A - Z
+                    query = query.OrderByDescending(d => d.Price);
+                }
+
+                if (ascName == true)
+                {
+                    // Sắp xếp theo giá giảm dần và tên A - Z
+                    query = query.OrderBy(d => d.Name);
+                }
 
                 // Thực hiện truy vấn bất đồng bộ và trả về kết quả
                 return await query.ToListAsync();
