@@ -2,7 +2,6 @@ package com.example.cafeonline;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.nfc.Tag;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -20,7 +19,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.cafeonline.adapter.ChatBoxAdapter;
 import com.example.cafeonline.model.ChatMessage;
-import com.example.cafeonline.model.ChatRoom;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.EventListener;
@@ -30,30 +28,23 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 
-public class ChatBoxActivity extends AppCompatActivity {
+public class AdminChatBoxUserActivity extends AppCompatActivity {
     private RecyclerView recyclerViewMessages;
     private ChatBoxAdapter chatAdapter;
     private List<ChatMessage> messageList;
     private FirebaseFirestore db;
     private EditText editText;
-    private int userId;
+    private int userIdChoose;
     private String messageId;
-    private String roomId;
-    private String userName;
+    private String roomIdChoose;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_chat_box);
-
         editText = findViewById(R.id.editTextMessage);
         recyclerViewMessages = findViewById(R.id.recyclerViewMessages);
         messageList = new ArrayList<>();
@@ -70,8 +61,10 @@ public class ChatBoxActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         Intent intent = getIntent();
-        roomId = intent.getStringExtra("roomId");
-        Log.d("TESTTT01", roomId);
+        roomIdChoose = intent.getStringExtra("roomId");
+        userIdChoose = intent.getIntExtra("userId", 0);
+        Log.d("TESTTT", roomIdChoose);
+        Log.d("TESTTT", userIdChoose + "");
     }
 
     @Override
@@ -81,27 +74,23 @@ public class ChatBoxActivity extends AppCompatActivity {
     }
 
     private void loadChatMessages() {
-        userId = getUserIdFromPreferences();
+        //roomId = getRoomIdFromPreferences();
         db.collection("message") // Tên collection trong Firestore
                 .orderBy("time", Query.Direction.ASCENDING) // Sắp xếp theo thời gian
                 .get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         messageList.clear(); // Xóa dữ liệu cũ nếu cần
+                        // lướt qua từng message
                         for (QueryDocumentSnapshot document : task.getResult()) {
-                            // Lấy userId từ document dưới dạng Number
                             messageId = document.getId();
                             Long documentUserId = document.getLong("userId");
                             String content = document.getString("content");
                             Timestamp timestamp = document.getTimestamp("time");
                             String userName = document.getString("userName");
                             String roomId = document.getString("roomId");
-
-                            // Kiểm tra userId
-                            if (documentUserId != null && documentUserId.intValue() == userId || documentUserId.intValue() == -1) {
-                                if (content != null && timestamp != null) {
-                                    messageList.add(new ChatMessage(messageId, content, timestamp, roomId, userId, userName));
-                                }
+                            if(roomId != null && roomId.equals(roomIdChoose) || userIdChoose == -1){
+                                messageList.add(new ChatMessage(messageId, content, timestamp, roomIdChoose, userIdChoose, userName));
                             }
                         }
                         chatAdapter.notifyDataSetChanged(); // Cập nhật RecyclerView
@@ -113,11 +102,9 @@ public class ChatBoxActivity extends AppCompatActivity {
 
     public void onSendClick(View view) {
         String messageText = editText.getText().toString();
-        userId = getUserIdFromPreferences();
-        userName = getUserNameFromPreferences();
         if (!messageText.isEmpty()) {
             // Tạo một ChatMessage mới với messageId và roomId ban đầu là null
-            ChatMessage newMessage = new ChatMessage(null, messageText, Timestamp.now(), roomId, userId, userName); // Tạo ChatMessage mới
+            ChatMessage newMessage = new ChatMessage(null, messageText, Timestamp.now(), roomIdChoose, -1, "Admin"); // Tạo ChatMessage mới
             // Lưu tin nhắn vào Firestore
             db.collection("message") // Thay đổi tên collection nếu cần
                     .add(newMessage)
@@ -128,7 +115,7 @@ public class ChatBoxActivity extends AppCompatActivity {
 
                         // Cập nhật lại messageId trên Firestore
                         db.collection("message")
-                                .whereEqualTo("userId", userId)
+                                .whereEqualTo("userId", -1)
                                 .get()
                                 .addOnCompleteListener(task -> {
                                     if (task.isSuccessful()) {
@@ -162,29 +149,9 @@ public class ChatBoxActivity extends AppCompatActivity {
         }
     }
 
-    private int getUserIdFromPreferences() {
-        SharedPreferences sharedPreferences = getSharedPreferences("KooheePrefs", MODE_PRIVATE);
-        return sharedPreferences.getInt("userId", 0); // Returns null if no userId is found
-    }
-
-    private String getUserNameFromPreferences() {
-        SharedPreferences sharedPreferences = getSharedPreferences("KooheePrefs", MODE_PRIVATE);
-        return sharedPreferences.getString("userName", "UserName"); // Returns null if no userId is found
-    }
-
-    private String getRoomIdAlreadyCreateFromPreferences() {
-        SharedPreferences sharedPreferences = getSharedPreferences("KooheePrefs", MODE_PRIVATE);
-        return sharedPreferences.getString("roomIdAlreadyCreate", "0");
-    }
-
-    private String getRoomIdFirstCreateFromPreferences() {
-        SharedPreferences sharedPreferences = getSharedPreferences("KooheePrefs", MODE_PRIVATE);
-        return sharedPreferences.getString("roomIdFirstCreate", "0");
-    }
-
     private void onChangeListener(){
         db.collection("message")
-                .whereEqualTo("userId", userId)
+                .whereEqualTo("userId", -1)
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
                     public void onEvent(@Nullable QuerySnapshot snapshots,

@@ -6,18 +6,29 @@ public class ChatMessage {
     private String content;
     private com.google.firebase.Timestamp time;
     private String roomId;
-    private String userId;
-
+    private int userId;
+    private String messageId;
+    private String userName;
 
     public ChatMessage() {
         // Cần một constructor mặc định cho Firebase
     }
 
-    public ChatMessage(String content, com.google.firebase.Timestamp time, String roomId, String userId) {
+    public ChatMessage(String messageId, String content, com.google.firebase.Timestamp time, String roomId, int userId, String userName) {
         this.content = content;
         this.time = time;
         this.roomId = roomId;
         this.userId = userId;
+        this.messageId = messageId;
+        this.userName = userName;
+    }
+
+    public String getMessageId() {
+        return messageId;
+    }
+
+    public void setMessageId(String messageId) {
+        this.messageId = messageId;
     }
 
     public com.google.firebase.Timestamp getTime() {
@@ -32,15 +43,15 @@ public class ChatMessage {
         return content;
     }
 
-    public void setContent(String message) {
+    public void setContent(String content) {
         this.content = content;
     }
 
-    public String getUserId() {
+    public int getUserId() {
         return userId;
     }
 
-    public void setUserId(String userId) {
+    public void setUserId(int userId) {
         this.userId = userId;
     }
 
@@ -50,5 +61,13 @@ public class ChatMessage {
 
     public void setRoomId(String roomId) {
         this.roomId = roomId;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 }

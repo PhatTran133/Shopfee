@@ -1,5 +1,8 @@
 package com.example.cafeonline.adapter;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +13,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.cafeonline.R;
 import com.example.cafeonline.model.ChatMessage;
+
+import org.w3c.dom.Text;
 
 import java.util.List;
 
@@ -32,6 +37,10 @@ public class ChatBoxAdapter extends RecyclerView.Adapter<ChatBoxAdapter.ChatView
     public void onBindViewHolder(@NonNull ChatViewHolder holder, int position) {
         ChatMessage message = messageList.get(position);
         holder.textViewMessage.setText(message.getContent());
+        holder.textViewUserName.setText(message.getUserName());
+        if(message.getUserName().isEmpty()){
+            holder.textViewUserName.setText("Admin");
+        }
         // Chuyển đổi Timestamp thành String để hiển thị
 //        if (message.getTime() != null) {
 //            holder.textViewTime.setText(message.getTime().toString()); // Chỉnh sửa định dạng theo nhu cầu
@@ -46,11 +55,13 @@ public class ChatBoxAdapter extends RecyclerView.Adapter<ChatBoxAdapter.ChatView
     public static class ChatViewHolder extends RecyclerView.ViewHolder {
         public TextView textViewMessage;
         public TextView textViewTime;
+        public TextView textViewUserName;
 
         public ChatViewHolder(@NonNull View itemView) {
             super(itemView);
             textViewMessage = itemView.findViewById(R.id.textViewMessage);
             textViewTime = itemView.findViewById(R.id.textViewTime);
+            textViewUserName = itemView.findViewById(R.id.textViewUserName);
         }
     }
 }

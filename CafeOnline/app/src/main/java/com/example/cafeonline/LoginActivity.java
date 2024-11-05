@@ -11,6 +11,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -66,6 +67,17 @@ public class LoginActivity extends AppCompatActivity {
         String email = edtEmail.getText().toString().trim();
         String password = edtPassword.getText().toString().trim();
 
+        // Kiểm tra tài khoản admin cứng
+        if (email.equals("admin@example.com") && password.equals("admin123")) {
+            // Đăng nhập thành công với tư cách admin
+            Toast.makeText(this, "Admin Login Successfully", Toast.LENGTH_SHORT).show();
+            saveUserIdToPreferences(-1, "admin@example.com"); // Giả sử ID admin là 1
+            saveUserNameToPreferences("Admin");
+            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+            startActivity(intent);
+            finish();
+            return; // Kết thúc hàm
+        }
 
         if (email.isEmpty() || password.isEmpty()) {
             Toast.makeText(this, "Please enter both email and password", Toast.LENGTH_SHORT).show();
@@ -86,7 +98,9 @@ public class LoginActivity extends AppCompatActivity {
                     if ("200".equals(apiResponse.getValue().getStatus())) {
                         int userId = apiResponse.getValue().getData().getId();
                         String email = apiResponse.getValue().getData().getEmail();// Assuming getUserId() returns the ID
+                        String userName = apiResponse.getValue().getData().getUsername();
                         saveUserIdToPreferences(userId, email);
+                        saveUserNameToPreferences(userName);
                         Toast.makeText(LoginActivity.this, "Login Successfully", Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                         startActivity(intent);
@@ -125,6 +139,13 @@ public class LoginActivity extends AppCompatActivity {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putInt("userId", userId);
         editor.putString("email", email);
+        editor.apply();
+    }
+
+    private void saveUserNameToPreferences(String userName) {
+        SharedPreferences sharedPreferences = getSharedPreferences("KooheePrefs", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("userName", userName);
         editor.apply();
     }
 
