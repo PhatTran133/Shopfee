@@ -89,6 +89,12 @@ public class DrinkAdapter extends RecyclerView.Adapter<DrinkAdapter.DrinkViewHol
             });
         }
     }
+    public void updateDrinkList(List<DrinkResponse> newDrinkList) {
+        this.drinkList.clear();
+        this.drinkList.addAll(newDrinkList);
+        notifyDataSetChanged(); // Thông báo cho adapter rằng dữ liệu đã thay đổi
+    }
+
 }
 
 

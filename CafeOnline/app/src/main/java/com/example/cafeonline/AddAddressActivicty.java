@@ -71,6 +71,7 @@ public class AddAddressActivicty extends AppCompatActivity {
                             Toast.makeText(AddAddressActivicty.this,"Add Address Successfully" +  apiResponse.getValue().getMessage(), Toast.LENGTH_SHORT).show();
                             Intent intent = new Intent(AddAddressActivicty.this, AddressActivity.class);
                             startActivity(intent);
+                            finish();
                         }
                         else{
                             Toast.makeText(AddAddressActivicty.this, "Add Address Failed" + apiResponse.getValue().getMessage(), Toast.LENGTH_SHORT).show();
