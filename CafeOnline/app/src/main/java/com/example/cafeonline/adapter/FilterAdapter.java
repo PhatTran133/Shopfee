@@ -20,10 +20,18 @@ public class FilterAdapter extends RecyclerView.Adapter<FilterAdapter.FilterView
     private Context context;
     private List<String> filterItems;
     private LinearLayout selectedFilterLayout = null; // Store the currently selected layout
+    private OnFilterSelectedListener filterSelectedListener;
 
-    public FilterAdapter(Context context, List<String> filterItems) {
+    // Thêm một interface để lắng nghe sự kiện
+    public interface OnFilterSelectedListener {
+        void onFilterSelected(String filter);
+    }
+
+
+    public FilterAdapter(Context context, List<String> filterItems, OnFilterSelectedListener listener) {
         this.context = context;
         this.filterItems = filterItems;
+        this.filterSelectedListener = listener;
     }
 
     @NonNull
@@ -50,6 +58,9 @@ public class FilterAdapter extends RecyclerView.Adapter<FilterAdapter.FilterView
         // Set click listener on the entire layout
         holder.layoutItem.setOnClickListener(v -> {
             selectOption(holder.layoutItem);
+            if (filterSelectedListener != null) {
+                filterSelectedListener.onFilterSelected(filterItem); // Gọi callback khi chọn filter
+            }
         });
     }
 

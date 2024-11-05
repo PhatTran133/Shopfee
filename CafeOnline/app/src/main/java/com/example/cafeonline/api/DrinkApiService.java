@@ -32,4 +32,9 @@ public interface DrinkApiService {
                                                           @Query("categoryName") String categoryName, // Đảm bảo rằng bạn sử dụng đúng tên
                                                           @Query("size") String size);
 
+    @GET("/api/Drink/filter")
+    Call<ApiResponse<List<DrinkResponse>>> getDrinkForFilter(@Query("descPrice") boolean descPrice,
+                                                          @Query("ascName") boolean ascName
+                                                          );
+
 }
