@@ -8,17 +8,19 @@ public class ChatMessage {
     private String roomId;
     private int userId;
     private String messageId;
+    private String userName;
 
     public ChatMessage() {
         // Cần một constructor mặc định cho Firebase
     }
 
-    public ChatMessage(String messageId, String content, com.google.firebase.Timestamp time, String roomId, int userId) {
+    public ChatMessage(String messageId, String content, com.google.firebase.Timestamp time, String roomId, int userId, String userName) {
         this.content = content;
         this.time = time;
         this.roomId = roomId;
         this.userId = userId;
         this.messageId = messageId;
+        this.userName = userName;
     }
 
     public String getMessageId() {
@@ -59,5 +61,13 @@ public class ChatMessage {
 
     public void setRoomId(String roomId) {
         this.roomId = roomId;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 }

@@ -5,28 +5,17 @@
     android:orientation="vertical"
     android:padding="8dp">
 
-    <TextView
-        android:id="@+id/textViewUserName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="User Name"
-        android:textColor="#333333"
-        android:textSize="16sp"
-        android:textStyle="bold" />
-
-    <TextView
-        android:id="@+id/textViewMessage"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Hello World"
-        android:textColor="#333333"
-        android:textSize="16sp" />
-
-    <TextView
-        android:id="@+id/textViewTime"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Time"
-        android:textColor="#999999"
-        android:textSize="12sp" />
+        <!-- Tên phòng chat -->
+        <TextView
+            android:id="@+id/textViewRoomName"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:text="Room Name"
+            android:textColor="#000000"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:background="@drawable/edittext_background"
+            android:clickable="true"
+            android:gravity="center_vertical"
+            android:onClick="onChatBoxClick"/>
 </LinearLayout>

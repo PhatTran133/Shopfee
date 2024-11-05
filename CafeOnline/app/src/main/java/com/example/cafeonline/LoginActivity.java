@@ -71,7 +71,7 @@ public class LoginActivity extends AppCompatActivity {
         if (email.equals("admin@example.com") && password.equals("admin123")) {
             // Đăng nhập thành công với tư cách admin
             Toast.makeText(this, "Admin Login Successfully", Toast.LENGTH_SHORT).show();
-            saveUserIdToPreferences(1, "admin@example.com"); // Giả sử ID admin là 1
+            saveUserIdToPreferences(-1, "admin@example.com"); // Giả sử ID admin là 1
             saveUserNameToPreferences("Admin");
             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
             startActivity(intent);

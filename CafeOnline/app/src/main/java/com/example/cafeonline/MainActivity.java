@@ -11,6 +11,7 @@ import com.example.cafeonline.ui.HomeFragment;
 import com.example.cafeonline.service.NotificationService;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -27,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
     private Button btnSearch;
     private FirebaseFirestore db;
     private int userId;
+    private String roomId;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,7 +41,6 @@ public class MainActivity extends AppCompatActivity {
         int userId = getUserIdFromPreferences();
 
         db = FirebaseFirestore.getInstance();
-
 //    ĐỪNG XÓA COMMENT NÀY
 //        Intent intent = new Intent(MainActivity.this, DrinkDetailActivity.class);
 //        startActivity(intent);
@@ -131,13 +132,40 @@ public class MainActivity extends AppCompatActivity {
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful() && task.getResult() != null && !task.getResult().isEmpty()) {
                         // Đã có room với userId này, không thêm room mới
-                        saveRoomIdToPreferences(task.getResult().getDocuments().get(0).getId());
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            roomId = document.getString("roomId");
+                            openChatBoxActivity(roomId);
+                        }
                     } else {
                         // Không tìm thấy room với userId này, thêm room mới
                         db.collection("room")
-                                .add(new ChatRoom(userId))
+                                .add(new ChatRoom(null, userId, getUserNameFromPreferences()))
                                 .addOnSuccessListener(documentReference -> {
-                                    saveRoomIdToPreferences(documentReference.getId());
+                                    roomId = documentReference.getId();
+                                    // Cập nhật lại roomId trên Firestore
+                                    db.collection("room")
+                                            .whereEqualTo("userId", userId)
+                                            .get()
+                                            .addOnCompleteListener(task1 -> {
+                                                if (task1.isSuccessful()) {
+                                                    for (QueryDocumentSnapshot document : task1.getResult()) {
+                                                        // Kiểm tra xem roomId đã được thiết lập hay chưa
+                                                        if (document.getString("roomId") == null) {
+                                                            // Cập nhật roomId trên Firestore
+                                                            document.getReference().update("roomId", roomId)
+                                                                    .addOnSuccessListener(aVoid -> {
+                                                                        Log.d("Firestore Update", "RoomId updated for document: " + roomId);
+                                                                        openChatBoxActivity(roomId);
+                                                                    })
+                                                                    .addOnFailureListener(e -> {
+                                                                        Log.w("Firestore Update Error", "Error updating RoomId", e);
+                                                                    });
+                                                        }
+                                                    }
+                                                } else {
+                                                    Log.w("Firestore Error", "Error getting documents.", task.getException());
+                                                }
+                                            });
                                 })
                                 .addOnFailureListener(e -> {
                                     // Xử lý lỗi nếu không thêm được room
@@ -149,18 +177,23 @@ public class MainActivity extends AppCompatActivity {
                     // Xử lý lỗi nếu không truy vấn được
                     Toast.makeText(this, "Error checking room: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 });
-        if(userId == 1){
-            Intent intent = new Intent(this, AdminChatBoxActivity.class);
-            startActivity(intent);
-        } else{
-            Intent intent = new Intent(this, ChatBoxActivity.class);
-            startActivity(intent);
-        }
+//        if(userId == -1){
+//            Intent intent = new Intent(this, AdminChatBoxActivity.class);
+//            startActivity(intent);
+//        } else{
+//            Intent intent = new Intent(this, ChatBoxActivity.class);
+//            startActivity(intent);
+//        }
     }
-    private void saveRoomIdToPreferences(String roomId) {
-        SharedPreferences sharedPreferences = getSharedPreferences("KooheePrefs", MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString("roomId", roomId);
-        editor.apply();
+    private void openChatBoxActivity(String roomId) {
+        Intent intent;
+        if (userId == -1) {
+            intent = new Intent(this, AdminChatBoxActivity.class);
+            intent.putExtra("roomIdOfAdmin", roomId);
+        } else {
+            intent = new Intent(this, ChatBoxActivity.class);
+            intent.putExtra("roomId", roomId);
+        }
+        startActivity(intent);
     }
 }
