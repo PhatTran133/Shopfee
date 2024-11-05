@@ -34,7 +34,7 @@ private LoginActivity activity;
         log_out =  findViewById(R.id.logout);
         log_out.setOnClickListener(v -> {
             // Xóa userID
-            clearUserIdFromPreferences();
+            clearAllPreferences();
             Intent intent = new Intent(AccountActivity.this, MainActivity.class);
             startActivity(intent);
             finish();
@@ -42,12 +42,13 @@ private LoginActivity activity;
         imgBack = findViewById(R.id.img_toolbar_back);
         imgBack.setOnClickListener(v -> onBackPressed());
     }
-    private void clearUserIdFromPreferences() {
+    private void clearAllPreferences() {
         SharedPreferences sharedPreferences = getSharedPreferences("KooheePrefs", MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.remove("userId");
+        editor.clear();
         editor.apply();
     }
+
     private String getUserEmailFromPreferences() {
         SharedPreferences sharedPreferences = getSharedPreferences("KooheePrefs", MODE_PRIVATE);
         return sharedPreferences.getString("email",null);
