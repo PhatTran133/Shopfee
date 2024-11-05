@@ -3,9 +3,9 @@ package com.example.cafeonline.model.request;
 public class OrderRequestModel {
     private int userId;
     private int cartId;
-    private PaymentRequestDTO paymentRequest;
+    private PaymentOrderRequest paymentRequest;
 
-    public OrderRequestModel(int userId, int cartId, PaymentRequestDTO paymentRequest) {
+    public OrderRequestModel(int userId, int cartId, PaymentOrderRequest paymentRequest) {
         this.userId = userId;
         this.cartId = cartId;
         this.paymentRequest = paymentRequest;
@@ -27,38 +27,12 @@ public class OrderRequestModel {
         this.cartId = cartId;
     }
 
-    public PaymentRequestDTO getPaymentRequest() {
+    public PaymentOrderRequest getPaymentRequest() {
         return paymentRequest;
     }
 
-    public void setPaymentRequest(PaymentRequestDTO paymentRequest) {
+    public void setPaymentRequest(PaymentOrderRequest paymentRequest) {
         this.paymentRequest = paymentRequest;
-    }
-
-    public static class PaymentRequestDTO{
-        private String type;
-        private String detail;
-
-        public PaymentRequestDTO(String type, String detail) {
-            this.type = type;
-            this.detail = detail;
-        }
-
-        public String getType() {
-            return type;
-        }
-
-        public void setType(String type) {
-            this.type = type;
-        }
-
-        public String getDetail() {
-            return detail;
-        }
-
-        public void setDetail(String detail) {
-            this.detail = detail;
-        }
     }
 }
 

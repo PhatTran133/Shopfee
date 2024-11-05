@@ -1,12 +1,9 @@
 package com.example.cafeonline;
 
-import static java.security.AccessController.getContext;
-
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -14,23 +11,19 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.cafeonline.adapter.AddressAdapter;
 import com.example.cafeonline.adapter.CartAdapter;
 import com.example.cafeonline.api.ApiService;
 import com.example.cafeonline.api.CartApiService;
-import com.example.cafeonline.api.UserApiService;
+import com.example.cafeonline.api.OrderApiService;
 import com.example.cafeonline.model.PaymentMethod;
 import com.example.cafeonline.model.request.CartItemRequestModel;
+import com.example.cafeonline.model.request.OrderRequestModel;
+import com.example.cafeonline.model.request.PaymentOrderRequest;
+import com.example.cafeonline.model.request.PaymentRequest;
 import com.example.cafeonline.model.response.AddressResponse;
 import com.example.cafeonline.model.response.ApiResponse;
 import com.example.cafeonline.model.response.CartItemResponse;
@@ -103,11 +96,10 @@ public class CartActivity extends AppCompatActivity {
         tvTotalPrice = findViewById(R.id.tv_amount);
         orderButton.setOnClickListener(v -> {
             // Gọi Service để hiển thị notification
-            Intent serviceIntent = new Intent(this, NotificationService.class);
-            serviceIntent.putExtra("title", "Order");
-            serviceIntent.putExtra("text", "Your order is pending");
-            startService(serviceIntent);
-
+//            Intent intent = new Intent(this, OrderActivity.class);
+//            startActivity(intent);
+//            finish();
+            createOrder();
         });
 
         int userId = getUserIdFromPreferences();
@@ -121,6 +113,8 @@ public class CartActivity extends AppCompatActivity {
                     if ("200".equals(apiResponse.getValue().getStatus())) {
                         CartResponse cart = apiResponse.getValue().getData();
                         if (cart != null) {
+                            int cartId = cart.getId();
+                           saveCartIdToPreferences(cartId);
                             DecimalFormat decimalFormat = new DecimalFormat("#,###");
                             String formattedPrice = decimalFormat.format(cart.getTotalPrice());
                             tvTotalPrice.setText(formattedPrice + " VND");
@@ -282,7 +276,16 @@ public class CartActivity extends AppCompatActivity {
         String formattedPrice = decimalFormat.format(totalPrice);
         tvTotalPrice.setText(formattedPrice + " VND");
     }
-
+    private void saveCartIdToPreferences(int cartId) {
+        SharedPreferences sharedPreferences = getSharedPreferences("KooheePrefsCart", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putInt("cartId", cartId);
+        editor.apply();
+    }
+    private int getCartIdFromPreferences() {
+        SharedPreferences sharedPreferences = getSharedPreferences("KooheePrefsCart", MODE_PRIVATE);
+        return sharedPreferences.getInt("cartId", 0); // Returns null if no userId is found
+    }
     private int getUserIdFromPreferences() {
         SharedPreferences sharedPreferences = getSharedPreferences("KooheePrefs", MODE_PRIVATE);
         return sharedPreferences.getInt("userId", 0); // Returns null if no userId is found
@@ -305,6 +308,68 @@ public class CartActivity extends AppCompatActivity {
         PaymentMethod paymentMethod = new PaymentMethod( selectedName, selectedDescription);
         return paymentMethod;
     }
+    private void createOrder(){
+        int userId = getUserIdFromPreferences();
+        if (userId == 0){
+            Intent intent = new Intent(CartActivity.this, LoginActivity.class);
+            startActivity(intent);
+            return;
+        }
+        String paymentType = String.valueOf(getPaymentMethodFromPreferences());
+        int cartId=getCartIdFromPreferences();
+        if(cartId == 0) {
+            Toast.makeText(CartActivity.this, "Cart not found", Toast.LENGTH_SHORT).show();
+        }
+        PaymentOrderRequest paymentRequest = new PaymentOrderRequest(paymentType,"Thanh toan don hang");
+
+        OrderRequestModel orderRequestModel = new OrderRequestModel(userId, cartId,paymentRequest);
+        OrderApiService orderApiService = ApiService.createService(OrderApiService.class);
+        Call<ApiResponse<String>> callApiDrink = orderApiService.createOrder(orderRequestModel);
+        callApiDrink.enqueue(new Callback<ApiResponse<String>>() {
+
+            @Override
+            public void onResponse(Call<ApiResponse<String>> call, Response<ApiResponse<String>> response) {
+                if (response.isSuccessful()) {
+                    ApiResponse<String> apiResponse = response.body();
+                    if ("200".equals(apiResponse.getValue().getStatus())) {
+
+                        Toast.makeText(CartActivity.this, "Order successfully", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(CartActivity.this, OrderActivity.class);
+                        startActivity(intent);
+                        finish();
+
+                    } else {
+                        Toast.makeText(CartActivity.this, "Error fetching caritem", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    try {
+                        if (response.errorBody() != null) {
+                            Gson gson = new Gson();
+                            ApiResponse<String> errorResponse = gson.fromJson(response.errorBody().string(), ApiResponse.class);
+                            System.out.println(errorResponse.getValue().getMessage());
+                            Toast.makeText(CartActivity.this, "Error fetching addresses", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(CartActivity.this, "Error", Toast.LENGTH_SHORT).show();
+                        }
+                    } catch (Exception e) {
+                        Toast.makeText(CartActivity.this, "Error parsing response: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        System.out.println(e.getMessage());
+                    }
+                }
+            }
+
+
+            @Override
+            public void onFailure(Call<ApiResponse<String>> call, Throwable t) {
+                Toast.makeText(CartActivity.this, "Network error", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+// Create a PaymentRequestDTO instance
+
+
+
 }
 
 
