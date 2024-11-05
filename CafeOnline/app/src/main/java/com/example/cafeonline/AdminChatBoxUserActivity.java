@@ -29,6 +29,7 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class AdminChatBoxUserActivity extends AppCompatActivity {
@@ -151,7 +152,8 @@ public class AdminChatBoxUserActivity extends AppCompatActivity {
 
     private void onChangeListener(){
         db.collection("message")
-                .whereEqualTo("userId", -1)
+                //.whereEqualTo("userId", -1)
+                .whereIn("userId", Arrays.asList(-1, userIdChoose))
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
                     public void onEvent(@Nullable QuerySnapshot snapshots,

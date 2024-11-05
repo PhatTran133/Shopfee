@@ -32,6 +32,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
@@ -184,7 +185,8 @@ public class ChatBoxActivity extends AppCompatActivity {
 
     private void onChangeListener(){
         db.collection("message")
-                .whereEqualTo("userId", userId)
+                //.whereEqualTo("userId", userId)
+                .whereIn("userId", Arrays.asList(-1, userId))
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
                     public void onEvent(@Nullable QuerySnapshot snapshots,
@@ -203,6 +205,7 @@ public class ChatBoxActivity extends AppCompatActivity {
                                     if (!messageList.contains(message)) {
                                         messageList.add(message);
                                         chatAdapter.notifyItemInserted(messageList.size() - 1);
+                                        chatAdapter.notifyDataSetChanged();
                                         Log.d("Message Change Added", "New message: " + dc.getDocument().getData());
                                     }
                                     Log.d("Message Change Added", "New message: " + dc.getDocument().getData());
