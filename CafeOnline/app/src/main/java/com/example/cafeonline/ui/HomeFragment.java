@@ -1,6 +1,7 @@
 package com.example.cafeonline.ui;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -65,8 +66,34 @@ public class HomeFragment extends Fragment {
 
         // Example filter items
         List<String> filterItems = Arrays.asList("All", "Price", "Name");
-        FilterAdapter filterAdapter = new FilterAdapter(getContext(), filterItems);
-        rvFilterItems.setAdapter(filterAdapter);
+        // Tạo FilterAdapter với callback
+        FilterAdapter filterAdapter = new FilterAdapter(getContext(), filterItems, filter -> {
+            boolean descPrice = false;
+            boolean ascName = false;
+
+            // Cập nhật trạng thái boolean dựa trên lựa chọn
+            switch (filter) {
+                case "All":
+                    // Cả descPrice và ascName đều false
+                    descPrice = false;
+                    ascName = false;
+                    break;
+                case "Price":
+                    // Chỉ bật descPrice
+                    descPrice = true;
+                    ascName = false;
+                    break;
+                case "Name":
+                    // Chỉ bật ascName
+                    descPrice = false;
+                    ascName = true;
+                    break;
+            }
+            Log.d("FilterSelection", "Filter: " + filter + ", descPrice: " + descPrice + ", ascName: " + ascName);
+
+            // Gọi API với các tham số cập nhật
+            getDrinkForFilter(descPrice, ascName);
+        });        rvFilterItems.setAdapter(filterAdapter);
 
 
         recyclerView = rootView.findViewById(R.id.rcv_drink_home);
@@ -163,7 +190,36 @@ public class HomeFragment extends Fragment {
         });
     }
 
+    private void getDrinkForFilter(boolean descPrice, boolean ascName) {
+        // Tạo một instance của API service và gọi API
+        DrinkApiService drinkApi = ApiService.createService(DrinkApiService.class);
+        Call<ApiResponse<List<DrinkResponse>>> call = drinkApi.getDrinkForFilter(descPrice, ascName);
 
+        call.enqueue(new Callback<ApiResponse<List<DrinkResponse>>>() {
+            @Override
+            public void onResponse(Call<ApiResponse<List<DrinkResponse>>> call, Response<ApiResponse<List<DrinkResponse>>> response) {
+                if (response.isSuccessful()) {
+                    ApiResponse<List<DrinkResponse>> apiResponse = response.body();
+                    if ("200".equals(apiResponse.getValue().getStatus())) {
+                        List<DrinkResponse> drinkList = apiResponse.getValue().getData();
+
+                        if (recyclerView.getAdapter() instanceof DrinkAdapter) {
+                            DrinkAdapter adapter = (DrinkAdapter) recyclerView.getAdapter();
+                            adapter.updateDrinkList(drinkList); // Gọi phương thức updateDrinkList
+                        } else {
+                            // Nếu adapter chưa được khởi tạo, tạo mới
+                            DrinkAdapter adapter = new DrinkAdapter(drinkList, null);
+                            recyclerView.setAdapter(adapter);
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ApiResponse<List<DrinkResponse>>> call, Throwable t) {
+                Toast.makeText(getContext(), "Network error", Toast.LENGTH_SHORT).show();            }
+        });
+    }
 }
 
 
