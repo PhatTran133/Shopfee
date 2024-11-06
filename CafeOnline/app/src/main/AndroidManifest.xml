@@ -67,6 +67,12 @@
             android:name=".CartActivity"
             android:exported="true" />
         <activity
+            android:name=".OrderActivity"
+            android:exported="true" />
+        <activity
+            android:name=".TrackingOrderActivity"
+            android:exported="true" />
+        <activity
             android:name=".PaymentMethodActivity"
             android:exported="true" />
         <activity

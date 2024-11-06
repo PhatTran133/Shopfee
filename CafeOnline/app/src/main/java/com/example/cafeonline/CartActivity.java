@@ -277,13 +277,20 @@ public class CartActivity extends AppCompatActivity {
         tvTotalPrice.setText(formattedPrice + " VND");
     }
     private void saveCartIdToPreferences(int cartId) {
-        SharedPreferences sharedPreferences = getSharedPreferences("KooheePrefsCart", MODE_PRIVATE);
+        SharedPreferences sharedPreferences = getSharedPreferences("KooheePrefs", MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putInt("cartId", cartId);
         editor.apply();
     }
+    private void saveOrderIdToPreferences(int orderId) {
+        SharedPreferences sharedPreferences = getSharedPreferences("KooheePrefs", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putInt("orderId", orderId);
+        editor.apply();
+    }
+
     private int getCartIdFromPreferences() {
-        SharedPreferences sharedPreferences = getSharedPreferences("KooheePrefsCart", MODE_PRIVATE);
+        SharedPreferences sharedPreferences = getSharedPreferences("KooheePrefs", MODE_PRIVATE);
         return sharedPreferences.getInt("cartId", 0); // Returns null if no userId is found
     }
     private int getUserIdFromPreferences() {
@@ -320,20 +327,22 @@ public class CartActivity extends AppCompatActivity {
         if(cartId == 0) {
             Toast.makeText(CartActivity.this, "Cart not found", Toast.LENGTH_SHORT).show();
         }
-        PaymentOrderRequest paymentRequest = new PaymentOrderRequest(paymentType,"Thanh toan don hang");
+        PaymentOrderRequest paymentRequest = new PaymentOrderRequest("Cash","Thanh toan don hang");
 
         OrderRequestModel orderRequestModel = new OrderRequestModel(userId, cartId,paymentRequest);
         OrderApiService orderApiService = ApiService.createService(OrderApiService.class);
-        Call<ApiResponse<String>> callApiDrink = orderApiService.createOrder(orderRequestModel);
-        callApiDrink.enqueue(new Callback<ApiResponse<String>>() {
+        Call<ApiResponse<Integer>> callApiDrink = orderApiService.createOrder(orderRequestModel);
+        callApiDrink.enqueue(new Callback<ApiResponse<Integer>>() {
 
             @Override
-            public void onResponse(Call<ApiResponse<String>> call, Response<ApiResponse<String>> response) {
+            public void onResponse(Call<ApiResponse<Integer>> call, Response<ApiResponse<Integer>> response) {
                 if (response.isSuccessful()) {
-                    ApiResponse<String> apiResponse = response.body();
+                    ApiResponse<Integer> apiResponse = response.body();
                     if ("200".equals(apiResponse.getValue().getStatus())) {
 
                         Toast.makeText(CartActivity.this, "Order successfully", Toast.LENGTH_SHORT).show();
+                         int orderId= apiResponse.getValue().getData();
+                         saveOrderIdToPreferences(orderId);
                         Intent intent = new Intent(CartActivity.this, OrderActivity.class);
                         startActivity(intent);
                         finish();
@@ -347,7 +356,7 @@ public class CartActivity extends AppCompatActivity {
                             Gson gson = new Gson();
                             ApiResponse<String> errorResponse = gson.fromJson(response.errorBody().string(), ApiResponse.class);
                             System.out.println(errorResponse.getValue().getMessage());
-                            Toast.makeText(CartActivity.this, "Error fetching addresses", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(CartActivity.this, "Error fetching", Toast.LENGTH_SHORT).show();
                         } else {
                             Toast.makeText(CartActivity.this, "Error", Toast.LENGTH_SHORT).show();
                         }
@@ -360,7 +369,7 @@ public class CartActivity extends AppCompatActivity {
 
 
             @Override
-            public void onFailure(Call<ApiResponse<String>> call, Throwable t) {
+            public void onFailure(Call<ApiResponse<Integer>> call, Throwable t) {
                 Toast.makeText(CartActivity.this, "Network error", Toast.LENGTH_SHORT).show();
             }
         });

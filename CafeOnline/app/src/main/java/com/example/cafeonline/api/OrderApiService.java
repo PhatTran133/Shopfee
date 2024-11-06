@@ -15,9 +15,11 @@ import retrofit2.http.Query;
 public interface OrderApiService {
 
     //Anh nhac em
-    @GET("/api/orders/{userId}")
+    @GET("/api/orders/status/{userId}")
     Call<ApiResponse<OrderResponse>> getOrder(@Path("userId") int userId,
                                               @Query("orderStatus") String orderStatus);
     @POST("/api/orders")
-    Call<ApiResponse<String>> createOrder(@Body OrderRequestModel orderRequestModel);
+    Call<ApiResponse<Integer>> createOrder(@Body OrderRequestModel orderRequestModel);
+    @GET("/api/orders/{orderId}")
+    Call<ApiResponse<OrderResponse>> getOrderById(@Path("orderId") int orderId);
 }
