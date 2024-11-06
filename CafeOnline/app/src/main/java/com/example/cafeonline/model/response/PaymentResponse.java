@@ -3,9 +3,9 @@ package com.example.cafeonline.model.response;
 import java.util.Date;
 
 public class PaymentResponse {
-         private int id;
-         private String type;
-         private String detail;
+    private int id;
+    private String type;
+    private String detail;
     private Date createdDate;
     private Date updateDate;
 

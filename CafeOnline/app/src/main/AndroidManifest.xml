@@ -76,6 +76,9 @@
             android:name=".PaymentMethodActivity"
             android:exported="true" />
         <activity
+            android:name=".OrderActivity"
+            android:exported="true" />
+        <activity
             android:name=".AddAddressActivicty"
             android:exported="true" />
         <activity
@@ -85,6 +88,16 @@
         <service
             android:name=".service.NotificationService"
             android:exported="false" />
+        <activity
+            android:name=".PaymentCallbackActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="com.cafeonline" android:host="paymentcallback" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

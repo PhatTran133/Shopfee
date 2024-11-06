@@ -151,6 +151,7 @@ public class HomeFragment extends Fragment {
                         System.out.println(e.getMessage());
                     }
                 }
+
             }
 
             @Override
@@ -213,6 +214,7 @@ public class HomeFragment extends Fragment {
                         }
                     }
                 }
+
             }
 
             @Override
