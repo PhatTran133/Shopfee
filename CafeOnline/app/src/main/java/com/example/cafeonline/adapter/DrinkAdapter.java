@@ -75,7 +75,7 @@ public class DrinkAdapter extends RecyclerView.Adapter<DrinkAdapter.DrinkViewHol
             Glide.with(itemView.getContext())
                     .load(drink.getImage())
                     .into(imageView);
-
+            tvCategoryName.setText(drink.getCategoryName());
             linearLayoutItemDrink.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
                     DrinkResponse drink = drinkList.get(getAdapterPosition()); // Lấy vị trí item được click
