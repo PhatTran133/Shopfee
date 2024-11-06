@@ -322,7 +322,6 @@ public class CartActivity extends AppCompatActivity {
             startActivity(intent);
             return;
         }
-        String paymentType = String.valueOf(getPaymentMethodFromPreferences());
         int cartId=getCartIdFromPreferences();
         if(cartId == 0) {
             Toast.makeText(CartActivity.this, "Cart not found", Toast.LENGTH_SHORT).show();
