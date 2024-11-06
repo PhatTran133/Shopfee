@@ -318,7 +318,12 @@ public class CartActivity extends AppCompatActivity {
         AddressResponse addressResponse = new AddressResponse(addressId, 0, fullname, phone, address);
         return addressResponse;
     }
-
+    private void saveOrderIdToPreferences(int orderId) {
+        SharedPreferences sharedPreferences = getSharedPreferences("KooheePrefs", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putInt("orderId", orderId);
+        editor.apply();
+    }
     private PaymentMethod getPaymentMethodFromPreferences() {
         SharedPreferences sharedPreferences = getSharedPreferences("KooheePrefs", MODE_PRIVATE);
         String selectedName = sharedPreferences.getString("selectedPaymentName", null);
@@ -342,7 +347,7 @@ public class CartActivity extends AppCompatActivity {
 
         PaymentMethod paymentMethod = getPaymentMethodFromPreferences();
         if (paymentMethod.getName().equals("Cash")) {
-            PaymentOrderRequest paymentRequest = new PaymentOrderRequest(paymentType, "Thanh toan don hang");
+            PaymentOrderRequest paymentRequest = new PaymentOrderRequest("Cash", "Thanh toan don hang");
             OrderRequestModel orderRequestModel = new OrderRequestModel(userId, cartId, paymentRequest);
             OrderApiService orderApiService = ApiService.createService(OrderApiService.class);
             Call<ApiResponse<Integer>> callApiDrink = orderApiService.createOrder(orderRequestModel);
@@ -353,11 +358,8 @@ public class CartActivity extends AppCompatActivity {
                     if (response.isSuccessful()) {
                         ApiResponse<Integer> apiResponse = response.body();
                         if ("200".equals(apiResponse.getValue().getStatus())) {
-                            orderId = apiResponse.getValue().getData();
-                            Intent serviceIntent = new Intent(CartActivity.this, NotificationService.class);
-                            serviceIntent.putExtra("title", "KooHee");
-                            serviceIntent.putExtra("text", "Your Order Is Created");
-                            startService(serviceIntent);
+                            int orderId= apiResponse.getValue().getData();
+                            saveOrderIdToPreferences(orderId);
                             Toast.makeText(CartActivity.this, "Order successfully", Toast.LENGTH_SHORT).show();
                             Intent intent = new Intent(CartActivity.this, OrderActivity.class);
                             startActivity(intent);
