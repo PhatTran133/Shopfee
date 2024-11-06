@@ -97,7 +97,7 @@ namespace PRM392_CafeOnline_BE_API.Services
             }
             catch (Exception ex)
             {
-                throw;
+                throw new Exception(ex.Message);
             }
         }
 
