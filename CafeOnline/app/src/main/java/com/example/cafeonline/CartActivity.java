@@ -3,6 +3,7 @@ package com.example.cafeonline;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -19,6 +20,7 @@ import com.example.cafeonline.adapter.CartAdapter;
 import com.example.cafeonline.api.ApiService;
 import com.example.cafeonline.api.CartApiService;
 import com.example.cafeonline.api.OrderApiService;
+import com.example.cafeonline.api.PaymentApiService;
 import com.example.cafeonline.model.PaymentMethod;
 import com.example.cafeonline.model.request.CartItemRequestModel;
 import com.example.cafeonline.model.request.OrderRequestModel;
@@ -28,6 +30,7 @@ import com.example.cafeonline.model.response.AddressResponse;
 import com.example.cafeonline.model.response.ApiResponse;
 import com.example.cafeonline.model.response.CartItemResponse;
 import com.example.cafeonline.model.response.CartResponse;
+import com.example.cafeonline.model.response.PaymentUrlResponse;
 import com.example.cafeonline.service.NotificationService;
 import com.google.gson.Gson;
 
@@ -46,7 +49,9 @@ public class CartActivity extends AppCompatActivity {
     private LinearLayout addOtherDrinks;
     private RelativeLayout address, payment;
     private CartAdapter adapter;
-
+    private int orderId = 0;
+    private String paymentUrl = null;
+    private double totalFinalPrice = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -95,11 +100,21 @@ public class CartActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         tvTotalPrice = findViewById(R.id.tv_amount);
         orderButton.setOnClickListener(v -> {
-            // Gọi Service để hiển thị notification
-//            Intent intent = new Intent(this, OrderActivity.class);
-//            startActivity(intent);
-//            finish();
-            createOrder();
+            if(paymentMethod.getName()== null){
+                Toast.makeText(CartActivity.this, "Please choose Payment method", Toast.LENGTH_SHORT).show();
+            }else {
+                if (addressResponse.getAddress() == null) {
+                    Toast.makeText(CartActivity.this, "Please choose Delivery address", Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    if(totalFinalPrice == 0){
+                        Toast.makeText(CartActivity.this, "Please add drink to cart", Toast.LENGTH_SHORT).show();
+                    }
+                    else{
+                        createOrder();
+                    }
+                }
+            }
         });
 
         int userId = getUserIdFromPreferences();
@@ -118,6 +133,8 @@ public class CartActivity extends AppCompatActivity {
                             DecimalFormat decimalFormat = new DecimalFormat("#,###");
                             String formattedPrice = decimalFormat.format(cart.getTotalPrice());
                             tvTotalPrice.setText(formattedPrice + " VND");
+                            totalFinalPrice = cart.getTotalPrice();
+
                             List<CartItemResponse> cartItems = cart.getCartItems();
                             if (cartItems != null && !cartItems.isEmpty()) {
                                 setupAdapter(cartItems);
@@ -275,6 +292,7 @@ public class CartActivity extends AppCompatActivity {
         DecimalFormat decimalFormat = new DecimalFormat("#,###");
         String formattedPrice = decimalFormat.format(totalPrice);
         tvTotalPrice.setText(formattedPrice + " VND");
+        totalFinalPrice = totalPrice;
     }
     private void saveCartIdToPreferences(int cartId) {
         SharedPreferences sharedPreferences = getSharedPreferences("KooheePrefsCart", MODE_PRIVATE);
@@ -308,68 +326,154 @@ public class CartActivity extends AppCompatActivity {
         PaymentMethod paymentMethod = new PaymentMethod( selectedName, selectedDescription);
         return paymentMethod;
     }
-    private void createOrder(){
+    private void createOrder() {
         int userId = getUserIdFromPreferences();
-        if (userId == 0){
+        if (userId == 0) {
             Intent intent = new Intent(CartActivity.this, LoginActivity.class);
             startActivity(intent);
             return;
         }
+
         String paymentType = String.valueOf(getPaymentMethodFromPreferences());
-        int cartId=getCartIdFromPreferences();
-        if(cartId == 0) {
+        int cartId = getCartIdFromPreferences();
+        if (cartId == 0) {
             Toast.makeText(CartActivity.this, "Cart not found", Toast.LENGTH_SHORT).show();
         }
-        PaymentOrderRequest paymentRequest = new PaymentOrderRequest(paymentType,"Thanh toan don hang");
 
-        OrderRequestModel orderRequestModel = new OrderRequestModel(userId, cartId,paymentRequest);
-        OrderApiService orderApiService = ApiService.createService(OrderApiService.class);
-        Call<ApiResponse<String>> callApiDrink = orderApiService.createOrder(orderRequestModel);
-        callApiDrink.enqueue(new Callback<ApiResponse<String>>() {
+        PaymentMethod paymentMethod = getPaymentMethodFromPreferences();
+        if (paymentMethod.getName().equals("Cash")) {
+            PaymentOrderRequest paymentRequest = new PaymentOrderRequest(paymentType, "Thanh toan don hang");
+            OrderRequestModel orderRequestModel = new OrderRequestModel(userId, cartId, paymentRequest);
+            OrderApiService orderApiService = ApiService.createService(OrderApiService.class);
+            Call<ApiResponse<Integer>> callApiDrink = orderApiService.createOrder(orderRequestModel);
 
-            @Override
-            public void onResponse(Call<ApiResponse<String>> call, Response<ApiResponse<String>> response) {
-                if (response.isSuccessful()) {
-                    ApiResponse<String> apiResponse = response.body();
-                    if ("200".equals(apiResponse.getValue().getStatus())) {
-
-                        Toast.makeText(CartActivity.this, "Order successfully", Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent(CartActivity.this, OrderActivity.class);
-                        startActivity(intent);
-                        finish();
-
-                    } else {
-                        Toast.makeText(CartActivity.this, "Error fetching caritem", Toast.LENGTH_SHORT).show();
-                    }
-                } else {
-                    try {
-                        if (response.errorBody() != null) {
-                            Gson gson = new Gson();
-                            ApiResponse<String> errorResponse = gson.fromJson(response.errorBody().string(), ApiResponse.class);
-                            System.out.println(errorResponse.getValue().getMessage());
-                            Toast.makeText(CartActivity.this, "Error fetching addresses", Toast.LENGTH_SHORT).show();
+            callApiDrink.enqueue(new Callback<ApiResponse<Integer>>() {
+                @Override
+                public void onResponse(Call<ApiResponse<Integer>> call, Response<ApiResponse<Integer>> response) {
+                    if (response.isSuccessful()) {
+                        ApiResponse<Integer> apiResponse = response.body();
+                        if ("200".equals(apiResponse.getValue().getStatus())) {
+                            orderId = apiResponse.getValue().getData();
+                            Intent serviceIntent = new Intent(CartActivity.this, NotificationService.class);
+                            serviceIntent.putExtra("title", "KooHee");
+                            serviceIntent.putExtra("text", "Your Order Is Created");
+                            startService(serviceIntent);
+                            Toast.makeText(CartActivity.this, "Order successfully", Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent(CartActivity.this, OrderActivity.class);
+                            startActivity(intent);
+                            finish();
                         } else {
-                            Toast.makeText(CartActivity.this, "Error", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(CartActivity.this, "Error fetching caritem", Toast.LENGTH_SHORT).show();
                         }
-                    } catch (Exception e) {
-                        Toast.makeText(CartActivity.this, "Error parsing response: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                        System.out.println(e.getMessage());
+                    } else {
+                        try {
+                            if (response.errorBody() != null) {
+                                Gson gson = new Gson();
+                                ApiResponse<String> errorResponse = gson.fromJson(response.errorBody().string(), ApiResponse.class);
+                                System.out.println(errorResponse.getValue().getMessage());
+                                Toast.makeText(CartActivity.this, "Error fetching", Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(CartActivity.this, "Error", Toast.LENGTH_SHORT).show();
+                            }
+                        } catch (Exception e) {
+                            Toast.makeText(CartActivity.this, "Error parsing response: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                            System.out.println(e.getMessage());
+                        }
                     }
                 }
-            }
 
+                @Override
+                public void onFailure(Call<ApiResponse<Integer>> call, Throwable t) {
+                    Toast.makeText(CartActivity.this, "Network error", Toast.LENGTH_SHORT).show();
+                }
+            });
+        } else {
+            PaymentOrderRequest paymentRequest = new PaymentOrderRequest(paymentType, "Thanh toan don hang");
+            OrderRequestModel orderRequestModel = new OrderRequestModel(userId, cartId, paymentRequest);
+            OrderApiService orderApiService = ApiService.createService(OrderApiService.class);
+            Call<ApiResponse<Integer>> callApiDrink = orderApiService.createOrder(orderRequestModel);
 
-            @Override
-            public void onFailure(Call<ApiResponse<String>> call, Throwable t) {
-                Toast.makeText(CartActivity.this, "Network error", Toast.LENGTH_SHORT).show();
-            }
-        });
+            callApiDrink.enqueue(new Callback<ApiResponse<Integer>>() {
+                @Override
+                public void onResponse(Call<ApiResponse<Integer>> call, Response<ApiResponse<Integer>> response) {
+                    if (response.isSuccessful()) {
+                        ApiResponse<Integer> apiResponse = response.body();
+                        if ("200".equals(apiResponse.getValue().getStatus())) {
+                            Toast.makeText(CartActivity.this, "Order successfully", Toast.LENGTH_SHORT).show();
+                            orderId = apiResponse.getValue().getData();
+                            PaymentRequest paymentRequest = new PaymentRequest(userId, orderId, "Drink", totalFinalPrice, "THANH TOAN TRUC TUYEN KOOHEE", "Username");
+                            PaymentApiService paymentApiService = ApiService.createService(PaymentApiService.class);
+                            Call<ApiResponse<PaymentUrlResponse>> callApiDrink = paymentApiService.createPaymentUrl(paymentRequest);
+
+                            callApiDrink.enqueue(new Callback<ApiResponse<PaymentUrlResponse>>() {
+                                @Override
+                                public void onResponse(Call<ApiResponse<PaymentUrlResponse>> call, Response<ApiResponse<PaymentUrlResponse>> response) {
+                                    if (response.isSuccessful()) {
+                                        ApiResponse<PaymentUrlResponse> apiResponse = response.body();
+                                        if ("200".equals(apiResponse.getValue().getStatus())) {
+                                            paymentUrl = apiResponse.getValue().getData().getPaymentUrl();
+                                            if (paymentUrl != null && !paymentUrl.isEmpty()) {
+                                                Intent serviceIntent = new Intent(CartActivity.this, NotificationService.class);
+                                                serviceIntent.putExtra("title", "KooHee");
+                                                serviceIntent.putExtra("text", "Your Order Is Waited For Paying");
+                                                startService(serviceIntent);
+                                                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(paymentUrl));
+                                                startActivity(browserIntent);
+                                            } else {
+                                                Toast.makeText(CartActivity.this, "Payment URL not found", Toast.LENGTH_SHORT).show();
+                                            }
+                                        } else {
+                                            Toast.makeText(CartActivity.this, "Error fetching", Toast.LENGTH_SHORT).show();
+                                        }
+                                    } else {
+                                        try {
+                                            if (response.errorBody() != null) {
+                                                Gson gson = new Gson();
+                                                ApiResponse<String> errorResponse = gson.fromJson(response.errorBody().string(), ApiResponse.class);
+                                                System.out.println(errorResponse.getValue().getMessage());
+                                                Toast.makeText(CartActivity.this, "Error fetching", Toast.LENGTH_SHORT).show();
+                                            } else {
+                                                Toast.makeText(CartActivity.this, "Error", Toast.LENGTH_SHORT).show();
+                                            }
+                                        } catch (Exception e) {
+                                            Toast.makeText(CartActivity.this, "Error parsing response: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                            System.out.println(e.getMessage());
+                                        }
+                                    }
+                                }
+
+                                @Override
+                                public void onFailure(Call<ApiResponse<PaymentUrlResponse>> call, Throwable t) {
+                                    Toast.makeText(CartActivity.this, "Network error", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                        } else {
+                            Toast.makeText(CartActivity.this, "Error fetching caritem", Toast.LENGTH_SHORT).show();
+                        }
+                    } else {
+                        try {
+                            if (response.errorBody() != null) {
+                                Gson gson = new Gson();
+                                ApiResponse<String> errorResponse = gson.fromJson(response.errorBody().string(), ApiResponse.class);
+                                System.out.println(errorResponse.getValue().getMessage());
+                                Toast.makeText(CartActivity.this, "Error fetching addresses", Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(CartActivity.this, "Error", Toast.LENGTH_SHORT).show();
+                            }
+                        } catch (Exception e) {
+                            Toast.makeText(CartActivity.this, "Error parsing response: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                            System.out.println(e.getMessage());
+                        }
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ApiResponse<Integer>> call, Throwable t) {
+                    Toast.makeText(CartActivity.this, "Network error", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
     }
-
-// Create a PaymentRequestDTO instance
-
-
-
 }
 
 
