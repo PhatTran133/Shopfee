@@ -36,7 +36,7 @@ public class PaymentCallbackActivity extends AppCompatActivity {
         tvFullname = findViewById(R.id.tv_name);
         tvPhone = findViewById(R.id.tv_phone);
         tvAddress = findViewById(R.id.tv_address);
-        btTrackingOrder = findViewById(R.id.tv_tracking_order);
+        btTrackingOrder = findViewById(R.id.btn_tracking_order);
         imgBack = findViewById(R.id.img_toolbar_back);
         imgBack.setOnClickListener(v -> onBackPressed());
 
