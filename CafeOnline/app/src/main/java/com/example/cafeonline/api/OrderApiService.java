@@ -19,5 +19,5 @@ public interface OrderApiService {
     Call<ApiResponse<OrderResponse>> getOrder(@Path("userId") int userId,
                                               @Query("orderStatus") String orderStatus);
     @POST("/api/orders")
-    Call<ApiResponse<String>> createOrder(@Body OrderRequestModel orderRequestModel);
+    Call<ApiResponse<Integer>> createOrder(@Body OrderRequestModel orderRequestModel);
 }

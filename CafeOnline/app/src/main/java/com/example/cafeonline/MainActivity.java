@@ -79,7 +79,7 @@ public class MainActivity extends AppCompatActivity {
                     return true;
                 }
                 //Rồi thì sang screen đơn hàng
-                Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                Intent intent = new Intent(MainActivity.this, OrderActivity.class);
                 startActivity(intent);
                 return true;
             } else if (item.getItemId() == R.id.nav_account) {

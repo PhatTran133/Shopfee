@@ -103,6 +103,7 @@ public class ChangePasswordNotLoginActivity extends AppCompatActivity {
                     } catch (Exception e) {
                         Toast.makeText(ChangePasswordNotLoginActivity.this, "Error parsing response: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                     }                }
+
             }
             @Override
             public void onFailure(Call<ApiResponse<ResetPasswordRequest>> call, Throwable t) {

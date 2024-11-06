@@ -92,6 +92,7 @@ public class AddAddressActivicty extends AppCompatActivity {
                             Toast.makeText(AddAddressActivicty.this, "Error parsing response: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                         }
                     }
+
                 }
                 @Override
                 public void onFailure(Call<ApiResponse<AddressResponse>> call, Throwable t){
