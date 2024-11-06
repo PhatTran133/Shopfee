@@ -32,7 +32,7 @@ namespace PRM392_CafeOnline_BE_API.Controllers
                 return StatusCode(500, new JsonResponse<string>("Internal Error", 500, ex.Message));
             }
         }
-        [HttpGet("{userId}")]
+        [HttpGet("status/{userId}")]
         public async Task<IActionResult> GetOrdersByStatus([FromQuery]OrderStatus orderStatus, int userId)
         {
             try
@@ -53,6 +53,7 @@ namespace PRM392_CafeOnline_BE_API.Controllers
         {
             try
             {
+             
                 var order = await _orderService.GetOrderByIdAsync(orderId);
                 return Ok(new JsonResponse<OrderDTO>(order, 200, "Get Order Successfully"));
             }
