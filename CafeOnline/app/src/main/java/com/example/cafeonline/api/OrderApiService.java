@@ -4,6 +4,8 @@ import com.example.cafeonline.model.request.OrderRequestModel;
 import com.example.cafeonline.model.response.ApiResponse;
 import com.example.cafeonline.model.response.OrderResponse;
 
+import java.util.List;
+
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
@@ -15,8 +17,8 @@ public interface OrderApiService {
 
     //Anh nhac em
     @GET("/api/orders/status/{userId}")
-    Call<ApiResponse<OrderResponse>> getOrder(@Path("userId") int userId,
-                                              @Query("orderStatus") String orderStatus);
+    Call<ApiResponse<List<OrderResponse>>> getOrder(@Path("userId") int userId,
+                                                    @Query("orderStatus") String orderStatus);
     @POST("/api/orders")
     Call<ApiResponse<Integer>> createOrder(@Body OrderRequestModel orderRequestModel);
     

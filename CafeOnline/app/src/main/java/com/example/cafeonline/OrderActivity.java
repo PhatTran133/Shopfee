@@ -136,7 +136,7 @@ public class OrderActivity extends AppCompatActivity {
 
                 @Override
                 public void onFailure(Call<ApiResponse<OrderResponse>> call,  Throwable t) {
-                    // Handle network or other errors
+                    Toast.makeText(OrderActivity.this, "Network error", Toast.LENGTH_SHORT).show();
                 }
             });
 
