@@ -34,14 +34,17 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderItemVie
     @NonNull
     @Override
     public OrderAdapter.OrderItemViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_order, parent, false);
-        return new OrderAdapter.OrderItemViewHolder(view);
+        View v = View.inflate(parent.getContext(), R.layout.item_order, null);
+        RecyclerView.LayoutParams lp = new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        v.setLayoutParams(lp);
+        return new OrderAdapter.OrderItemViewHolder(v);
     }
 
     @Override
     public void onBindViewHolder(@NonNull OrderAdapter.OrderItemViewHolder holder, int position) {
         OrderItemResponse item = orderItemResponseList.get(position);
         holder.bind(item);
+
     }
 
     @Override
@@ -70,9 +73,9 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderItemVie
             tvName.setText(item.getDrinkDTO().getName());
             DecimalFormat decimalFormat = new DecimalFormat("#,###");
             String formattedPrice = decimalFormat.format(item.getTotalPrice());
-            tvPrice.setText(formattedPrice);
+            tvPrice.setText(formattedPrice + " VND");
             String formattedQuantity = decimalFormat.format((item.getQuantity()));
-            tvQuantity.setText(formattedQuantity);
+            tvQuantity.setText("x"+formattedQuantity);
             String formattedId = decimalFormat.format(item.getId());
             tvId.setText("ID: "+ formattedId);
             Glide.with(itemView.getContext())

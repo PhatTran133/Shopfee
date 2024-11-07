@@ -1,5 +1,6 @@
 package com.example.cafeonline.adapter;
 
+import android.annotation.SuppressLint;
 import android.content.SharedPreferences;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -63,7 +64,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
             cart.setUnitPrice(newPrice);
             DecimalFormat decimalFormat = new DecimalFormat("#,###");
             String formattedPrice = decimalFormat.format(cart.getUnitPrice());
-            holder.tvPrice.setText(String.valueOf(formattedPrice + "VND"));
+            holder.tvPrice.setText(String.valueOf(formattedPrice + " VND"));
             activity.updateCartItem(cart);
             updateTotalPrice();
         });
@@ -77,7 +78,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
                 cart.setUnitPrice(newPrice);
                 DecimalFormat decimalFormat = new DecimalFormat("#,###");
                 String formattedPrice = decimalFormat.format(cart.getUnitPrice());
-                holder.tvPrice.setText(String.valueOf(formattedPrice + "VND"));
+                holder.tvPrice.setText(String.valueOf(formattedPrice + " VND"));
                 activity.updateCartItem(cart);
                 updateTotalPrice();
             }
@@ -129,12 +130,13 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
             linearLayoutItemDrink = itemView.findViewById(R.id.layout_item_drink);
         }
 
-        public void bind(CartItemResponse cart,int position) {
+        @SuppressLint("SetTextI18n")
+        public void bind(CartItemResponse cart, int position) {
             // Xử lý phần hiển thị options
            tvName.setText(cart.getDrinkDTO().getName());
            DecimalFormat decimalFormat = new DecimalFormat("#,###");
             String formattedPrice = decimalFormat.format(cart.getUnitPrice());
-            tvPrice.setText(formattedPrice + "VND");
+            tvPrice.setText(formattedPrice + " VND");
             String formattedQuantity = decimalFormat.format((cart.getQuantity()));
             tvQuantity.setText((formattedQuantity));
             Glide.with(itemView.getContext())

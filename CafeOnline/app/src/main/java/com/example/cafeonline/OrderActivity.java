@@ -80,7 +80,7 @@ public class OrderActivity extends AppCompatActivity {
 
             call.enqueue(new Callback<ApiResponse<OrderResponse>>() {
 
-                @SuppressLint("SetTextI18n")
+                @SuppressLint({"SetTextI18n", "NotifyDataSetChanged"})
                 @Override
                 public void onResponse(Call<ApiResponse<OrderResponse>> call, Response<ApiResponse<OrderResponse>> response) {
                     if (response.isSuccessful()) {
@@ -106,6 +106,7 @@ public class OrderActivity extends AppCompatActivity {
                             List<OrderItemResponse> orderItemResponse = order.getOrderItemDTOs();
                             if(orderItemResponse != null && !orderItemResponse.isEmpty()){
                                 adapter = new OrderAdapter(orderItemResponse);
+                                adapter.notifyDataSetChanged();
                                 recyclerView.setAdapter(adapter);
                             }else {
                                 Toast.makeText(OrderActivity.this, "There nothing to show", Toast.LENGTH_SHORT).show();

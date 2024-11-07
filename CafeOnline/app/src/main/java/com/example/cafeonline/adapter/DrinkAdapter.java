@@ -1,5 +1,6 @@
 package com.example.cafeonline.adapter;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -67,11 +68,12 @@ public class DrinkAdapter extends RecyclerView.Adapter<DrinkAdapter.DrinkViewHol
 
         }
 
+        @SuppressLint("SetTextI18n")
         public void bind(DrinkResponse drink) {
             tvName.setText(drink.getName());
             DecimalFormat decimalFormat = new DecimalFormat("#,###");
             String formattedPrice = decimalFormat.format(drink.getPrice());
-            tvPrice.setText(formattedPrice);
+            tvPrice.setText(formattedPrice + " VND");
             Glide.with(itemView.getContext())
                     .load(drink.getImage())
                     .into(imageView);
