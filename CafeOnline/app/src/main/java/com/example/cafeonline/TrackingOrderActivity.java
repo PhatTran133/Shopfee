@@ -1,6 +1,7 @@
 package com.example.cafeonline;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.ImageView;
@@ -31,7 +32,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class TrackingOrderActivity extends AppCompatActivity {
-
+    private ImageView imgBack;
     private RecyclerView recyclerView;
     private OrderReceiptAdapter orderAdapter;
 
@@ -42,7 +43,12 @@ public class TrackingOrderActivity extends AppCompatActivity {
 
         recyclerView = findViewById(R.id.rcv_order);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
+        imgBack = findViewById(R.id.img_toolbar_back);
+        imgBack.setOnClickListener(v -> {
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
+            finish();
+        });
         fetchOrders();
     }
 

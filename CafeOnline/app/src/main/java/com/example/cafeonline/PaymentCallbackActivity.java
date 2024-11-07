@@ -38,7 +38,11 @@ public class PaymentCallbackActivity extends AppCompatActivity {
         tvAddress = findViewById(R.id.tv_address);
         btTrackingOrder = findViewById(R.id.btn_tracking_order);
         imgBack = findViewById(R.id.img_toolbar_back);
-        imgBack.setOnClickListener(v -> onBackPressed());
+        imgBack.setOnClickListener(v -> {
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
+            finish();
+        });
 
         Intent intent = getIntent();
         Uri uri = intent.getData();
@@ -64,7 +68,7 @@ public class PaymentCallbackActivity extends AppCompatActivity {
                 tvPhone.setText(addressResponse.getPhone());
                 tvAddress.setText(addressResponse.getAddress());
                 btTrackingOrder.setOnClickListener(v -> {
-                    Intent orderIntent = new Intent(this, OrderActivity.class);
+                    Intent orderIntent = new Intent(this, TrackingOrderActivity.class);
                     startActivity(orderIntent);
                     finish();
                 });

@@ -6,13 +6,9 @@ public class ToppingResponse {
     private int id;
     private String name;
     private double price;
+    private boolean selected; // Trường mới để theo dõi trạng thái chọn topping
 
-    public ToppingResponse(int id, String name, double price) {
-        this.id = id;
-        this.name = name;
-        this.price = price;
-    }
-
+    // Getter và Setter cho id
     public int getId() {
         return id;
     }
@@ -21,6 +17,7 @@ public class ToppingResponse {
         this.id = id;
     }
 
+    // Getter và Setter cho name
     public String getName() {
         return name;
     }
@@ -29,6 +26,7 @@ public class ToppingResponse {
         this.name = name;
     }
 
+    // Getter và Setter cho price
     public double getPrice() {
         return price;
     }
@@ -36,4 +34,14 @@ public class ToppingResponse {
     public void setPrice(double price) {
         this.price = price;
     }
+
+    // Getter và Setter cho selected
+    public boolean isSelected() {
+        return selected;
+    }
+
+    public void setSelected(boolean selected) {
+        this.selected = selected;
+    }
 }
+

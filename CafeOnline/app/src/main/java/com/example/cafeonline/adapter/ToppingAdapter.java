@@ -59,9 +59,9 @@ public class ToppingAdapter extends RecyclerView.Adapter<ToppingAdapter.ToppingV
             checkBox = itemView.findViewById(R.id.cb_topping);
 
             checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
-               // check box được chọn hay không
                 ToppingResponse topping = toppingList.get(getAdapterPosition());
                 if (onToppingSelectedListener != null) {
+                    // Khi topping được chọn hoặc hủy chọn, gọi listener để cập nhật giá trị tổng
                     onToppingSelectedListener.onToppingSelected(
                             topping.getId(),
                             topping.getPrice(),
@@ -77,6 +77,15 @@ public class ToppingAdapter extends RecyclerView.Adapter<ToppingAdapter.ToppingV
             DecimalFormat decimalFormat = new DecimalFormat("#,###");
             String formattedPrice = decimalFormat.format(topping.getPrice());
             tvPrice.setText(formattedPrice);
+
+            // Đảm bảo trạng thái checkbox phù hợp với trạng thái của topping
+            checkBox.setChecked(topping.isSelected());
         }
+    }
+
+    // Cập nhật dữ liệu từ bên ngoài (nếu cần)
+    public void updateToppingList(List<ToppingResponse> newToppingList) {
+        this.toppingList = newToppingList;
+        notifyDataSetChanged();
     }
 }

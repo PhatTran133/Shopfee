@@ -1,6 +1,7 @@
 package com.example.cafeonline.adapter;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,7 +17,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.cafeonline.CartActivity;
+import com.example.cafeonline.DrinkDetailActivity;
+import com.example.cafeonline.EditDrinkActivity;
+import com.example.cafeonline.MainActivity;
 import com.example.cafeonline.R;
+import com.example.cafeonline.TrackingOrderActivity;
 import com.example.cafeonline.model.request.CartItemRequestModel;
 import com.example.cafeonline.model.response.AddressResponse;
 import com.example.cafeonline.model.response.CartItemToppingResponse;
@@ -25,6 +30,7 @@ import com.example.cafeonline.model.response.CartItemResponse;
 import com.example.cafeonline.model.response.ToppingResponse;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -115,7 +121,8 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
         private int count = 1;
         private double price = 0;
         private double totalPrice = 0;
-        private ImageView imgDelete;
+        private ImageView imgDelete, imgEdit;
+
         public CartViewHolder(@NonNull View itemView) {
             super(itemView);
             tvName = itemView.findViewById(R.id.tv_drink);
@@ -127,6 +134,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
             tvSub = itemView.findViewById(R.id.tv_sub);
             tvTotalPrice= itemView.findViewById(R.id.tv_amount);
             imgDelete = itemView.findViewById(R.id.img_delete);
+            imgEdit = itemView.findViewById(R.id.img_edit);
             linearLayoutItemDrink = itemView.findViewById(R.id.layout_item_drink);
         }
 
@@ -197,6 +205,27 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
                     listener.onDeleteClick(cartList.get(position));
                 }
             });
+            imgEdit.setOnClickListener(v -> {
+                Intent intent = new Intent(itemView.getContext(), EditDrinkActivity.class);
+                intent.putExtra("cartItemId", cart.getId());
+                intent.putExtra("drinkName", cart.getDrinkDTO().getName());
+                intent.putExtra("variant", cart.getVariant());
+                intent.putExtra("size", cart.getSize());
+                intent.putExtra("sugar", cart.getSugar());
+                intent.putExtra("iced", cart.getIced());
+                intent.putExtra("note", cart.getNote());
+                intent.putExtra("quantity", cart.getQuantity());
+                intent.putExtra("unitPrice", cart.getUnitPrice());
+
+                ArrayList<String> toppings = new ArrayList<>();
+                for (CartItemToppingResponse topping : cart.getCartItemToppingDTOs()) {
+                    toppings.add(topping.getTopping().getName());
+                }
+                intent.putStringArrayListExtra("toppings", toppings);
+
+                itemView.getContext().startActivity(intent);
+            });
+
         }
     }
     public int getTotalQuantity() {

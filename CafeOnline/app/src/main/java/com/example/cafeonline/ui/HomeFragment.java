@@ -102,10 +102,10 @@ public class HomeFragment extends Fragment {
 
         imageSlider = rootView.findViewById(R.id.imageSlider);
         ArrayList<SlideModel> slideModels = new ArrayList<>();
-        slideModels.add(new SlideModel(R.drawable.drink_example, ScaleTypes.FIT));
-        slideModels.add(new SlideModel(R.drawable.ic_logo, ScaleTypes.FIT));
-        slideModels.add(new SlideModel(R.drawable.ic_splash, ScaleTypes.FIT));
-        slideModels.add(new SlideModel(R.drawable.drink_example, ScaleTypes.FIT));
+        slideModels.add(new SlideModel(R.drawable.slide_image_1, ScaleTypes.FIT));
+        slideModels.add(new SlideModel(R.drawable.slide_image_2, ScaleTypes.FIT));
+        slideModels.add(new SlideModel(R.drawable.slide_image_3, ScaleTypes.FIT));
+        slideModels.add(new SlideModel(R.drawable.slide_image_4, ScaleTypes.FIT));
         imageSlider.setImageList(slideModels, ScaleTypes.FIT);
 
 

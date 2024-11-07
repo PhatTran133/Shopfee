@@ -67,6 +67,9 @@
             android:name=".CartActivity"
             android:exported="true" />
         <activity
+            android:name=".EditDrinkActivity"
+            android:exported="true" />
+        <activity
             android:name=".OrderActivity"
             android:exported="true" />
         <activity
@@ -75,9 +78,7 @@
         <activity
             android:name=".PaymentMethodActivity"
             android:exported="true" />
-        <activity
-            android:name=".OrderActivity"
-            android:exported="true" />
+
         <activity
             android:name=".AddAddressActivicty"
             android:exported="true" />
