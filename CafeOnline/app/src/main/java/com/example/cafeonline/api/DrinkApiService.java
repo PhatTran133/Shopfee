@@ -29,10 +29,13 @@ public interface DrinkApiService {
 
     @GET("/api/Drink/filter")
     Call<ApiResponse<List<DrinkResponse>>> getDrinkFilter(@Query("name") String name,
-                                                          @Query("category") String categoryName,
-                                                          @Query("size") String size);
-//                                                          @Query("minPrice") double minPrice,
-//                                                          @Query("maxPrice") double maxPrice);
-//                                                          @Query("startDate") Date startDate,
-//                                                          @Query("endDate") Date endDate);
+                                                          @Query("categoryName") String categoryName, // Đảm bảo rằng bạn sử dụng đúng tên
+                                                          @Query("size") String size,
+                                                          @Query("descPrice") boolean descPrice,
+                                                          @Query("ascName") boolean ascName);
+//
+//    @GET("/api/Drink/filter")
+//    Call<ApiResponse<List<DrinkResponse>>> getDrinkForFilter(
+//    );
+
 }

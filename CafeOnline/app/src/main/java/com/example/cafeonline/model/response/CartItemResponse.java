@@ -3,34 +3,54 @@ package com.example.cafeonline.model.response;
 import java.util.List;
 
 public class CartItemResponse {
-    public int Id;
-    public int quantity;
-    public String variant;
-    public String size;
-    public String sugar;
-    public String iced;
-    public List<CartItemToppingResponse> cartItemToppingDTOs;
-    public double totalPrice;
-    public DrinkResponse drinkDTO;
+    public int id;
+    private int quantity;
+    private String variant;
+    private String size;
+    private String sugar;
+    private String iced;
+    private String note;
+    private List<CartItemToppingResponse> cartItemToppingDTOs;
+    private int unitPrice;
+    private int totalPrice;
+    private DrinkResponse drinkDTO;
 
-    public CartItemResponse(int id, int quantity, String variant, String size, String sugar, String iced, List<CartItemToppingResponse> cartItemToppingDTOs, double totalPrice, DrinkResponse drinkDTO) {
-        Id = id;
+    public CartItemResponse(int id, int quantity, String variant, String size, String sugar, String iced, String note, List<CartItemToppingResponse> cartItemToppingDTOs, int unitPrice, int totalPrice, DrinkResponse drinkDTO) {
+        this.id = id;
         this.quantity = quantity;
         this.variant = variant;
         this.size = size;
         this.sugar = sugar;
         this.iced = iced;
+        this.note = note;
         this.cartItemToppingDTOs = cartItemToppingDTOs;
+        this.unitPrice = unitPrice;
         this.totalPrice = totalPrice;
         this.drinkDTO = drinkDTO;
     }
 
+    public int getUnitPrice() {
+        return unitPrice;
+    }
+
+    public void setUnitPrice(int unitPrice) {
+        this.unitPrice = unitPrice;
+    }
+
+    public String getNote() {
+        return note;
+    }
+
+    public void setNote(String note) {
+        this.note = note;
+    }
+
     public int getId() {
-        return Id;
+        return id;
     }
 
     public void setId(int id) {
-        Id = id;
+        this.id = id;
     }
 
     public int getQuantity() {
@@ -81,11 +101,11 @@ public class CartItemResponse {
         this.cartItemToppingDTOs = cartItemToppingDTOs;
     }
 
-    public double getTotalPrice() {
+    public int getTotalPrice() {
         return totalPrice;
     }
 
-    public void setTotalPrice(double totalPrice) {
+    public void setTotalPrice(int totalPrice) {
         this.totalPrice = totalPrice;
     }
 

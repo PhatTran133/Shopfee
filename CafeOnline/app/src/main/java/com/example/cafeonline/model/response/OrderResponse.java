@@ -1,6 +1,7 @@
 package com.example.cafeonline.model.response;
 
 import java.util.Date;
+import java.util.List;
 
 public class OrderResponse {
     private int id;
@@ -10,17 +11,19 @@ public class OrderResponse {
     private Date createdDate;
     private Date updateDate;
     private Date deletedDate;
-    private UserResponse user;
+    private List<OrderItemResponse> orderItemDTOs;
+    private List<PaymentResponse> paymentDTOs;
 
-    public OrderResponse(int id, int userId, double total, boolean statusOfOrder, Date createdDate, Date updateDate, Date deletedDate, UserResponse user) {
-        this.id = id;
-        this.userId = userId;
-        this.total = total;
-        this.statusOfOrder = statusOfOrder;
-        this.createdDate = createdDate;
-        this.updateDate = updateDate;
+    public OrderResponse(List<PaymentResponse> paymentDTOs, List<OrderItemResponse> orderItemDTOs, Date deletedDate, Date updateDate, Date createdDate, boolean statusOfOrder, double total, int userId, int id) {
+        this.paymentDTOs = paymentDTOs;
+        this.orderItemDTOs = orderItemDTOs;
         this.deletedDate = deletedDate;
-        this.user = user;
+        this.updateDate = updateDate;
+        this.createdDate = createdDate;
+        this.statusOfOrder = statusOfOrder;
+        this.total = total;
+        this.userId = userId;
+        this.id = id;
     }
 
     public int getId() {
@@ -79,11 +82,19 @@ public class OrderResponse {
         this.deletedDate = deletedDate;
     }
 
-    public UserResponse getUser() {
-        return user;
+    public List<OrderItemResponse> getOrderItemDTOs() {
+        return orderItemDTOs;
     }
 
-    public void setUser(UserResponse user) {
-        this.user = user;
+    public void setOrderItemDTOs(List<OrderItemResponse> orderItemDTOs) {
+        this.orderItemDTOs = orderItemDTOs;
+    }
+
+    public List<PaymentResponse> getPaymentDTOs() {
+        return paymentDTOs;
+    }
+
+    public void setPaymentDTOs(List<PaymentResponse> paymentDTOs) {
+        this.paymentDTOs = paymentDTOs;
     }
 }

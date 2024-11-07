@@ -1,5 +1,6 @@
 package com.example.cafeonline.adapter;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -67,15 +68,16 @@ public class DrinkAdapter extends RecyclerView.Adapter<DrinkAdapter.DrinkViewHol
 
         }
 
+        @SuppressLint("SetTextI18n")
         public void bind(DrinkResponse drink) {
             tvName.setText(drink.getName());
             DecimalFormat decimalFormat = new DecimalFormat("#,###");
             String formattedPrice = decimalFormat.format(drink.getPrice());
-            tvPrice.setText(formattedPrice);
+            tvPrice.setText(formattedPrice + " VND");
             Glide.with(itemView.getContext())
                     .load(drink.getImage())
                     .into(imageView);
-
+            tvCategoryName.setText(drink.getCategoryName());
             linearLayoutItemDrink.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
                     DrinkResponse drink = drinkList.get(getAdapterPosition()); // Lấy vị trí item được click
@@ -89,6 +91,12 @@ public class DrinkAdapter extends RecyclerView.Adapter<DrinkAdapter.DrinkViewHol
             });
         }
     }
+    public void updateDrinkList(List<DrinkResponse> newDrinkList) {
+        this.drinkList.clear();
+        this.drinkList.addAll(newDrinkList);
+        notifyDataSetChanged(); // Thông báo cho adapter rằng dữ liệu đã thay đổi
+    }
+
 }
 
 

@@ -3,9 +3,9 @@ package com.example.cafeonline.model.response;
 import java.math.BigDecimal;
 
 public class ToppingResponse {
-    public int id;
-    public String name;
-    public double price;
+    private int id;
+    private String name;
+    private double price;
 
     public ToppingResponse(int id, String name, double price) {
         this.id = id;

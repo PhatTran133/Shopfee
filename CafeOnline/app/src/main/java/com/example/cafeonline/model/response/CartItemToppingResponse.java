@@ -1,7 +1,7 @@
 package com.example.cafeonline.model.response;
 
 public class CartItemToppingResponse {
-    public ToppingResponse topping;
+    private ToppingResponse topping;
 
     public CartItemToppingResponse(ToppingResponse topping) {
         this.topping = topping;

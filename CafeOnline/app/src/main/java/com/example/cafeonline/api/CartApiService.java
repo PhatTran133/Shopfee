@@ -2,16 +2,20 @@ package com.example.cafeonline.api;
 
 import com.example.cafeonline.model.request.AddToCartRequest;
 import com.example.cafeonline.model.request.CartDetailRequest;
+import com.example.cafeonline.model.request.CartItemRequestModel;
 import com.example.cafeonline.model.request.RegisterRequest;
 import com.example.cafeonline.model.response.ApiResponse;
+import com.example.cafeonline.model.response.CartItemResponse;
 import com.example.cafeonline.model.response.CartResponse;
 
 import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
 import retrofit2.http.Path;
 
 public interface CartApiService {
@@ -21,4 +25,8 @@ public interface CartApiService {
     Call<ApiResponse<String>> addToCart(@Body AddToCartRequest addToCartRequest);
     @GET("api/carts/{userId}")
     Call<ApiResponse<CartResponse>> getCart(@Path("userId") int userId);
+    @DELETE("/api/carts/{cartToppingDrinkId}")
+    Call<ApiResponse<String>> deleteCartItems(@Path("cartToppingDrinkId") int cartToppingDrinkId);
+    @PUT("/api/carts/{cartItemId}")
+    Call<ApiResponse<String>> updateCartItem(@Path("cartItemId") int cartItemId,@Body CartItemRequestModel cartItemRequestModel);
 }

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- res/drawable/circle_background.xml -->
+    <shape xmlns:android="http://schemas.android.com/apk/res/android"
+        android:shape="oval">
+
+        <!-- Màu nền của hình tròn -->
+        <solid android:color="#CCCCCC" /> <!-- Thay đổi màu nền tùy thích -->
+
+        <!-- Đường viền xung quanh -->
+        <stroke
+            android:width="2dp"
+            android:color="#FFFFFF" /> <!-- Thay đổi màu và độ rộng của viền -->
+    </shape>
+</selector>

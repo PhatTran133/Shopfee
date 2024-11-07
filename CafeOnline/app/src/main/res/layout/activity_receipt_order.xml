@@ -14,7 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/toolbar"
-        android:layout_above="@+id/tv_tracking_order">
+        android:layout_above="@+id/btn_tracking_order">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -55,8 +55,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:layout_marginEnd="@dimen/define_dimen_10"
+                        android:layout_marginEnd="11dp"
                         android:layout_toStartOf="@+id/tv_id_transaction"
                         android:text="@string/label_id_transaction"
                         android:textColor="@color/textColorHeading"
@@ -177,7 +176,6 @@
                         android:id="@+id/tv_total"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
                         android:layout_alignParentEnd="true"
                         android:text="@string/app_name"
                         android:textColor="@color/textColorSecondary"
@@ -246,7 +244,6 @@
                         android:id="@+id/tv_name"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
                         android:layout_alignParentEnd="true"
                         android:text="@string/app_name"
                         android:textColor="@color/textColorSecondary"
@@ -273,7 +270,6 @@
                         android:id="@+id/tv_phone"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
                         android:layout_alignParentEnd="true"
                         android:text="@string/app_name"
                         android:textColor="@color/textColorSecondary"
@@ -319,7 +315,7 @@
     </androidx.core.widget.NestedScrollView>
 
     <Button
-        android:id="@+id/tv_tracking_order"
+        android:id="@+id/btn_tracking_order"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"

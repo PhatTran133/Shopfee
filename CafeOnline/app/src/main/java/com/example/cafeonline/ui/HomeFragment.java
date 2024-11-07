@@ -18,19 +18,20 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.denzcoskun.imageslider.ImageSlider;
 import com.denzcoskun.imageslider.constants.ScaleTypes;
 import com.denzcoskun.imageslider.models.SlideModel;
-import com.example.cafeonline.MainActivity;
 import com.example.cafeonline.R;
 import com.example.cafeonline.adapter.DrinkAdapter;
+import com.example.cafeonline.adapter.FilterAdapter;
 import com.example.cafeonline.api.ApiService;
 import com.example.cafeonline.api.DrinkApiService;
 import com.example.cafeonline.model.response.ApiResponse;
 import com.example.cafeonline.model.response.DrinkResponse;
+import com.example.cafeonline.widget.CustomTabLayout;
+import com.google.android.material.tabs.TabLayout;
 import com.google.gson.Gson;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.Arrays;
 import java.util.List;
 
 import retrofit2.Call;
@@ -42,6 +43,12 @@ public class HomeFragment extends Fragment {
     private ImageSlider imageSlider;
     private Button btnSearch;
     private EditText search;
+    private CustomTabLayout tabCategory, tabFilter;
+    private RecyclerView rvFilterItems;
+    private String selectedCategory = "Coffee";
+    private boolean descPrice = false;
+    private boolean ascName = false;
+
 
     @Nullable
     @Override
@@ -51,14 +58,50 @@ public class HomeFragment extends Fragment {
         search = rootView.findViewById(R.id.edt_search_name);
         btnSearch = rootView.findViewById(R.id.btn_search);
 
-        btnSearch.setOnClickListener(v -> getDrinkData());
+        btnSearch.setOnClickListener(v -> getDrinkData(selectedCategory, descPrice, ascName));
 
-        // Lấy RecyclerView và ImageSlider từ layout của Fragment
+        tabCategory = rootView.findViewById(R.id.tab_category);
+        addTabs();
+
+        rvFilterItems = rootView.findViewById(R.id.rv_filter_items);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
+        rvFilterItems.setLayoutManager(layoutManager);
+
+        // Example filter items
+        List<String> filterItems = Arrays.asList("All", "Price", "Name");
+        // Tạo FilterAdapter với callback
+        FilterAdapter filterAdapter = new FilterAdapter(getContext(), filterItems, filter -> {
+
+
+            // Cập nhật trạng thái boolean dựa trên lựa chọn
+            switch (filter) {
+                case "All":
+                    // Cả descPrice và ascName đều false
+                    descPrice = false;
+                    ascName = false;
+                    break;
+                case "Price":
+                    // Chỉ bật descPrice
+                    descPrice = true;
+                    ascName = false;
+                    break;
+                case "Name":
+                    // Chỉ bật ascName
+                    descPrice = false;
+                    ascName = true;
+                    break;
+            }
+            Log.d("FilterSelection", "Filter: " + filter + ", descPrice: " + descPrice + ", ascName: " + ascName);
+
+            // Gọi API với các tham số cập nhật
+            getDrinkData(selectedCategory,descPrice, ascName);
+        });        rvFilterItems.setAdapter(filterAdapter);
+
+
         recyclerView = rootView.findViewById(R.id.rcv_drink_home);
+
         imageSlider = rootView.findViewById(R.id.imageSlider);
-        //tạo array list cho ảnh trong slider
         ArrayList<SlideModel> slideModels = new ArrayList<>();
-        //Add ảnh vào slider
         slideModels.add(new SlideModel(R.drawable.drink_example, ScaleTypes.FIT));
         slideModels.add(new SlideModel(R.drawable.ic_logo, ScaleTypes.FIT));
         slideModels.add(new SlideModel(R.drawable.ic_splash, ScaleTypes.FIT));
@@ -68,17 +111,16 @@ public class HomeFragment extends Fragment {
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        getDrinkData();
+        getDrinkData(selectedCategory, descPrice, ascName);
 
         return rootView;
     }
 
-    private void getDrinkData() {
+    private void getDrinkData(String category, boolean descPrice, boolean ascName) {
         String name = search.getText().toString().trim();
-        String category = search.getText().toString().trim();
         String size = search.getText().toString().trim();
         DrinkApiService drinkService = ApiService.createService(DrinkApiService.class);
-        retrofit2.Call<ApiResponse<List<DrinkResponse>>> callApiDrink = drinkService.getDrinkFilter(name, category, size);
+        retrofit2.Call<ApiResponse<List<DrinkResponse>>> callApiDrink = drinkService.getDrinkFilter(name, category, size, descPrice,ascName);
         callApiDrink.enqueue(new Callback<ApiResponse<List<DrinkResponse>>>() {
             @Override
             public void onResponse(retrofit2.Call<ApiResponse<List<DrinkResponse>>> callApiDrink, Response<ApiResponse<List<DrinkResponse>>> response) {
@@ -87,10 +129,14 @@ public class HomeFragment extends Fragment {
                     if ("200".equals(apiResponse.getValue().getStatus())) {
                         List<DrinkResponse> drinkList = apiResponse.getValue().getData();
 
-                        DrinkAdapter adapter = new DrinkAdapter(drinkList, null);
-                        recyclerView.setAdapter(adapter);
-                    } else {
-                        Toast.makeText(getContext(), apiResponse.getValue().getMessage(), Toast.LENGTH_SHORT).show();
+                        if (recyclerView.getAdapter() instanceof DrinkAdapter) {
+                            DrinkAdapter adapter = (DrinkAdapter) recyclerView.getAdapter();
+                            adapter.updateDrinkList(drinkList); // Gọi phương thức updateDrinkList
+                        } else {
+                            // Nếu adapter chưa được khởi tạo, tạo mới
+                            DrinkAdapter adapter = new DrinkAdapter(drinkList, null);
+                            recyclerView.setAdapter(adapter);
+                        }
                     }
                 } else {
                     try {
@@ -107,6 +153,7 @@ public class HomeFragment extends Fragment {
                         System.out.println(e.getMessage());
                     }
                 }
+
             }
 
             @Override
@@ -116,6 +163,67 @@ public class HomeFragment extends Fragment {
         });
     }
 
+    private void addTabs() {
+        tabCategory.addTab(tabCategory.newTab().setText("Coffee"));
+        tabCategory.addTab(tabCategory.newTab().setText("Latte"));
+        tabCategory.addTab(tabCategory.newTab().setText("Juice"));
+
+        // Set a listener to handle tab selection
+        tabCategory.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                String selectedTab = tab.getText().toString();
+                selectedCategory = selectedTab;
+                getDrinkData(selectedCategory, descPrice, ascName);
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+//                String selectedTab = tab.getText().toString();
+//                selectedCategory = selectedTab;
+//                getDrinkData(selectedCategory);
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+//                String selectedTab = tab.getText().toString();
+//                selectedCategory = selectedTab;
+//                getDrinkData(selectedCategory);
+            }
+        });
+    }
+
+//    private void getDrinkForFilter(boolean descPrice, boolean ascName) {
+//        // Tạo một instance của API service và gọi API
+//        DrinkApiService drinkApi = ApiService.createService(DrinkApiService.class);
+//        Call<ApiResponse<List<DrinkResponse>>> call = drinkApi.getDrinkFilter(descPrice, ascName);
+//
+//        call.enqueue(new Callback<ApiResponse<List<DrinkResponse>>>() {
+//            @Override
+//            public void onResponse(Call<ApiResponse<List<DrinkResponse>>> call, Response<ApiResponse<List<DrinkResponse>>> response) {
+//                if (response.isSuccessful()) {
+//                    ApiResponse<List<DrinkResponse>> apiResponse = response.body();
+//                    if ("200".equals(apiResponse.getValue().getStatus())) {
+//                        List<DrinkResponse> drinkList = apiResponse.getValue().getData();
+//
+//                        if (recyclerView.getAdapter() instanceof DrinkAdapter) {
+//                            DrinkAdapter adapter = (DrinkAdapter) recyclerView.getAdapter();
+//                            adapter.updateDrinkList(drinkList); // Gọi phương thức updateDrinkList
+//                        } else {
+//                            // Nếu adapter chưa được khởi tạo, tạo mới
+//                            DrinkAdapter adapter = new DrinkAdapter(drinkList, null);
+//                            recyclerView.setAdapter(adapter);
+//                        }
+//                    }
+//                }
+//
+//            }
+//
+//            @Override
+//            public void onFailure(Call<ApiResponse<List<DrinkResponse>>> call, Throwable t) {
+//                Toast.makeText(getContext(), "Network error", Toast.LENGTH_SHORT).show();            }
+//        });
+//    }
 }
 
 
