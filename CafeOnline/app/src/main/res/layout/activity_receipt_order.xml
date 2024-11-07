@@ -134,26 +134,26 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/define_dimen_10">
 
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:layout_marginEnd="@dimen/define_dimen_10"
-                        android:layout_toStartOf="@+id/tv_price"
-                        android:text="@string/label_price"
-                        android:textColor="@color/textColorHeading"
-                        android:textSize="@dimen/text_size_small"
-                        android:textStyle="bold" />
+<!--                    <TextView-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_centerVertical="true"-->
+<!--                        android:layout_marginEnd="@dimen/define_dimen_10"-->
+<!--                        android:layout_toStartOf="@+id/tv_price"-->
+<!--                        android:text="@string/label_price"-->
+<!--                        android:textColor="@color/textColorHeading"-->
+<!--                        android:textSize="@dimen/text_size_small"-->
+<!--                        android:textStyle="bold" />-->
 
-                    <TextView
-                        android:id="@+id/tv_price"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:layout_alignParentEnd="true"
-                        android:text="@string/app_name"
-                        android:textColor="@color/textColorSecondary"
-                        android:textSize="@dimen/text_size_small" />
+<!--                    <TextView-->
+<!--                        android:id="@+id/tv_price"-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_centerVertical="true"-->
+<!--                        android:layout_alignParentEnd="true"-->
+<!--                        android:text="@string/app_name"-->
+<!--                        android:textColor="@color/textColorSecondary"-->
+<!--                        android:textSize="@dimen/text_size_small" />-->
                 </RelativeLayout>
 
                 <RelativeLayout
@@ -329,6 +329,6 @@
         android:paddingEnd="@dimen/define_dimen_30"
         android:textSize="@dimen/text_size_small"
         android:background="@drawable/bg_main_corner_6"
-        android:text="@string/label_tracking_order"/>
+        android:text="@string/label_order_history"/>
 
 </RelativeLayout>

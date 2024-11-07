@@ -142,6 +142,7 @@
     <string name="label_id_transaction" translatable="false">Transaction code</string>
     <string name="label_date_and_time" translatable="false">Date and time</string>
     <string name="label_tracking_order" translatable="false">Tracking order</string>
+    <string name="label_order_history" translatable="false">Order History</string>
     <string name="label_receipt_order" translatable="false">Receipt</string>
 
     <string name="label_shop_takes_order" translatable="false">KooHee receives your order!</string>

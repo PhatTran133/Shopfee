@@ -134,7 +134,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
             tvSub = itemView.findViewById(R.id.tv_sub);
             tvTotalPrice= itemView.findViewById(R.id.tv_amount);
             imgDelete = itemView.findViewById(R.id.img_delete);
-            imgEdit = itemView.findViewById(R.id.img_edit);
+//            imgEdit = itemView.findViewById(R.id.img_edit);
             linearLayoutItemDrink = itemView.findViewById(R.id.layout_item_drink);
         }
 
@@ -205,26 +205,26 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
                     listener.onDeleteClick(cartList.get(position));
                 }
             });
-            imgEdit.setOnClickListener(v -> {
-                Intent intent = new Intent(itemView.getContext(), EditDrinkActivity.class);
-                intent.putExtra("cartItemId", cart.getId());
-                intent.putExtra("drinkName", cart.getDrinkDTO().getName());
-                intent.putExtra("variant", cart.getVariant());
-                intent.putExtra("size", cart.getSize());
-                intent.putExtra("sugar", cart.getSugar());
-                intent.putExtra("iced", cart.getIced());
-                intent.putExtra("note", cart.getNote());
-                intent.putExtra("quantity", cart.getQuantity());
-                intent.putExtra("unitPrice", cart.getUnitPrice());
-
-                ArrayList<String> toppings = new ArrayList<>();
-                for (CartItemToppingResponse topping : cart.getCartItemToppingDTOs()) {
-                    toppings.add(topping.getTopping().getName());
-                }
-                intent.putStringArrayListExtra("toppings", toppings);
-
-                itemView.getContext().startActivity(intent);
-            });
+//            imgEdit.setOnClickListener(v -> {
+//                Intent intent = new Intent(itemView.getContext(), EditDrinkActivity.class);
+//                intent.putExtra("cartItemId", cart.getId());
+//                intent.putExtra("drinkName", cart.getDrinkDTO().getName());
+//                intent.putExtra("variant", cart.getVariant());
+//                intent.putExtra("size", cart.getSize());
+//                intent.putExtra("sugar", cart.getSugar());
+//                intent.putExtra("iced", cart.getIced());
+//                intent.putExtra("note", cart.getNote());
+//                intent.putExtra("quantity", cart.getQuantity());
+//                intent.putExtra("unitPrice", cart.getUnitPrice());
+//
+//                ArrayList<String> toppings = new ArrayList<>();
+//                for (CartItemToppingResponse topping : cart.getCartItemToppingDTOs()) {
+//                    toppings.add(topping.getTopping().getName());
+//                }
+//                intent.putStringArrayListExtra("toppings", toppings);
+//
+//                itemView.getContext().startActivity(intent);
+//            });
 
         }
     }

@@ -27,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private Button btnSearch;
     private FirebaseFirestore db;
-    private int userId;
+    private int userId = 0;
     private String roomId;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -110,8 +110,9 @@ public class MainActivity extends AppCompatActivity {
 
         // Gọi Service để hiển thị notification
         Intent serviceIntent = new Intent(this, NotificationService.class);
+        String userName = getUserNameFromPreferences();
         serviceIntent.putExtra("title", "KooHee");
-        serviceIntent.putExtra("text", "Welcome " + userId + " to KooHee!" );
+        serviceIntent.putExtra("text", "Welcome " + userName + " to KooHee!" );
         startService(serviceIntent);
     }
 
@@ -126,7 +127,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onClickChat(View view) {
+
         userId = getUserIdFromPreferences();
+        if(userId != 0){
         db.collection("room")
                 .whereEqualTo("userId", userId)
                 .get()
@@ -185,6 +188,11 @@ public class MainActivity extends AppCompatActivity {
 //            Intent intent = new Intent(this, ChatBoxActivity.class);
 //            startActivity(intent);
 //        }
+        }
+        else {
+            Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+            startActivity(intent);
+        }
     }
     private void openChatBoxActivity(String roomId) {
         Intent intent;

@@ -166,60 +166,60 @@
                 android:layout_marginBottom="@dimen/define_dimen_6"
                 android:background="@color/bgFilter"/>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_margin="@dimen/define_dimen_10">
+<!--            <LinearLayout-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:orientation="vertical"-->
+<!--                android:layout_margin="@dimen/define_dimen_10">-->
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/textColorHeading"
-                    android:textSize="@dimen/text_size_small"
-                    android:textStyle="bold"
-                    android:text="@string/label_payment_summary"/>
+<!--                <TextView-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:textColor="@color/textColorHeading"-->
+<!--                    android:textSize="@dimen/text_size_small"-->
+<!--                    android:textStyle="bold"-->
+<!--                    android:text="@string/label_payment_summary"/>-->
 
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/define_dimen_10">
+<!--                <RelativeLayout-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_marginTop="@dimen/define_dimen_10">-->
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="@dimen/define_dimen_10"
-                        android:layout_toStartOf="@+id/tv_price_drink"
-                        android:orientation="vertical">
+<!--                    <LinearLayout-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_marginEnd="@dimen/define_dimen_10"-->
+<!--                        android:layout_toStartOf="@+id/tv_price_drink"-->
+<!--                        android:orientation="vertical">-->
 
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="@string/label_price"
-                            android:textColor="@color/textColorHeading"
-                            android:textSize="@dimen/text_size_small" />
+<!--                        <TextView-->
+<!--                            android:layout_width="match_parent"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:text="@string/label_price"-->
+<!--                            android:textColor="@color/textColorHeading"-->
+<!--                            android:textSize="@dimen/text_size_small" />-->
 
-                        <TextView
-                            android:id="@+id/tv_count_item"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/define_dimen_5"
-                            android:text="@string/app_name"
-                            android:textColor="@color/textColorSecondary"
-                            android:textSize="@dimen/text_size_xsmall" />
-                    </LinearLayout>
+<!--                        <TextView-->
+<!--                            android:id="@+id/tv_count_item"-->
+<!--                            android:layout_width="match_parent"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:layout_marginTop="@dimen/define_dimen_5"-->
+<!--                            android:text="@string/app_name"-->
+<!--                            android:textColor="@color/textColorSecondary"-->
+<!--                            android:textSize="@dimen/text_size_xsmall" />-->
+<!--                    </LinearLayout>-->
 
-                    <TextView
-                        android:id="@+id/tv_price_drink"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentEnd="true"
-                        android:text="0.000vnd"
-                        android:textColor="@color/textColorSecondary"
-                        android:textSize="@dimen/text_size_small" />
-                </RelativeLayout>
+<!--                    <TextView-->
+<!--                        android:id="@+id/tv_price_drink"-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_alignParentEnd="true"-->
+<!--                        android:text="0.000vnd"-->
+<!--                        android:textColor="@color/textColorSecondary"-->
+<!--                        android:textSize="@dimen/text_size_small" />-->
+<!--                </RelativeLayout>-->
 
-            </LinearLayout>
+<!--            </LinearLayout>-->
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>

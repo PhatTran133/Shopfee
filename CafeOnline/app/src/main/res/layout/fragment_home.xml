@@ -77,13 +77,13 @@
 
         <Button
             android:id="@+id/btn_navigate"
-            android:layout_width="wrap_content"
+            android:layout_width="391dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/define_dimen_10"
-            android:text="Chat"
-            android:textColor="@color/white"
             android:backgroundTint="@color/colorPrimaryDark"
-            android:onClick="onClickChat"/>
+            android:onClick="onClickChat"
+            android:text="Chat"
+            android:textColor="@color/white" />
         <com.example.cafeonline.widget.CustomTabLayout
             android:id="@+id/tab_category"
             android:layout_width="match_parent"
