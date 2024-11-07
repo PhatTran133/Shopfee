@@ -18,7 +18,6 @@
             android:layout_height="wrap_content"
             android:background="@drawable/bg_white_corner_16_border_gray"
             android:padding="@dimen/define_dimen_4">
-
             <EditText
                 android:id="@+id/edt_search_name"
                 android:layout_width="match_parent"
@@ -76,6 +75,15 @@
                 />
         </RelativeLayout>
 
+        <Button
+            android:id="@+id/btn_navigate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/define_dimen_10"
+            android:text="Chat"
+            android:textColor="@color/white"
+            android:backgroundTint="@color/colorPrimaryDark"
+            android:onClick="onClickChat"/>
         <com.example.cafeonline.widget.CustomTabLayout
             android:id="@+id/tab_category"
             android:layout_width="match_parent"
@@ -106,15 +114,7 @@
             android:focusable="false"
             android:nestedScrollingEnabled="false"
             />
-        <Button
-            android:id="@+id/btn_navigate"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/define_dimen_10"
-            android:text="Chat"
-            android:textColor="@color/white"
-            android:backgroundTint="@color/colorPrimaryDark"
-            android:onClick="onClickChat"/>
+
     </LinearLayout>
 
 
