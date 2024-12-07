@@ -4,9 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Repositories
+namespace BussinessObjects.DTO
 {
-    public class OrderToppingDrinkRepository
+    public class OrderItemToppingDTO
     {
+        public ToppingDTO Topping { get; set; } = null!;
     }
 }

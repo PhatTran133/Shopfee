@@ -4,9 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Repositories
+namespace BussinessObjects.DTO
 {
-    public class CartToppingDrinkRepository
+    public class ForgotPasswordDTO
     {
+        public string Email { get; set; } = null!;
     }
 }

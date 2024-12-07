@@ -20,9 +20,11 @@ namespace BussinessObjects.Models
         public string? Address { get; set; }
         public DateTime? CreatedDate { get; set; }
         public DateTime? UpdatedDate { get; set; }
+        public bool EmailVerified { get; set; }
 
         public virtual ICollection<Cart> Carts { get; set; }
         public virtual ICollection<TblNotification> TblNotifications { get; set; }
         public virtual ICollection<TblOrder> TblOrders { get; set; }
+        public virtual ICollection<AdditionalInformation> AdditionalInformations { get; set; }
     }
 }
